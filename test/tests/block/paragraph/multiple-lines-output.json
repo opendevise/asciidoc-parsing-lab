@@ -1,0 +1,20 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "This paragraph has multiple lines that wrap after reaching the 72\ncharacter limit.",
+          "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 2, "column": 16 } }
+        }
+      ],
+      "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 2, "column": 16 } }
+    }
+  ],
+  "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 2, "column": 16 } }
+}

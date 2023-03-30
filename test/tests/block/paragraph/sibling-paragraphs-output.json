@@ -1,0 +1,33 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "This document has multiple paragraphs.",
+          "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 1, "column": 38 } }
+        }
+      ],
+      "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 1, "column": 38 } }
+    },
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "Paragraphs are separated by one or more empty lines.",
+          "location": { "start": { "line": 3, "column": 1 }, "end": { "line": 3, "column": 52 } }
+        }
+      ],
+      "location": { "start": { "line": 3, "column": 1 }, "end": { "line": 3, "column": 52 } }
+    }
+  ],
+  "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 3, "column": 52 } }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "asciidoc-parsing-lab",
+  "version": "1.0.0-alpha.0",
+  "description": "A lab for prototyping, developing, and testing the grammar for the AsciiDoc language specification.",
+  "license": "EPL-2.0",
+  "author": "Dan Allen",
+  "engines": {
+    "node": ">=19.0.0"
+  },
+  "scripts": {
+    "lint": "eslint \"{lib,test}/**/*.js\"",
+    "test": "_mocha",
+    "gen": "npm run gen:block-parser && npm run gen:inline-parser && npm run gen:preprocessor-parser",
+    "gen:block-parser": "peggy -c grammar/asciidoc-block-config.js -t '' > /dev/null",
+    "gen:inline-parser": "peggy -c grammar/asciidoc-inline-config.js -t '' > /dev/null",
+    "gen:preprocessor-parser": "peggy -c grammar/asciidoc-preprocessor-config.js -t '' > /dev/null"
+  },
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json"
+  },
+  "imports": {
+    "#block-default-inline-parser": "./lib/asciidoc-block-parser/default-inline-parser.js",
+    "#block-helpers": "./lib/asciidoc-block-parser/helpers.js",
+    "#inline-helpers": "./lib/asciidoc-inline-parser/helpers.js",
+    "#inline-parser": "./lib/asciidoc-inline-parser.js",
+    "#preprocessor-parser": "./lib/asciidoc-preprocessor-parser.js",
+    "#test-harness": "./test/harness/index.js"
+  },
+  "dependencies": {
+    "peggy": "~3.0",
+    "chai": "latest",
+    "eslint": "latest",
+    "eslint-config-standard": "latest",
+    "js-yaml": "latest",
+    "mocha": "latest"
+  },
+  "files": [
+    "lib"
+  ],
+  "workspaces": [
+    "."
+  ]
+}

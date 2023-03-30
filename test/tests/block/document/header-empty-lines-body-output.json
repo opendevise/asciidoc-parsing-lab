@@ -1,0 +1,33 @@
+{
+  "name": "document",
+  "type": "block",
+  "attributes": {},
+  "header": {
+    "title": {
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "Document Title",
+          "location": { "start": { "line": 1, "column": 3 }, "end": { "line": 1, "column": 16 } }
+        }
+      ]
+    }
+  },
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "body",
+          "location": { "start": { "line": 4, "column": 1 }, "end": { "line": 4, "column": 4 } }
+        }
+      ],
+      "location": { "start": { "line": 4, "column": 1 }, "end": { "line": 4, "column": 4 } }
+    }
+  ],
+  "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 4, "column": 4 } }
+}
