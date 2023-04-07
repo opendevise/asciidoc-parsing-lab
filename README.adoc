@@ -1,13 +1,14 @@
 = AsciiDoc Parsing Lab
 :url-asciidoc-lang: https://gitlab.eclipse.org/eclipse/asciidoc-lang/asciidoc-lang
 :url-peggy: https://peggyjs.org/documentation.html
+:url-nodejs: https://nodejs.org
 :url-nvm: https://github.com/creationix/nvm
 :url-formal-grammar: https://en.wikipedia.org/wiki/Formal_grammar
 
 This project is a laboratory for researching and developing a {url-formal-grammar}[formal grammar] (i.e., grammar formalism) for the {url-asciidoc-lang}[AsciiDoc Language].
 The source code in this repository is highly experimental and incomplete.
-It should not be viewed as a standalone AsciiDoc processor implementation.
-Rather, it's only meant to serve as a reference.
+It should not be considered a standalone AsciiDoc processor implementation.
+Rather, it's meant to serve as a reference for proofs.
 The grammars and grammar-related helpers formulated in this repository will be contributed to the AsciiDoc Language Specification and TCK.
 
 == What's this about?
@@ -15,12 +16,12 @@ The grammars and grammar-related helpers formulated in this repository will be c
 The development of the AsciiDoc Language Specification is now in full swing.
 The center piece of this specification is the normative definition of the AsciiDoc Language.
 
-Up until now, the AsciiDoc syntax rules have only been described informally through implementation code and user-oriented documentation.
+Up until now, the AsciiDoc syntax rules have only been informally described through pre-spec implementation code (Asciidoctor) and user-oriented documentation (https://docs.asciidoctor.org/asciidoc/latest/).
 Developing a specification for the AsciiDoc Language necessitates formalizing the syntax into a grammar.
 
 A formal grammar describes the sequences of characters (i.e., markup) that are valid according to the syntax using a set of rules.
-Establishing a formal grammar is a major step forward for AsciiDoc and the specification.
-It will help root out inconsistencies, ambiguities, and idiosyncrasies.
+Establishing a formal grammar is a major step forward for the AsciiDoc Language and its specification.
+It will help root out well-known inconsistencies, ambiguities, and idiosyncrasies.
 However, bridging this gap while retaining reasonable compatibility is a major challenge of the specification that requires substantial and open-ended research, hence the need for this project.
 
 This lab is primarily focused on exploring a PEG grammar for AsciiDoc.
@@ -28,7 +29,8 @@ This lab is primarily focused on exploring a PEG grammar for AsciiDoc.
 == How do I run it?
 
 This repository is structured as a Node.js project with a Mocha test suite.
-Thus, in order to work with it, you first need to make sure you have Node.js installed.
+Thus, in order to work with it, you first need to have {url-nodejs}[Node.js] installed.
+
 The best way to install Node.js is to use {url-nvm}[nvm] (Node Version Manager).
 
  $ nvm install 19
@@ -42,7 +44,7 @@ Next, install the dependencies of the project using npm:
  $ npm i
 
 At the core of this repository is a collection of parsers for AsciiDoc.
-The parsers are generated from grammar files that are located in the _grammar_ folder.
+The parsers are generated from grammar files located in the _grammar_ folder.
 The grammars, which end in _.pegjs_, are written for {url-peggy}[peggy].
 peggy is the parser generator used by this project to the generate the parsers.
 
