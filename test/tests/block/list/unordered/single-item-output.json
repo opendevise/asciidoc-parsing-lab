@@ -1,0 +1,33 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "unordered",
+      "marker": "*",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "*",
+          "principal": {
+            "inlines": [
+              {
+                "name": "text",
+                "type": "string",
+                "value": "water",
+                "location": { "start": { "line": 1, "column": 3 }, "end": { "line": 1, "column": 7 } }
+              }
+            ]
+          },
+          "blocks": [],
+          "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 1, "column": 7 } }
+        }
+      ],
+      "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 1, "column": 7 } }
+    }
+  ],
+  "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 1, "column": 7 } }
+}
