@@ -123,7 +123,7 @@ listing = (openingDelim:listing_delimiter { enterBlock(context, openingDelim) })
 
 example_delimiter_line = @$('====' [=]*) eol
 
-example = (openingDelim:example_delimiter_line { helper.enterBlock(context, openingDelim) }) blocks:(@example / @sidebar / @list / paragraph)* closingDelim:(@example_delimiter_line / eof)
+example = (openingDelim:example_delimiter_line { enterBlock(context, openingDelim) }) blocks:(@example / @sidebar / @list / paragraph)* closingDelim:(@example_delimiter_line / eof)
   {
     const delimiter = exitBlock(context)
     if (closingDelim === undefined) console.log('unclosed example block')
