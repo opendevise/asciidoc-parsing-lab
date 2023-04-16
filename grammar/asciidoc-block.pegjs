@@ -85,7 +85,7 @@ section_or_discrete_heading = heading:heading blocks:(&{ return options.currentA
   {
     if (!blocks) return heading
     context.sectionStack.pop()
-    return Object.assign(heading, { name: 'section', blocks })
+    return Object.assign(heading, { name: 'section', blocks, location: blockLocation() })
   }
 
 paragraph = !heading lines:(!(block_attribute_line / delim:any_compound_block_delimiter_line &{ return isBlockEnd(context, delim) }) @line)+
