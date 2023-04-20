@@ -16,7 +16,7 @@
         ]
       },
       "level": 1,
-      "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 1, "column": 16 } },
+      "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 3, "column": 9 } },
       "blocks": [
         {
           "name": "paragraph",
