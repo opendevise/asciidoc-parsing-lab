@@ -1,0 +1,64 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "unordered",
+      "marker": "*",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "*",
+          "principal": {
+            "inlines": [
+              {
+                "name": "text",
+                "type": "string",
+                "value": "principal text",
+                "location": { "start": { "line": 1, "column": 3 }, "end": { "line": 1, "column": 16 } }
+              }
+            ]
+          },
+          "blocks": [
+            {
+              "name": "listing",
+              "type": "block",
+              "form": "delimited",
+              "delimiter": "----",
+              "inlines": [
+                {
+                  "type": "string",
+                  "name": "text",
+                  "value": "attached block",
+                  "location": { "start": { "line": 4, "column": 1 }, "end": { "line": 4, "column": 14 } }
+                }
+              ],
+              "location": { "start": { "line": 3, "column": 1 }, "end": { "line": 5, "column": 4 } }
+            },
+            {
+              "name": "listing",
+              "type": "block",
+              "form": "delimited",
+              "delimiter": "----",
+              "inlines": [
+                {
+                  "type": "string",
+                  "name": "text",
+                  "value": "another\nattached\nblock",
+                  "location": { "start": { "line": 8, "column": 1 }, "end": { "line": 10, "column": 5 } }
+                }
+              ],
+              "location": { "start": { "line": 7, "column": 1 }, "end": { "line": 11, "column": 4 } }
+            }
+          ],
+          "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 11, "column": 4 } }
+        }
+      ],
+      "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 11, "column": 4 } }
+    }
+  ],
+  "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 11, "column": 4 } }
+}

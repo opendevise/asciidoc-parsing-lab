@@ -1,0 +1,11 @@
+* principal text
++
+----
+attached block
+----
++
+----
+another
+attached
+block
+----
