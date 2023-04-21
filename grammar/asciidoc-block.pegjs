@@ -179,7 +179,7 @@ list_item = marker:list_marker &{ return isCurrentList(context, marker) } princi
 
 image = 'image::' !space target:$[^\n\[]+ '[' attrlist:attrlist ']' eol
   {
-    return { name: 'image', type: 'block', form: 'macro', target, attributes: attrlist ? attrlist.split(',') : [] }
+    return { name: 'image', type: 'block', form: 'macro', target, attributes: attrlist ? attrlist.split(',') : [], location: blockLocation() }
   }
 
 any_compound_block_delimiter_line = example_delimiter_line / sidebar_delimiter_line
