@@ -161,10 +161,9 @@ list_start = @list_marker ![ \n]
 
 list_marker = @($[*]+ / $[.]+ / '-' / $([0-9]+ '.')) ' '
 
-list_item_principal = text:$(line (!(block_attribute_line / list_continuation_line / list_start / any_compound_block_delimiter_line) @line)*)
+list_item_principal = line:line wrapped:$(!(block_attribute_line / list_continuation_line / list_start / any_compound_block_delimiter_line) @line)*
   {
-    // FIXME is there a way to avoid this check using the grammar rules?
-    return text[text.length - 1] === '\n' ? text.slice(0, -1) : text
+    return wrapped ? line + '\n' + wrapped : line
   }
 
 list_continuation_line = '+' eol
