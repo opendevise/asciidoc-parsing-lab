@@ -26,6 +26,7 @@
     "#inline-helpers": "./lib/asciidoc-inline-parser/helpers.js",
     "#inline-parser": "./lib/asciidoc-inline-parser.js",
     "#preprocessor-parser": "./lib/asciidoc-preprocessor-parser.js",
+    "#util": "./lib/util.js",
     "#test-harness": "./test/harness/index.js"
   },
   "dependencies": {

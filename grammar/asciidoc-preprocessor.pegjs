@@ -1,3 +1,7 @@
+{{
+const fs = require('node:fs')
+const { splitLines } = require('#util')
+}}
 {
 options.attributes = {}
 options.offsets = Object.assign({}, { delta: 0 })
@@ -93,7 +97,7 @@ pp_include = 'include::' target:$[^\[\n]+ '[]' eol
         offsets[n] = { line: n + delta, column: 1, delta }
       }
     }
-    const contents = require('fs').readFileSync(target, 'utf8').split(/(?<=\n)/)
+    const contents = splitLines(fs.readFileSync(target, 'utf8'))
     const contentsLastLine = contents.pop()
     contents.push(contentsLastLine[contentsLastLine.length - 1] === '\n' ? contentsLastLine : contentsLastLine + '\n')
     // TODO deal with case when no lines are added
