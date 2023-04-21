@@ -40,7 +40,7 @@ block_attribute_line = '[' @attrlist ']' eol
 
 // TODO clean up handling of attribute entries above/below
 // TODO allow doctitle to be optional
-header = attribute_entries_above:attribute_entry* doctitle:doctitle attribute_entries_below:attribute_entry* &(lf / eof)
+header = attribute_entries_above:attribute_entry* doctitle:doctitle attribute_entries_below:attribute_entry* &eol
   {
     const attributes = attribute_entries_above.length
       ? attribute_entries_above.reduce((accum, [name, val]) => Object.assign(accum, { [name]: val }), {})
@@ -194,4 +194,4 @@ lf = '\n'
 
 eof = !.
 
-eol = '\n' / eof
+eol = '\n' / !.
