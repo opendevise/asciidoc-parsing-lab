@@ -1,0 +1,15 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "sidebar",
+      "type": "block",
+      "form": "delimited",
+      "delimiter": "****",
+      "blocks": [],
+      "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 2, "column": 4 } }
+    }
+  ],
+  "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 2, "column": 4 } }
+}
