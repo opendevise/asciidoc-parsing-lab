@@ -1,0 +1,76 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "sidebar",
+      "type": "block",
+      "form": "delimited",
+      "delimiter": "****",
+      "blocks": [
+        {
+          "name": "list",
+          "type": "block",
+          "variant": "unordered",
+          "marker": "*",
+          "items": [
+            {
+              "name": "listItem",
+              "type": "block",
+              "marker": "*",
+              "principal": {
+                "inlines": [
+                  {
+                    "name": "text",
+                    "type": "string",
+                    "value": "phone",
+                    "location": { "start": { "line": 2, "column": 3 }, "end": { "line": 2, "column": 7 } }
+                  }
+                ]
+              },
+              "blocks": [],
+              "location": { "start": { "line": 2, "column": 1 }, "end": { "line": 2, "column": 7 } }
+            },
+            {
+              "name": "listItem",
+              "type": "block",
+              "marker": "*",
+              "principal": {
+                "inlines": [
+                  {
+                    "name": "text",
+                    "type": "string",
+                    "value": "wallet",
+                    "location": { "start": { "line": 3, "column": 3 }, "end": { "line": 3, "column": 8 } }
+                  }
+                ]
+              },
+              "blocks": [],
+              "location": { "start": { "line": 3, "column": 1 }, "end": { "line": 3, "column": 8 } }
+            },
+            {
+              "name": "listItem",
+              "type": "block",
+              "marker": "*",
+              "principal": {
+                "inlines": [
+                  {
+                    "name": "text",
+                    "type": "string",
+                    "value": "keys",
+                    "location": { "start": { "line": 4, "column": 3 }, "end": { "line": 4, "column": 6 } }
+                  }
+                ]
+              },
+              "blocks": [],
+              "location": { "start": { "line": 4, "column": 1 }, "end": { "line": 4, "column": 6 } }
+            }
+          ],
+          "location": { "start": { "line": 2, "column": 1 }, "end": { "line": 4, "column": 6 } }
+        }
+      ],
+      "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 5, "column": 4 } }
+    }
+  ],
+  "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 5, "column": 4 } }
+}
