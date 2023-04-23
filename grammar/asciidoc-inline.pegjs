@@ -5,6 +5,10 @@ const { computeLocation, transformToModel, unshiftOntoCopy } = require('#inline-
 // perhaps change this to start to capture line and column?
 options.startLine ??= 1
 options.startColumn ??= 1
+if (!/[`_*#:<[\\]/.test(input)) {
+  // TODO extract the function to transform text and call it directly
+  return transformToModel(input ? [input] : [], computeLocation.bind(null, peg$computeLocation, options.startLine - 1, options.startColumn - 1))
+}
 }
 // TODO instead of &any check here, could patch parser to node call parsenode() if peg$currPos === input.length
 root = nodes:(&any @node)*
@@ -125,7 +129,7 @@ escaped = '\\' match:([`_*<] / $(wordy* colon))
 
 wordy = [\p{Alpha}0-9]
 
-// NOTE we don't have to include \\ here since its always pair with a mark (if it means something)
+// NOTE we don't have to include \\ here since it's always paired with a mark (if it means something)
 not_mark_or_space = [^ `_*#:<\\]
 
 // NOTE regex starts to become faster than alternatives at ~ 3 characters
