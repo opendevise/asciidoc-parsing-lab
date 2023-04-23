@@ -57,19 +57,19 @@ describe('inline (unported)', () => {
   describe('escaped markup', () => {
     it('escaped lone constrained strong mark', () => {
       const input = '\\*'
-      const expected = [{ type: 'string', name: 'text', value: '*', location: loc(2) }]
+      const expected = [{ type: 'string', name: 'text', value: '*', location: loc(1, input) }]
       expect(parse(input)).to.eql(expected)
     })
 
     it('escaped unclosed constrained strong', () => {
       const input = '\\*disclaimer'
-      const expected = [{ type: 'string', name: 'text', value: '*disclaimer', location: loc(2, input) }]
+      const expected = [{ type: 'string', name: 'text', value: '*disclaimer', location: loc(1, input) }]
       expect(parse(input)).to.eql(expected)
     })
 
     it('escaped opening constrained strong mark', () => {
       const input = '\\*seeing stars*'
-      const expected = [{ type: 'string', name: 'text', value: '*seeing stars*', location: loc(2, input) }]
+      const expected = [{ type: 'string', name: 'text', value: '*seeing stars*', location: loc(1, input) }]
       expect(parse(input)).to.eql(expected)
     })
 
@@ -87,7 +87,7 @@ describe('inline (unported)', () => {
 
     it('escaped opening unconstrained strong mark', () => {
       const input = '\\*\\*seeing stars**'
-      const expected = [{ type: 'string', name: 'text', value: '**seeing stars**', location: loc(2, input) }]
+      const expected = [{ type: 'string', name: 'text', value: '**seeing stars**', location: loc(1, input) }]
       expect(parse(input)).to.eql(expected)
     })
 
@@ -100,7 +100,7 @@ describe('inline (unported)', () => {
     it('constrained strong enclosed in escaped unconstrained strong', () => {
       const input = '\\**enclosed in stars**'
       const expected = [
-        { type: 'string', name: 'text', value: '*', location: loc(2) },
+        { type: 'string', name: 'text', value: '*', location: loc(1, 2) },
         {
           type: 'inline',
           name: 'span',
@@ -116,13 +116,13 @@ describe('inline (unported)', () => {
 
     it('escaped xref shorthand notation', () => {
       const input = '\\<<foo>>'
-      const expected = [{ type: 'string', name: 'text', value: '<<foo>>', location: loc(2, input) }]
+      const expected = [{ type: 'string', name: 'text', value: '<<foo>>', location: loc(1, input) }]
       expect(parse(input)).to.eql(expected)
     })
 
     it('escaped lone less than sign', () => {
       const input = '\\<'
-      const expected = [{ type: 'string', name: 'text', value: '<', location: loc(2, input) }]
+      const expected = [{ type: 'string', name: 'text', value: '<', location: loc(1, input) }]
       expect(parse(input)).to.eql(expected)
     })
   })

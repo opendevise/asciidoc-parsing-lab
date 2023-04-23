@@ -124,7 +124,7 @@ other_right = $(wordy* constrained_left_mark) / space / escaped / any
 // TODO could add : to regexp and use wordy+ colon in second alternative
 escaped = '\\' match:([`_*<] / $(wordy* colon))
   {
-    return Object.assign(new String(match), { escaped: true })
+    return Object.assign(new String(match), { escaped: true, sourceLength: match.length + 1 })
   }
 
 wordy = [\p{Alpha}0-9]
