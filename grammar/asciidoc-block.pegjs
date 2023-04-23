@@ -3,7 +3,6 @@ const { createContext, enterBlock, exitBlock, isBlockEnd, isCurrentList, isNeste
 }}
 {
 const context = createContext()
-// TODO parseInline should short-circuit if no markup characters are detected
 const parseInline = (options.inlineParser ?? require('#block-default-inline-parser')).parse
 
 function blockLocation (eof) {
