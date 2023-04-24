@@ -1,0 +1,38 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "sidebar",
+      "type": "block",
+      "form": "delimited",
+      "delimiter": "****",
+      "blocks": [
+        {
+          "name": "sidebar",
+          "type": "block",
+          "form": "delimited",
+          "delimiter": "******",
+          "blocks": [
+            {
+              "name": "paragraph",
+              "type": "block",
+              "inlines": [
+                {
+                  "name": "text",
+                  "type": "string",
+                  "value": "rabbit hole",
+                  "location": { "start": { "line": 4, "column": 1 }, "end": { "line": 4, "column": 11 } }
+                }
+              ],
+              "location": { "start": { "line": 4, "column": 1 }, "end": { "line": 4, "column": 11 } }
+            }
+          ],
+          "location": { "start": { "line": 3, "column": 1 }, "end": { "line": 5, "column": 6 } }
+        }
+      ],
+      "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 7, "column": 4 } }
+    }
+  ],
+  "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 7, "column": 4 } }
+}
