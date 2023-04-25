@@ -87,7 +87,7 @@ section_or_discrete_heading = heading:heading blocks:(&{ return options.currentA
     return Object.assign(heading, { name: 'section', blocks, location: blockLocation() })
   }
 
-paragraph = !heading lines:(!(block_attribute_line / delim:any_compound_block_delimiter_line &{ return isBlockEnd(context, delim) }) @line)+
+paragraph = !heading lines:(!(block_attribute_line / any_compound_block_delimiter_line) @line)+
   {
     const location_ = blockLocation()
     return { name: 'paragraph', type: 'block', inlines: parseInline(lines.join('\n'), { startLine: location_.start.line }), location: location_ }
