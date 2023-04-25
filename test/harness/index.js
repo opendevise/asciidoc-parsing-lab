@@ -43,7 +43,9 @@ function makeTests (tests, testBlock) {
       describe(name, () => makeTests(test.entries, testBlock))
     } else {
       const testMethod = it[test.status] || it
-      testMethod(name, () => testBlock(test))
+      testMethod(name, function () {
+        return testBlock.call(this, test)
+      })
     }
   }
 }
