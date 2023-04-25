@@ -160,9 +160,9 @@ list_start = @list_marker ![ \n]
 
 list_marker = @($[*]+ / $[.]+ / '-' / $([0-9]+ '.')) ' '
 
-list_item_principal = line:line wrapped:$(!(block_attribute_line / list_continuation_line / list_start / any_compound_block_delimiter_line) @line)*
+list_item_principal = first:line wrapped:(!(block_attribute_line / list_continuation_line / list_start / any_compound_block_delimiter_line) @line)*
   {
-    return wrapped ? line + '\n' + wrapped : line
+    return wrapped.length ? first + '\n' + wrapped.join('\n') : first
   }
 
 list_continuation_line = '+' eol
