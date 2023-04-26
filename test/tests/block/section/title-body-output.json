@@ -11,12 +11,12 @@
             "name": "text",
             "type": "string",
             "value": "Section Title",
-            "location": [{ "line": 1, "column": 4 }, { "line": 1, "column": 16 }]
+            "location": [{ "line": 1, "col": 4 }, { "line": 1, "col": 16 }]
           }
         ]
       },
       "level": 1,
-      "location": [{ "line": 1, "column": 1 }, { "line": 3, "column": 9 }],
+      "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 9 }],
       "blocks": [
         {
           "name": "paragraph",
@@ -26,13 +26,13 @@
               "name": "text",
               "type": "string",
               "value": "paragraph",
-              "location": [{ "line": 3, "column": 1 }, { "line": 3, "column": 9 }]
+              "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 9 }]
             }
           ],
-          "location": [{ "line": 3, "column": 1 }, { "line": 3, "column": 9 }]
+          "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 9 }]
         }
       ]
     }
   ],
-  "location": [{ "line": 1, "column": 1 }, { "line": 3, "column": 9 }]
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 9 }]
 }

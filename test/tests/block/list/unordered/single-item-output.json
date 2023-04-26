@@ -18,16 +18,16 @@
                 "name": "text",
                 "type": "string",
                 "value": "water",
-                "location": [{ "line": 1, "column": 3 }, { "line": 1, "column": 7 }]
+                "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 7 }]
               }
             ]
           },
           "blocks": [],
-          "location": [{ "line": 1, "column": 1 }, { "line": 1, "column": 7 }]
+          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7 }]
         }
       ],
-      "location": [{ "line": 1, "column": 1 }, { "line": 1, "column": 7 }]
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7 }]
     }
   ],
-  "location": [{ "line": 1, "column": 1 }, { "line": 1, "column": 7 }]
+  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7 }]
 }

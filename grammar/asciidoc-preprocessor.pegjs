@@ -14,7 +14,7 @@ document = body lf*
     let lastLine = !end.offset || input[input.length - 1] === '\n' ? end.line - 1 : end.line
     for (let n = lastLine; n > 0; n--) {
       if (n in offsets) break
-      offsets[n] = { line: n + delta, column: 1, delta }
+      offsets[n] = { line: n + delta, col: 1, delta }
     }
     let n = lastLine + 1
     while (n in offsets) delete offsets[n++]
@@ -94,7 +94,7 @@ pp_include = 'include::' target:$[^\[\n]+ '[]' eol
     if (!offsets[startLine - 1]) {
       for (let n = startLine - 1; n > 0; n--) {
         if (n in offsets) break
-        offsets[n] = { line: n + delta, column: 1, delta }
+        offsets[n] = { line: n + delta, col: 1, delta }
       }
     }
     const contents = splitLines(fs.readFileSync(target, 'utf8'))
@@ -106,12 +106,12 @@ pp_include = 'include::' target:$[^\[\n]+ '[]' eol
     while (n in offsets) offsets[n + numAdded] = offsets[n++]
     const parent = offsets[startLine].file || '<input>'
     for (let l = 0, len = numAdded; l < len; l++) {
-      offsets[l + startLine] = { line: l + 1, column: 1, delta: 0, file: target, parent }
+      offsets[l + startLine] = { line: l + 1, col: 1, delta: 0, file: target, parent }
     }
     offsets.delta -= (numAdded - 1)
     input = input.slice(0, (peg$currPos = startOffset)) + contents.join('') + input.slice(endOffset)
     // NOTE might be able to avoid this if we don't rely on location()
-    peg$posDetailsCache = [{ line: 1, column: 1 }]
+    peg$posDetailsCache = [{ line: 1, col: 1 }]
     return true
   }
 
@@ -122,13 +122,13 @@ pp_conditional_short = operator:('ifdef' / 'ifndef') '::' attribute_name:attribu
     const delta = offsets.delta
     for (let n = startLine; n > 0; n--) {
       if (n in offsets) break
-      offsets[n] = { line: n + delta, column: 1, delta }
+      offsets[n] = { line: n + delta, col: 1, delta }
     }
     const drop = operator === 'ifdef' ? !(attribute_name in options.attributes) : (attribute_name in options.attributes)
     if (drop) {
       if (eol) {
         let n = endLine
-        if (!offsets[n]) offsets[n] = { line: n + delta, column: 1, delta }
+        if (!offsets[n]) offsets[n] = { line: n + delta, col: 1, delta }
         while (n in offsets) {
           offsets[n].delta += 1
           offsets[n - 1] = offsets[n]
@@ -138,10 +138,10 @@ pp_conditional_short = operator:('ifdef' / 'ifndef') '::' attribute_name:attribu
         delete offsets[startLine]
       }
     } else {
-      offsets[startLine].column = mark - startOffset + 1
+      offsets[startLine].col = mark - startOffset + 1
     }
     input = input.slice(0, (peg$currPos = startOffset)) + (drop ? '' : contents + (eol || '')) + input.slice(endOffset)
-    peg$posDetailsCache = [{ line: 1, column: 1 }]
+    peg$posDetailsCache = [{ line: 1, col: 1 }]
     return true
   }
 
@@ -157,14 +157,14 @@ pp_conditional = operator:('ifdef' / 'ifndef') '::' attribute_name:attribute_nam
     if (!offsets[startLine - 1]) {
       for (let n = startLine - 1; n > 0; n--) {
         if (n in offsets) break
-        offsets[n] = { line: n + delta, column: 1, delta }
+        offsets[n] = { line: n + delta, col: 1, delta }
       }
     }
     const drop = operator === 'ifdef' ? !(attribute_name in options.attributes) : (attribute_name in options.attributes)
     if (drop) {
       const numDropped = contents.length + 2
       let l = endLine
-      if (!offsets[l]) offsets[l] = { line: l + delta, column: 1, delta }
+      if (!offsets[l]) offsets[l] = { line: l + delta, col: 1, delta }
       while (l in offsets) offsets[l++].delta += numDropped
       for (let n = startLine; n < endLine; n++) delete offsets[n]
       let n = endLine
@@ -175,7 +175,7 @@ pp_conditional = operator:('ifdef' / 'ifndef') '::' attribute_name:attribute_nam
       offsets.delta = offsets[n - 1 - numDropped].delta
     } else {
       if (!offsets[startLine]) {
-        for (let l = startLine; l < endLine; l++) offsets[l] = { line: l + delta, column: 1, delta }
+        for (let l = startLine; l < endLine; l++) offsets[l] = { line: l + delta, col: 1, delta }
       }
       let l = startLine
       const currentInclude = offsets[startLine].file
@@ -193,7 +193,7 @@ pp_conditional = operator:('ifdef' / 'ifndef') '::' attribute_name:attribute_nam
       currentInclude ? (offsets.delta += 2) : (offsets.delta = newDelta)
     }
     input = input.slice(0, (peg$currPos = startOffset)) + (drop ? '' : contents.join('')) + input.slice(endOffset)
-    peg$posDetailsCache = [{ line: 1, column: 1 }]
+    peg$posDetailsCache = [{ line: 1, col: 1 }]
     return true
   }
 

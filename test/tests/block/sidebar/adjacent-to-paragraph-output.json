@@ -10,10 +10,10 @@
           "name": "text",
           "type": "string",
           "value": "before",
-          "location": [{ "line": 1, "column": 1 }, { "line": 1, "column": 6 }]
+          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 6 }]
         }
       ],
-      "location": [{ "line": 1, "column": 1 }, { "line": 1, "column": 6 }]
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 6 }]
     },
     {
       "name": "sidebar",
@@ -29,14 +29,14 @@
               "name": "text",
               "type": "string",
               "value": "sidebar",
-              "location": [{ "line": 3, "column": 1 }, { "line": 3, "column": 7 }]
+              "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 7 }]
             }
           ],
-          "location": [{ "line": 3, "column": 1 }, { "line": 3, "column": 7 }]
+          "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 7 }]
         }
       ],
-      "location": [{ "line": 2, "column": 1 }, { "line": 4, "column": 4 }]
+      "location": [{ "line": 2, "col": 1 }, { "line": 4, "col": 4 }]
     }
   ],
-  "location": [{ "line": 1, "column": 1 }, { "line": 4, "column": 4 }]
+  "location": [{ "line": 1, "col": 1 }, { "line": 4, "col": 4 }]
 }

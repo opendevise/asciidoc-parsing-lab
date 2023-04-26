@@ -6,20 +6,20 @@ const { parse } = require('#inline-parser')
 
 describe('inline (unported)', () => {
   const loc = (start, end = start) => {
-    let startLine, startColumn, endLine, endColumn
+    let startLine, startCol, endLine, endCol
     if (Array.isArray(start)) {
-      ;([startLine, startColumn] = start)
+      ;([startLine, startCol] = start)
     } else {
       startLine = 1
-      startColumn = start
+      startCol = start
     }
     if (Array.isArray(end)) {
-      ;([endLine, endColumn] = end)
+      ;([endLine, endCol] = end)
     } else {
       endLine = startLine
-      endColumn = typeof end === 'string' ? end.length : end
+      endCol = typeof end === 'string' ? end.length : end
     }
-    return [{ line: startLine, column: startColumn }, { line: endLine, column: endColumn }]
+    return [{ line: startLine, col: startCol }, { line: endLine, col: endCol }]
   }
 
   describe('no markup', () => {

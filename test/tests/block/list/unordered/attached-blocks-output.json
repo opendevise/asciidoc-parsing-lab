@@ -18,7 +18,7 @@
                 "name": "text",
                 "type": "string",
                 "value": "principal text",
-                "location": [{ "line": 1, "column": 3 }, { "line": 1, "column": 16 }]
+                "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 16 }]
               }
             ]
           },
@@ -33,10 +33,10 @@
                   "type": "string",
                   "name": "text",
                   "value": "attached block",
-                  "location": [{ "line": 4, "column": 1 }, { "line": 4, "column": 14 }]
+                  "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 14 }]
                 }
               ],
-              "location": [{ "line": 3, "column": 1 }, { "line": 5, "column": 4 }]
+              "location": [{ "line": 3, "col": 1 }, { "line": 5, "col": 4 }]
             },
             {
               "name": "listing",
@@ -48,17 +48,17 @@
                   "type": "string",
                   "name": "text",
                   "value": "another\nattached\nblock",
-                  "location": [{ "line": 8, "column": 1 }, { "line": 10, "column": 5 }]
+                  "location": [{ "line": 8, "col": 1 }, { "line": 10, "col": 5 }]
                 }
               ],
-              "location": [{ "line": 7, "column": 1 }, { "line": 11, "column": 4 }]
+              "location": [{ "line": 7, "col": 1 }, { "line": 11, "col": 4 }]
             }
           ],
-          "location": [{ "line": 1, "column": 1 }, { "line": 11, "column": 4 }]
+          "location": [{ "line": 1, "col": 1 }, { "line": 11, "col": 4 }]
         }
       ],
-      "location": [{ "line": 1, "column": 1 }, { "line": 11, "column": 4 }]
+      "location": [{ "line": 1, "col": 1 }, { "line": 11, "col": 4 }]
     }
   ],
-  "location": [{ "line": 1, "column": 1 }, { "line": 11, "column": 4 }]
+  "location": [{ "line": 1, "col": 1 }, { "line": 11, "col": 4 }]
 }

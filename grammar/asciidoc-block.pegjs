@@ -6,14 +6,17 @@ const context = createContext()
 const parseInline = (options.inlineParser ?? require('#block-default-inline-parser')).parse
 
 function blockLocation (eof) {
-  const { start, end, startDetails = peg$computePosDetails(start) } = range()
+  const { start, end } = range()
+  const { line: startLine, column: startCol } = peg$computePosDetails(start)
+  const startDetails = { line: startLine, col: startCol }
   if (end === start) return [startDetails, startDetails]
   if (eof) {
-    const { line, column } = peg$computePosDetails(end)
-    return [startDetails, { line, column: (column - 1) || 1 }]
+    const { line: endLine, column: endCol } = peg$computePosDetails(end)
+    return [startDetails, { line: endLine, col: (endCol - 1) || 1 }]
+  } else {
+    const { line: endLine, column: endCol } = peg$computePosDetails(end - (end < input.length || (input[end - 1] ?? '\n') === '\n' ? 2 : 1))
+    return [startDetails, { line: endLine, col: endCol }]
   }
-  const endDetails = peg$computePosDetails(end - (end < input.length || (input[end - 1] ?? '\n') === '\n' ? 2 : 1))
-  return [startDetails, endDetails]
 }
 }
 document = header:header? body:body lf*
@@ -47,7 +50,7 @@ header = attribute_entries_above:attribute_entry* doctitle:doctitle attribute_en
     attribute_entries_below.length &&
       attribute_entries_below.reduce((accum, [name, val]) => Object.assign(accum, { [name]: val }), attributes)
     const titleStartLine = location().start.line + attribute_entries_above.length
-    return { title: { inlines: parseInline(doctitle, { startLine: titleStartLine, startColumn: 3 }) }, attributes }
+    return { title: { inlines: parseInline(doctitle, { startLine: titleStartLine, startCol: 3 }) }, attributes }
   }
 
 // TODO be more strict about doctitle chars; namely require a non-space
@@ -97,7 +100,7 @@ heading = marker:'='+ ' ' title:line
   {
     const location_ = blockLocation()
     // Q should we store marker instead of or in addition to level?
-    return { name: 'heading', type: 'block', title: { inlines: parseInline(title, { startLine: location_[0].line, startColumn: marker.length + 2}) }, level: marker.length - 1, location: location_ }
+    return { name: 'heading', type: 'block', title: { inlines: parseInline(title, { startLine: location_[0].line, startCol: marker.length + 2}) }, level: marker.length - 1, location: location_ }
   }
 
 listing_delimiter = @$('----' [-]*) eol
@@ -114,7 +117,7 @@ listing = (openingDelim:listing_delimiter { enterBlock(context, openingDelim) })
     // FIXME could this be captured from rule instead of computed?
     let inlines = []
     if (lines.length) {
-      const contentsLocation = [{ line: location_[0].line + 1, column: 1 }, { line: location_[1].line - 1, column: lines[lines.length - 1].length }]
+      const contentsLocation = [{ line: location_[0].line + 1, col: 1 }, { line: location_[1].line - 1, col: lines[lines.length - 1].length }]
       inlines = toInlines('text', lines.join('\n'), contentsLocation)
     }
     return { name: 'listing', type: 'block', form: 'delimited', delimiter, inlines, location: location_ }
@@ -172,7 +175,7 @@ list_continuation_line = '+' eol
 list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line @(listing / example) / lf* @list)*
   {
     const location_ = blockLocation()
-    return { name: 'listItem', type: 'block', marker, principal: { inlines: parseInline(principal, { startLine: location_[0].line, startColumn: marker.length + 2 }) }, blocks, location: location_ }
+    return { name: 'listItem', type: 'block', marker, principal: { inlines: parseInline(principal, { startLine: location_[0].line, startCol: marker.length + 2 }) }, blocks, location: location_ }
   }
 
 image = 'image::' !space target:$[^\n\[]+ '[' attrlist:attrlist ']' eol

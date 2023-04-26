@@ -12,11 +12,11 @@
           "name": "text",
           "type": "string",
           "value": "------",
-          "location": [{ "line": 2, "column": 1 }, { "line": 2, "column": 6 }]
+          "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 6 }]
         }
       ],
-      "location": [{ "line": 1, "column": 1 }, { "line": 3, "column": 4 }]
+      "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 4 }]
     }
   ],
-  "location": [{ "line": 1, "column": 1 }, { "line": 3, "column": 4 }]
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 4 }]
 }

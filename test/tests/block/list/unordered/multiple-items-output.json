@@ -18,12 +18,12 @@
                 "name": "text",
                 "type": "string",
                 "value": "Linux",
-                "location": [{ "line": 1, "column": 3 }, { "line": 1, "column": 7 }]
+                "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 7 }]
               }
             ]
           },
           "blocks": [],
-          "location": [{ "line": 1, "column": 1 }, { "line": 1, "column": 7 }]
+          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7 }]
         },
         {
           "name": "listItem",
@@ -35,12 +35,12 @@
                 "name": "text",
                 "type": "string",
                 "value": "Windows",
-                "location": [{ "line": 2, "column": 3 }, { "line": 2, "column": 9 }]
+                "location": [{ "line": 2, "col": 3 }, { "line": 2, "col": 9 }]
               }
             ]
           },
           "blocks": [],
-          "location": [{ "line": 2, "column": 1 }, { "line": 2, "column": 9 }]
+          "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 9 }]
         },
         {
           "name": "listItem",
@@ -52,16 +52,16 @@
                 "name": "text",
                 "type": "string",
                 "value": "macOS",
-                "location": [{ "line": 3, "column": 3 }, { "line": 3, "column": 7 }]
+                "location": [{ "line": 3, "col": 3 }, { "line": 3, "col": 7 }]
               }
             ]
           },
           "blocks": [],
-          "location": [{ "line": 3, "column": 1 }, { "line": 3, "column": 7 }]
+          "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 7 }]
         }
       ],
-      "location": [{ "line": 1, "column": 1 }, { "line": 3, "column": 7 }]
+      "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 7 }]
     }
   ],
-  "location": [{ "line": 1, "column": 1 }, { "line": 3, "column": 7 }]
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 7 }]
 }
