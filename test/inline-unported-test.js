@@ -19,7 +19,7 @@ describe('inline (unported)', () => {
       endLine = startLine
       endColumn = typeof end === 'string' ? end.length : end
     }
-    return { start: { line: startLine, column: startColumn }, end: { line: endLine, column: endColumn } }
+    return [{ line: startLine, column: startColumn }, { line: endLine, column: endColumn }]
   }
 
   describe('no markup', () => {
