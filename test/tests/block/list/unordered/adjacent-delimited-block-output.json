@@ -18,15 +18,15 @@
                 "name": "text",
                 "type": "string",
                 "value": "wrapped\nitem",
-                "location": { "start": { "line": 1, "column": 3 }, "end": { "line": 2, "column": 4 } }
+                "location": [{ "line": 1, "column": 3 }, { "line": 2, "column": 4 }]
               }
             ]
           },
           "blocks": [],
-          "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 2, "column": 4 } }
+          "location": [{ "line": 1, "column": 1 }, { "line": 2, "column": 4 }]
         }
       ],
-      "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 2, "column": 4 } }
+      "location": [{ "line": 1, "column": 1 }, { "line": 2, "column": 4 }]
     },
     {
       "name": "sidebar",
@@ -42,14 +42,14 @@
               "name": "text",
               "type": "string",
               "value": "sidebar",
-              "location": { "start": { "line": 4, "column": 1 }, "end": { "line": 4, "column": 7 } }
+              "location": [{ "line": 4, "column": 1 }, { "line": 4, "column": 7 }]
             }
           ],
-          "location": { "start": { "line": 4, "column": 1 }, "end": { "line": 4, "column": 7 } }
+          "location": [{ "line": 4, "column": 1 }, { "line": 4, "column": 7 }]
         }
       ],
-      "location": { "start": { "line": 3, "column": 1 }, "end": { "line": 5, "column": 4 } }
+      "location": [{ "line": 3, "column": 1 }, { "line": 5, "column": 4 }]
     }
   ],
-  "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 5, "column": 4 } }
+  "location": [{ "line": 1, "column": 1 }, { "line": 5, "column": 4 }]
 }

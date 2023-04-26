@@ -7,13 +7,13 @@ const parseInline = (options.inlineParser ?? require('#block-default-inline-pars
 
 function blockLocation (eof) {
   const { start, end, startDetails = peg$computePosDetails(start) } = range()
-  if (end === start) return { start: startDetails, end: startDetails }
+  if (end === start) return [startDetails, startDetails]
   if (eof) {
     const { line, column } = peg$computePosDetails(end)
-    return { start: startDetails, end: { line, column: (column - 1) || 1 } }
+    return [startDetails, { line, column: (column - 1) || 1 }]
   }
   const endDetails = peg$computePosDetails(end - (end < input.length || (input[end - 1] ?? '\n') === '\n' ? 2 : 1))
-  return { start: startDetails, end: endDetails }
+  return [startDetails, endDetails]
 }
 }
 document = header:header? body:body lf*
@@ -90,14 +90,14 @@ section_or_discrete_heading = heading:heading blocks:(&{ return options.currentA
 paragraph = !heading lines:(!(block_attribute_line / any_compound_block_delimiter_line) @line)+
   {
     const location_ = blockLocation()
-    return { name: 'paragraph', type: 'block', inlines: parseInline(lines.join('\n'), { startLine: location_.start.line }), location: location_ }
+    return { name: 'paragraph', type: 'block', inlines: parseInline(lines.join('\n'), { startLine: location_[0].line }), location: location_ }
   }
 
 heading = marker:'='+ ' ' title:line
   {
     const location_ = blockLocation()
     // Q should we store marker instead of or in addition to level?
-    return { name: 'heading', type: 'block', title: { inlines: parseInline(title, { startLine: location_.start.line, startColumn: marker.length + 2}) }, level: marker.length - 1, location: location_ }
+    return { name: 'heading', type: 'block', title: { inlines: parseInline(title, { startLine: location_[0].line, startColumn: marker.length + 2}) }, level: marker.length - 1, location: location_ }
   }
 
 listing_delimiter = @$('----' [-]*) eol
@@ -114,7 +114,7 @@ listing = (openingDelim:listing_delimiter { enterBlock(context, openingDelim) })
     // FIXME could this be captured from rule instead of computed?
     let inlines = []
     if (lines.length) {
-      const contentsLocation = { start: { line: location_.start.line + 1, column: 1 }, end: { line: location_.end.line - 1, column: lines[lines.length - 1].length } }
+      const contentsLocation = [{ line: location_[0].line + 1, column: 1 }, { line: location_[1].line - 1, column: lines[lines.length - 1].length }]
       inlines = toInlines('text', lines.join('\n'), contentsLocation)
     }
     return { name: 'listing', type: 'block', form: 'delimited', delimiter, inlines, location: location_ }
@@ -172,7 +172,7 @@ list_continuation_line = '+' eol
 list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line @(listing / example) / lf* @list)*
   {
     const location_ = blockLocation()
-    return { name: 'listItem', type: 'block', marker, principal: { inlines: parseInline(principal, { startLine: location_.start.line, startColumn: marker.length + 2 }) }, blocks, location: location_ }
+    return { name: 'listItem', type: 'block', marker, principal: { inlines: parseInline(principal, { startLine: location_[0].line, startColumn: marker.length + 2 }) }, blocks, location: location_ }
   }
 
 image = 'image::' !space target:$[^\n\[]+ '[' attrlist:attrlist ']' eol

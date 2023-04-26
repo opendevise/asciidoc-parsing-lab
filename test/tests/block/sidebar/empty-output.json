@@ -8,8 +8,8 @@
       "form": "delimited",
       "delimiter": "****",
       "blocks": [],
-      "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 2, "column": 4 } }
+      "location": [{ "line": 1, "column": 1 }, { "line": 2, "column": 4 }]
     }
   ],
-  "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 2, "column": 4 } }
+  "location": [{ "line": 1, "column": 1 }, { "line": 2, "column": 4 }]
 }

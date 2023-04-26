@@ -10,11 +10,11 @@
           "name": "text",
           "type": "string",
           "value": "body",
-          "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 1, "column": 4 } }
+          "location": [{ "line": 1, "column": 1 }, { "line": 1, "column": 4 }]
         }
       ],
-      "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 1, "column": 4 } }
+      "location": [{ "line": 1, "column": 1 }, { "line": 1, "column": 4 }]
     }
   ],
-  "location": { "start": { "line": 1, "column": 1 }, "end": { "line": 1, "column": 4 } }
+  "location": [{ "line": 1, "column": 1 }, { "line": 1, "column": 4 }]
 }
