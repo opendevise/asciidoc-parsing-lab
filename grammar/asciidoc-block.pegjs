@@ -5,8 +5,9 @@ const { createContext, enterBlock, exitBlock, isBlockEnd, isCurrentList, isNeste
 const context = createContext()
 const parseInline = (options.inlineParser ?? require('#block-default-inline-parser')).parse
 
-function blockLocation (eof) {
-  const { start, end } = range()
+function blockLocation (range_) {
+  let eof
+  const { start, end } = range_ === true ? (eof = true) && range() : range_ || range()
   const { line: startLine, column: startCol } = peg$computePosDetails(start)
   const startDetails = { line: startLine, col: startCol }
   if (end === start) return [startDetails, startDetails]
@@ -61,26 +62,41 @@ body = block*
 // blocks = // does not include check for section; paragraph can just be paragraph
 // blocks_in_section_body = // includes check for section; paragraph has to be paragraph_not_heading
 
-block = lf* attributes:(attrlists:(@block_attribute_line lf*)* {
-    return (options.currentAttributes = attrlists.reduce((accum, attrlist) => {
-      if (attrlist) {
-        accum ??= {}
-        // FIXME this is a quick hack
-        let positionalIndex = 0
-        attrlist.split(',').forEach((it) => {
-          let equalsIdx = it.indexOf('=')
-          if (~equalsIdx) {
-            accum[it.slice(0, equalsIdx)] = it.slice(equalsIdx + 1)
+block = lf* metadataStart:grab_offset metadata:(attrlists:(@block_attribute_line lf*)* metadataEnd:grab_offset {
+    // TODO move this logic to a helper function or grammar rule
+    if (!attrlists.length) return undefined
+    while (input[metadataEnd - 1] === '\n' && input[metadataEnd - 2] === '\n') metadataEnd--
+    const location_ = blockLocation({ start: metadataStart, end: metadataEnd })
+    const attributes = {}
+    const options = []
+    for (const attrlist of attrlists) {
+      if (!attrlist) return next
+      // FIXME this is a quick hack
+      let positionalIndex = 0
+      attrlist.split(',').forEach((it) => {
+        let equalsIdx = it.indexOf('=')
+        if (~equalsIdx) {
+          const name = it.slice(0, equalsIdx)
+          const value = it.slice(equalsIdx + 1)
+          if (name === 'opts' || name === 'options') {
+            for (const opt of value.split(',')) {
+              if (!~options.indexOf(opt)) options.push(opt)
+            }
+          } else if (name === 'role' && 'role' in attributes) {
+            if (value) attributes.role += ' ' + value
           } else {
-            accum[++positionalIndex] = it
+            attributes[name] = value
           }
-        })
-      }
-      return accum
-    }, undefined))
+        } else {
+          attributes[++positionalIndex] = it
+        }
+      })
+    }
+    // NOTE once we get into parsing attribute values, this will change to an overlay object
+    return { attributes, options, location: location_ }
   }) block:(section_or_discrete_heading / listing / example / sidebar / list / image / paragraph)
   {
-    return attributes ? Object.assign(block, { attributes }) : block
+    return metadata ? Object.assign(block, { metadata }) : block
   }
 
 section_or_discrete_heading = heading:heading blocks:(&{ return options.currentAttributes?.['1'] === 'discrete' } / &{ return isNestedSection(context, heading) } @block*)
@@ -184,6 +200,11 @@ image = 'image::' !space target:$[^\n\[]+ '[' attrlist:attrlist ']' eol
   }
 
 any_compound_block_delimiter_line = example_delimiter_line / sidebar_delimiter_line
+
+grab_offset = ''
+  {
+    return offset()
+  }
 
 line = @$[^\n]+ eol
 

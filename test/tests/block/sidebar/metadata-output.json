@@ -1,0 +1,34 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "sidebar",
+      "type": "block",
+      "form": "delimited",
+      "delimiter": "****",
+      "blocks": [
+        {
+          "name": "paragraph",
+          "type": "block",
+          "inlines": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "sidebar with block attributes",
+              "location": [ { "line": 3, "col": 1 }, { "line": 3, "col": 29 } ]
+            }
+          ],
+          "location": [ { "line": 3, "col": 1 }, { "line": 3, "col": 29 } ]
+        }
+      ],
+      "location": [ { "line": 2, "col": 1 }, { "line": 4, "col": 4 } ],
+      "metadata": {
+        "attributes": { "foo": "bar", "yin": "yang" },
+        "options": [],
+        "location": [ { "line": 1, "col": 1 }, { "line": 1, "col": 18 } ]
+      }
+    }
+  ],
+  "location": [ { "line": 1, "col": 1 }, { "line": 4, "col": 4 } ]
+}

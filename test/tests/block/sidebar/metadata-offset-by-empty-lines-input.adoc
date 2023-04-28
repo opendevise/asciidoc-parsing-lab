@@ -1,0 +1,8 @@
+
+[foo=bar]
+
+[yin=yang]
+
+****
+sidebar with block attributes
+****
