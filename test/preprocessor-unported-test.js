@@ -6,8 +6,8 @@ const { parse } = require('#preprocessor-parser')
 
 describe('preprocessor', () => {
   const offset = (spec) => {
-    const [line, column, delta] = spec.split(':').map(Number)
-    return { line, column, delta }
+    const [line, col, delta] = spec.split(':').map(Number)
+    return { line, col, delta }
   }
 
   it('should process empty input', () => {

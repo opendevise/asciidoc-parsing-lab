@@ -2,18 +2,18 @@
 const { computeLocation, transformToModel, unshiftOntoCopy } = require('#inline-helpers')
 }}
 {
-// perhaps change this to start to capture line and column?
+// perhaps change this to start to capture line and col?
 options.startLine ??= 1
-options.startColumn ??= 1
+options.startCol ??= 1
 if (!/[`_*#:<[\\]/.test(input)) {
   // TODO extract the function to transform text and call it directly
-  return transformToModel(input ? [input] : [], computeLocation.bind(null, peg$computeLocation, options.startLine - 1, options.startColumn - 1))
+  return transformToModel(input ? [input] : [], computeLocation.bind(null, peg$computeLocation, options.startLine - 1, options.startCol - 1))
 }
 }
 // TODO instead of &any check here, could patch parser to node call parsenode() if peg$currPos === input.length
 root = nodes:(&any @node)*
   {
-    return transformToModel(nodes, computeLocation.bind(null, peg$computeLocation, options.startLine - 1, options.startColumn - 1))
+    return transformToModel(nodes, computeLocation.bind(null, peg$computeLocation, options.startLine - 1, options.startCol - 1))
   }
 
 //node = span / macro / other
