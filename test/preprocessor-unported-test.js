@@ -272,6 +272,40 @@ describe('preprocessor', () => {
     expect(parse(input)).to.eql(expected)
   })
 
+  it('should process attribute entry when name of attribute contains hyphen', () => {
+    const input = heredoc`
+    :app-name: ACME
+
+    ifdef::app-name[app-name is set]
+    `
+    const expected = {
+      input: heredoc`
+      :app-name: ACME
+
+      app-name is set
+      `,
+      offsets: { 1: offset('1:1:0'), 2: offset('2:1:0'), 3: offset('3:17:0') },
+    }
+    expect(parse(input)).to.eql(expected)
+  })
+
+  it('should process attribute entry when name of attribute contains hyphen', () => {
+    const input = heredoc`
+    :project_name: asciidoc-lang
+
+    ifdef::project_name[asciidoc-lang is set]
+    `
+    const expected = {
+      input: heredoc`
+      :project_name: asciidoc-lang
+
+      asciidoc-lang is set
+      `,
+      offsets: { 1: offset('1:1:0'), 2: offset('2:1:0'), 3: offset('3:21:0') },
+    }
+    expect(parse(input)).to.eql(expected)
+  })
+
   it('should not process attribute entry in paragraph', () => {
     const input = heredoc`
     paragraph
