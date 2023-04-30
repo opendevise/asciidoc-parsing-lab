@@ -33,8 +33,8 @@ attribute_entry = ':' name:attribute_name ':' value:attribute_value eol
     return [name, value]
   }
 
-// TODO be more strict/specific about attribute name
-attribute_name = $[a-z]+
+// TODO permit non-ASCII letters in attribute name
+attribute_name = !'-' @$[a-zA-Z0-9_-]+
 
 attribute_value = (' ' @$[^\n]+ / '')
 

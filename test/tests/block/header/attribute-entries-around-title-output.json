@@ -1,10 +1,7 @@
 {
   "name": "document",
   "type": "block",
-  "attributes": {
-    "icons": "font",
-    "toc": ""
-  },
+  "attributes": { "attribute-missing": "warn", "toc": "" },
   "header": {
     "title": {
       "inlines": [

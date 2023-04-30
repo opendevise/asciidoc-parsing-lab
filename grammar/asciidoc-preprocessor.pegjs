@@ -197,7 +197,8 @@ pp_conditional = operator:('ifdef' / 'ifndef') '::' attribute_name:attribute_nam
     return true
   }
 
-attribute_name = $[a-z]+
+// TODO permit non-ASCII letters in attribute name
+attribute_name = !'-' @$[a-zA-Z0-9_-]+
 
 grab_offset = ''
   {
