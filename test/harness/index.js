@@ -67,7 +67,14 @@ async function scanTests (dir = process.cwd(), base = process.cwd()) {
         await Promise.all([
           fsp.readFile(inputPath, 'utf8'),
           fsp.readFile(outputPath).then(
-            (data) => [JSON.parse(data), JSON.parse(data, (key, val) => key === 'location' ? undefined : val)],
+            (data) => {
+              try {
+                return [JSON.parse(data), JSON.parse(data, (key, val) => key === 'location' ? undefined : val)]
+              } catch (e) {
+                e.message += ' in ' + ospath.relative(base, outputPath)
+                throw e
+              }
+            },
             () => []
           ),
           fsp.readFile(configPath).then(yaml.load, () => Object.create(Object.prototype)),
