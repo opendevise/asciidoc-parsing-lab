@@ -161,7 +161,7 @@ list = &(marker:list_start &{ return isNewList(context, marker) }) items:(lf* @l
 
 list_start = @list_marker ![ \n]
 
-list_marker = @($[*]+ / $[.]+ / '-' / $([0-9]+ '.')) ' '
+list_marker = @($'*'+ / $'.'+ / '-' / $([0-9]+ '.')) ' '
 
 list_item_principal = first:line wrapped:(!(block_attribute_line / list_continuation_line / list_start / any_compound_block_delimiter_line) @line)*
   {
