@@ -2,7 +2,7 @@
 'use strict'
 
 import { expect, makeTests, resolveDirname, scanTests, stringifyASG } from '#test-harness'
-import parse from 'asciidoc-parsing-lab'
+//import parse from 'asciidoc-parsing-lab'
 import { parse as parseInline } from '#inline-parser'
 import ospath from 'node:path'
 
