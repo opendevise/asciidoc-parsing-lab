@@ -12,10 +12,7 @@ describe('preprocessor', () => {
 
   it('should process empty input', () => {
     const input = ''
-    const expected = {
-      input,
-      locations: {},
-    }
+    const expected = { input, locations: {} }
     expect(parse(input)).to.eql(expected)
   })
 
