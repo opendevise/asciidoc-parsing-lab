@@ -303,6 +303,43 @@ describe('preprocessor', () => {
     expect(parse(input)).to.eql(expected)
   })
 
+  it('should consult attribute in attributes passed from API', () => {
+    const attributes = { foo: 'bar' }
+    const input = heredoc`
+    ifdef::foo[foo is set]
+    fin
+    `
+    const expected = {
+      input: heredoc`
+      foo is set
+      fin
+      `,
+      locations: { 1: location('1:12:0'), 2: location('2:1:0') },
+    }
+    expect(parse(input, { attributes })).to.eql(expected)
+  })
+
+  it('should not modify attributes passed from API when processing attribute entry', () => {
+    const attributes = { foo: 'bar' }
+    const input = heredoc`
+    :yin: yang
+
+    ifdef::foo[foo is set]
+    ifdef::yin[yin is set]
+    `
+    const expected = {
+      input: heredoc`
+      :yin: yang
+
+      foo is set
+      yin is set
+      `,
+      locations: { 1: location('1:1:0'), 2: location('2:1:0'), 3: location('3:12:0'), 4: location('4:12:0') },
+    }
+    expect(parse(input, { attributes })).to.eql(expected)
+    expect(Object.keys(attributes)).to.eql(['foo'])
+  })
+
   it('should not process attribute entry in paragraph', () => {
     const input = heredoc`
     paragraph

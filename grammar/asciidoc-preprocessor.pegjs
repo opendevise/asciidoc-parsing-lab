@@ -3,7 +3,7 @@ const fs = require('node:fs')
 const { splitLines } = require('#util')
 }}
 {
-options.attributes = {}
+const documentAttributes = Object.assign({}, options.attributes)
 // locations maps line numbers to location objects
 const locations = { lineOffset: 0 }
 }
@@ -62,7 +62,7 @@ attached_block = pp '+\n' @(example / paragraph)
 
 attribute_entry = ':' name:attribute_name ':' value:(' ' @$[^\n]+ / '') eol
   {
-    options.attributes[name] = value
+    documentAttributes[name] = value
   }
 
 line = value:$([^\n]+ eol)
@@ -124,7 +124,7 @@ pp_conditional_short = operator:('ifdef' / 'ifndef') '::' attribute_name:attribu
       if (n in locations) break
       locations[n] = { line: n + lineOffset, col: 1, lineOffset }
     }
-    const drop = operator === 'ifdef' ? !(attribute_name in options.attributes) : (attribute_name in options.attributes)
+    const drop = operator === 'ifdef' ? !(attribute_name in documentAttributes) : (attribute_name in documentAttributes)
     if (drop) {
       if (eol) {
         let n = endLine
@@ -159,7 +159,7 @@ pp_conditional = operator:('ifdef' / 'ifndef') '::' attribute_name:attribute_nam
         locations[n] = { line: n + lineOffset, col: 1, lineOffset }
       }
     }
-    const drop = operator === 'ifdef' ? !(attribute_name in options.attributes) : (attribute_name in options.attributes)
+    const drop = operator === 'ifdef' ? !(attribute_name in documentAttributes) : (attribute_name in documentAttributes)
     if (drop) {
       const numDropped = contents.length + 2
       let l = endLine
