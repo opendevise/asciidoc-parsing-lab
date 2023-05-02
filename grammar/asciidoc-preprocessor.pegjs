@@ -16,8 +16,10 @@ document = body lf*
       if (n in locations) break
       locations[n] = { line: n + lineOffset, col: 1, lineOffset }
     }
-    let n = lastLine + 1
-    while (n in locations) delete locations[n++]
+    let extra = lastLine + 1
+    while (extra in locations) delete locations[extra++]
+    // Q: is it necessary to track lineOffset on entries in the first place?
+    //for (const l in locations) delete locations[l].lineOffset
     delete locations.lineOffset
     return { input, locations }
   }
