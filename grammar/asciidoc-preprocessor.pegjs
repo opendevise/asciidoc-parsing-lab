@@ -103,9 +103,9 @@ pp_include = 'include::' target:$[^\[\n]+ '[]' eol
     const numAdded = contents.length
     let n = endLine
     while (n in locations) locations[n + numAdded] = locations[n++]
-    const parent = locations[startLine].file || '<input>'
+    const file = [...locations[startLine]?.file || [], target]
     for (let l = 0, len = numAdded; l < len; l++) {
-      locations[l + startLine] = { line: l + 1, col: 1, lineOffset: 0, file: target, parent }
+      locations[l + startLine] = { line: l + 1, col: 1, lineOffset: 0, file }
     }
     locations.lineOffset -= (numAdded - 1)
     input = input.slice(0, (peg$currPos = startOffset)) + contents.join('') + input.slice(endOffset)
