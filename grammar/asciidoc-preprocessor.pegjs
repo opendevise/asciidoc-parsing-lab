@@ -3,6 +3,7 @@ const fs = require('node:fs')
 const { splitLines } = require('#util')
 }}
 {
+if (!input) return { input }
 const documentAttributes = Object.assign({}, options.attributes)
 // locations maps line numbers to location objects
 const locations = { lineOffset: 0 }
