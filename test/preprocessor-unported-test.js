@@ -343,7 +343,13 @@ describe('preprocessor', () => {
 
       fin
       `,
-      locations: { 1: location('1:1:0'), 2: location('2:1:0'), 3: location('3:1:0'), 4: location('4:1:0'), 5: location('6:1:1') },
+      locations: {
+        1: location('1:1:0'),
+        2: location('2:1:0'),
+        3: location('3:1:0'),
+        4: location('4:1:0'),
+        5: location('6:1:1'),
+      },
     }
     expect(parse(input)).to.eql(expected)
   })
