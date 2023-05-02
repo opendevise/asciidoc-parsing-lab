@@ -22,35 +22,28 @@ describe('preprocessor', () => {
     bar
     baz
     `
-    const expected = {
-      input,
-      locations: { 1: location('1:1:0'), 2: location('2:1:0'), 3: location('3:1:0') },
-    }
+    const expected = { input }
     expect(parse(input)).to.eql(expected)
   })
 
   it('should preserve trailing newline in input', () => {
-    const input = heredoc`
+    const inputBase = heredoc`
     foo
     bar
     `
-    const expected = {
-      input: input + '\n',
-      locations: { 1: location('1:1:0'), 2: location('2:1:0') },
-    }
-    expect(parse(input + '\n')).to.eql(expected)
+    const input = inputBase + '\n'
+    const expected = { input }
+    expect(parse(input)).to.eql(expected)
   })
 
   it('should preserve trailing newlines in input', () => {
-    const input = heredoc`
+    const inputBase = heredoc`
     foo
     bar
     `
-    const expected = {
-      input: input + '\n\n',
-      locations: { 1: location('1:1:0'), 2: location('2:1:0'), 3: location('3:1:0') },
-    }
-    expect(parse(input + '\n\n')).to.eql(expected)
+    const input = inputBase + '\n\n'
+    const expected = { input }
+    expect(parse(input)).to.eql(expected)
   })
 
   it('should process input with true single-line preprocessor conditional', () => {
@@ -73,10 +66,7 @@ describe('preprocessor', () => {
 
   it('should process input with false single-line preprocessor conditional', () => {
     const input = 'ifdef::foo[foo is set]'
-    const expected = {
-      input: '',
-      locations: {},
-    }
+    const expected = { input: '' }
     expect(parse(input)).to.eql(expected)
   })
 

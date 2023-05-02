@@ -10,7 +10,9 @@ const locations = { lineOffset: 0 }
 }
 document = body lf*
   {
+    if (Object.keys(locations).length === 1) return { input }
     const lineOffset = locations.lineOffset
+    delete locations.lineOffset
     const end = location().end
     let lastLine = !end.offset || input[input.length - 1] === '\n' ? end.line - 1 : end.line
     for (let n = lastLine; n > 0; n--) {
@@ -21,7 +23,6 @@ document = body lf*
     while (extra in locations) delete locations[extra++]
     // Q: is it necessary to track lineOffset on entries in the first place?
     //for (const l in locations) delete locations[l].lineOffset
-    delete locations.lineOffset
     return { input, locations }
   }
 
