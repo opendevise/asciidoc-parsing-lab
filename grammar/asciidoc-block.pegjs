@@ -116,7 +116,7 @@ heading = marker:'='+ ' ' title:line
   {
     const location_ = blockLocation()
     // Q should we store marker instead of or in addition to level?
-    return { name: 'heading', type: 'block', title: { inlines: parseInline(title, { startLine: location_[0].line, startCol: marker.length + 2}) }, level: marker.length - 1, location: location_ }
+    return { name: 'heading', type: 'block', title: { inlines: parseInline(title, { startLine: location_[0].line, startCol: marker.length + 2 }) }, level: marker.length - 1, location: location_ }
   }
 
 listing_delimiter = @$('----' [-]*) eol
