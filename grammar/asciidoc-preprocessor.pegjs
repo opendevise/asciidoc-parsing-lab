@@ -4,22 +4,22 @@ const { splitLines } = require('#util')
 }}
 {
 options.attributes = {}
-options.offsets = Object.assign({}, { delta: 0 })
+// locations maps line numbers to location objects
+const locations = { lineOffset: 0 }
 }
 document = body lf*
   {
-    const offsets = options.offsets
-    const delta = offsets.delta
+    const lineOffset = locations.lineOffset
     const end = location().end
     let lastLine = !end.offset || input[input.length - 1] === '\n' ? end.line - 1 : end.line
     for (let n = lastLine; n > 0; n--) {
-      if (n in offsets) break
-      offsets[n] = { line: n + delta, col: 1, delta }
+      if (n in locations) break
+      locations[n] = { line: n + lineOffset, col: 1, lineOffset }
     }
     let n = lastLine + 1
-    while (n in offsets) delete offsets[n++]
-    delete offsets.delta
-    return { input, offsets }
+    while (n in locations) delete locations[n++]
+    delete locations.lineOffset
+    return { input, locations }
   }
 
 body = block*
@@ -89,12 +89,11 @@ pp_directive = &('if' / 'inc') @(pp_conditional_short / pp_conditional / pp_incl
 pp_include = 'include::' target:$[^\[\n]+ '[]' eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
-    const offsets = options.offsets
-    const delta = offsets.delta
-    if (!offsets[startLine - 1]) {
+    const lineOffset = locations.lineOffset
+    if (!locations[startLine - 1]) {
       for (let n = startLine - 1; n > 0; n--) {
-        if (n in offsets) break
-        offsets[n] = { line: n + delta, col: 1, delta }
+        if (n in locations) break
+        locations[n] = { line: n + lineOffset, col: 1, lineOffset }
       }
     }
     const contents = splitLines(fs.readFileSync(target, 'utf8'))
@@ -103,12 +102,12 @@ pp_include = 'include::' target:$[^\[\n]+ '[]' eol
     // TODO deal with case when no lines are added
     const numAdded = contents.length
     let n = endLine
-    while (n in offsets) offsets[n + numAdded] = offsets[n++]
-    const parent = offsets[startLine].file || '<input>'
+    while (n in locations) locations[n + numAdded] = locations[n++]
+    const parent = locations[startLine].file || '<input>'
     for (let l = 0, len = numAdded; l < len; l++) {
-      offsets[l + startLine] = { line: l + 1, col: 1, delta: 0, file: target, parent }
+      locations[l + startLine] = { line: l + 1, col: 1, lineOffset: 0, file: target, parent }
     }
-    offsets.delta -= (numAdded - 1)
+    locations.lineOffset -= (numAdded - 1)
     input = input.slice(0, (peg$currPos = startOffset)) + contents.join('') + input.slice(endOffset)
     // NOTE might be able to avoid this if we don't rely on location()
     peg$posDetailsCache = [{ line: 1, col: 1 }]
@@ -118,27 +117,26 @@ pp_include = 'include::' target:$[^\[\n]+ '[]' eol
 pp_conditional_short = operator:('ifdef' / 'ifndef') '::' attribute_name:attribute_name '[' mark:grab_offset contents:$([^\n\]]+ &(']' eol) / ([^\n\]] / ']' !eol)+) ']' eol:eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
-    const offsets = options.offsets
-    const delta = offsets.delta
+    const lineOffset = locations.lineOffset
     for (let n = startLine; n > 0; n--) {
-      if (n in offsets) break
-      offsets[n] = { line: n + delta, col: 1, delta }
+      if (n in locations) break
+      locations[n] = { line: n + lineOffset, col: 1, lineOffset }
     }
     const drop = operator === 'ifdef' ? !(attribute_name in options.attributes) : (attribute_name in options.attributes)
     if (drop) {
       if (eol) {
         let n = endLine
-        if (!offsets[n]) offsets[n] = { line: n + delta, col: 1, delta }
-        while (n in offsets) {
-          offsets[n].delta += 1
-          offsets[n - 1] = offsets[n]
-          delete offsets[n++]
+        if (!locations[n]) locations[n] = { line: n + lineOffset, col: 1, lineOffset }
+        while (n in locations) {
+          locations[n].lineOffset += 1
+          locations[n - 1] = locations[n]
+          delete locations[n++]
         }
       } else {
-        delete offsets[startLine]
+        delete locations[startLine]
       }
     } else {
-      offsets[startLine].col = mark - startOffset + 1
+      locations[startLine].col = mark - startOffset + 1
     }
     input = input.slice(0, (peg$currPos = startOffset)) + (drop ? '' : contents + (eol || '')) + input.slice(endOffset)
     peg$posDetailsCache = [{ line: 1, col: 1 }]
@@ -151,46 +149,45 @@ pp_conditional = operator:('ifdef' / 'ifndef') '::' attribute_name:attribute_nam
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
     const newEndLine = endLine - 2
-    const offsets = options.offsets
-    const delta = offsets.delta
+    const lineOffset = locations.lineOffset
     // Q: better to do this in the document action?
-    if (!offsets[startLine - 1]) {
+    if (!locations[startLine - 1]) {
       for (let n = startLine - 1; n > 0; n--) {
-        if (n in offsets) break
-        offsets[n] = { line: n + delta, col: 1, delta }
+        if (n in locations) break
+        locations[n] = { line: n + lineOffset, col: 1, lineOffset }
       }
     }
     const drop = operator === 'ifdef' ? !(attribute_name in options.attributes) : (attribute_name in options.attributes)
     if (drop) {
       const numDropped = contents.length + 2
       let l = endLine
-      if (!offsets[l]) offsets[l] = { line: l + delta, col: 1, delta }
-      while (l in offsets) offsets[l++].delta += numDropped
-      for (let n = startLine; n < endLine; n++) delete offsets[n]
+      if (!locations[l]) locations[l] = { line: l + lineOffset, col: 1, lineOffset }
+      while (l in locations) locations[l++].lineOffset += numDropped
+      for (let n = startLine; n < endLine; n++) delete locations[n]
       let n = endLine
-      while (n in offsets) {
-        offsets[n - numDropped] = offsets[n]
-        delete offsets[n++]
+      while (n in locations) {
+        locations[n - numDropped] = locations[n]
+        delete locations[n++]
       }
-      offsets.delta = offsets[n - 1 - numDropped].delta
+      locations.lineOffset = locations[n - 1 - numDropped].lineOffset
     } else {
-      if (!offsets[startLine]) {
-        for (let l = startLine; l < endLine; l++) offsets[l] = { line: l + delta, col: 1, delta }
+      if (!locations[startLine]) {
+        for (let l = startLine; l < endLine; l++) locations[l] = { line: l + lineOffset, col: 1, lineOffset }
       }
       let l = startLine
-      const currentInclude = offsets[startLine].file
+      const currentInclude = locations[startLine].file
       let closingLine = eol ? endLine - 1 : endLine
-      let newDelta = delta + 2
-      while (l in offsets) {
-        // FIXME only move delta if in same file
-        if (l > startLine && offsets[l].file === currentInclude) {
-          l > closingLine ? (newDelta = offsets[l].delta += 2) : (offsets[l].delta += 1)
+      let newLineOffset = lineOffset + 2
+      while (l in locations) {
+        // FIXME only move lineOffset if in same file
+        if (l > startLine && locations[l].file === currentInclude) {
+          l > closingLine ? (newLineOffset = locations[l].lineOffset += 2) : (locations[l].lineOffset += 1)
         }
-        if (l !== startLine && l !== closingLine) offsets[l - (l > closingLine ? 2 : 1)] = offsets[l]
-        delete offsets[l++]
+        if (l !== startLine && l !== closingLine) locations[l - (l > closingLine ? 2 : 1)] = locations[l]
+        delete locations[l++]
       }
-      // NOTE if included lines are reduced then root delta increases
-      currentInclude ? (offsets.delta += 2) : (offsets.delta = newDelta)
+      // NOTE if included lines are reduced then root lineOffset increases
+      currentInclude ? (locations.lineOffset += 2) : (locations.lineOffset = newLineOffset)
     }
     input = input.slice(0, (peg$currPos = startOffset)) + (drop ? '' : contents.join('')) + input.slice(endOffset)
     peg$posDetailsCache = [{ line: 1, col: 1 }]
@@ -209,4 +206,4 @@ lf = '\n'
 
 eof = !.
 
-eol = '\n' / eof
+eol = '\n' / !.
