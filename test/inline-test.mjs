@@ -9,9 +9,9 @@ import ospath from 'node:path'
 const tests = await scanTests(ospath.join(resolveDirname(import.meta), 'tests/inline'))
 
 describe('inline', () => {
-  makeTests(tests, function ({ input, inputPath, expected, expectedWithoutLocations }) {
+  makeTests(tests, function ({ input, options, inputPath, expected, expectedWithoutLocations }) {
     //const actual = parse(input, { parseInlines: true }).blocks[0].inlines
-    const actual = parseInline(input)
+    const actual = parseInline(input, options)
     if (expected == null) {
       // Q: can we write data to expected file automatically?
       // TODO only output expected if environment variable is set

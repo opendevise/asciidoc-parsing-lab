@@ -8,8 +8,8 @@ import ospath from 'node:path'
 const tests = await scanTests(ospath.join(resolveDirname(import.meta), 'tests/block'))
 
 describe('block', () => {
-  makeTests(tests, function ({ input, inputPath, expected, expectedWithoutLocations }) {
-    const actual = parse(input)
+  makeTests(tests, function ({ input, options, inputPath, expected, expectedWithoutLocations }) {
+    const actual = parse(input, options)
     if (expected == null) {
       // Q: can we write data to expect file automatically?
       // TODO only output expected if environment variable is set

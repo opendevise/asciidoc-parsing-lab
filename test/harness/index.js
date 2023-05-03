@@ -92,6 +92,7 @@ async function scanTests (dir = process.cwd(), base = process.cwd()) {
             inputPath: ospath.relative(base, inputPath),
             outputPath: ospath.relative(base, outputPath),
             input,
+            options: config.options,
             expected,
             expectedWithoutLocations,
             status: config.only ? 'only' : config.skip ? 'skip' : undefined,
