@@ -6,7 +6,7 @@ const { attributes: documentAttributes = {} } = options
 const context = createContext()
 const parseInline = (options.inlineParser ?? require('#block-default-inline-parser')).parse
 
-function blockLocation (range_) {
+function getLocation (range_) {
   let eof
   const { start, end } = range_ === true ? (eof = true) && range() : range_ || range()
   const { line: startLine, column: startCol } = peg$computePosDetails(start)
@@ -23,7 +23,7 @@ function blockLocation (range_) {
 }
 document = header:header? body:body lf*
   {
-    const location_ = blockLocation(true)
+    const location_ = getLocation(true)
     if (header == null) return { name: 'document', type: 'block', blocks: body, location: location_ }
     const attributes = header.attributes
     delete header.attributes
@@ -68,7 +68,7 @@ block = lf* metadataStart:grab_offset metadata:(attrlists:(@block_attribute_line
     // TODO move this logic to a helper function or grammar rule
     if (!attrlists.length) return undefined
     while (input[metadataEnd - 1] === '\n' && input[metadataEnd - 2] === '\n') metadataEnd--
-    const location_ = blockLocation({ start: metadataStart, end: metadataEnd })
+    const location_ = getLocation({ start: metadataStart, end: metadataEnd })
     const attributes = {}
     const options = []
     for (const attrlist of attrlists) {
@@ -105,18 +105,18 @@ section_or_discrete_heading = heading:heading blocks:(&{ return options.currentA
   {
     if (!blocks) return heading
     context.sectionStack.pop()
-    return Object.assign(heading, { name: 'section', blocks, location: blockLocation() })
+    return Object.assign(heading, { name: 'section', blocks, location: getLocation() })
   }
 
 paragraph = !heading lines:(!(block_attribute_line / any_compound_block_delimiter_line) @line)+
   {
-    const location_ = blockLocation()
+    const location_ = getLocation()
     return { name: 'paragraph', type: 'block', inlines: parseInline(lines.join('\n'), { startLine: location_[0].line }), location: location_ }
   }
 
 heading = marker:'='+ ' ' title:line
   {
-    const location_ = blockLocation()
+    const location_ = getLocation()
     // Q should we store marker instead of or in addition to level?
     return { name: 'heading', type: 'block', title: { inlines: parseInline(title, { startLine: location_[0].line, startCol: marker.length + 2 }) }, level: marker.length - 1, location: location_ }
   }
@@ -131,7 +131,7 @@ listing = (openingDelim:listing_delimiter { enterBlock(context, openingDelim) })
       console.log('unclosed listing block')
     }
     // Q should start location include all block attribute lines? or should that information be on the attributedefs?
-    const location_ = blockLocation()
+    const location_ = getLocation()
     // FIXME could this be captured from rule instead of computed?
     let inlines = []
     if (lines.length) {
@@ -147,7 +147,7 @@ example = (openingDelim:example_delimiter_line &{ return enterBlock(context, ope
   {
     const delimiter = exitBlock(context)
     if (closingDelim === undefined) console.log('unclosed example block')
-    return { name: 'example', type: 'block', form: 'delimited', delimiter, blocks, location: blockLocation() }
+    return { name: 'example', type: 'block', form: 'delimited', delimiter, blocks, location: getLocation() }
   }
 
 sidebar_delimiter_line = @$('****' [*]*) eol
@@ -156,7 +156,7 @@ sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, ope
   {
     const delimiter = exitBlock(context)
     if (closingDelim === undefined) console.log('unclosed sidebar block')
-    return { name: 'sidebar', type: 'block', form: 'delimited', delimiter, blocks, location: blockLocation() }
+    return { name: 'sidebar', type: 'block', form: 'delimited', delimiter, blocks, location: getLocation() }
   }
 
 // NOTE: use items:(@list_item @(lf* @list_item)*) to avoid having to check lf and list_marker on first item
@@ -174,7 +174,7 @@ list = &(marker:list_start &{ return isNewList(context, marker) }) items:(lf* @l
       }
     }
     const variant = marker[0] === '*' ? 'unordered' : 'ordered'
-    return { name: 'list', type: 'block', variant, marker, items: items, location: blockLocation() }
+    return { name: 'list', type: 'block', variant, marker, items: items, location: getLocation() }
   }
 
 list_start = @list_marker ![ \n]
@@ -192,13 +192,13 @@ list_continuation_line = '+' eol
 // TODO process block attribute lines above attached blocks
 list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line @(listing / example) / lf* @list)*
   {
-    const location_ = blockLocation()
+    const location_ = getLocation()
     return { name: 'listItem', type: 'block', marker, principal: { inlines: parseInline(principal, { startLine: location_[0].line, startCol: marker.length + 2 }) }, blocks, location: location_ }
   }
 
 image = 'image::' !space target:$[^\n\[]+ '[' attrlist:attrlist ']' eol
   {
-    return { name: 'image', type: 'block', form: 'macro', target, attributes: attrlist ? attrlist.split(',') : [], location: blockLocation() }
+    return { name: 'image', type: 'block', form: 'macro', target, attributes: attrlist ? attrlist.split(',') : [], location: getLocation() }
   }
 
 any_compound_block_delimiter_line = example_delimiter_line / sidebar_delimiter_line
