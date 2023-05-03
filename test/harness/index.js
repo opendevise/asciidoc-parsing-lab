@@ -5,7 +5,6 @@ const { expect } = require('chai')
 const fsp = require('node:fs/promises')
 const ospath = require('node:path')
 const { fileURLToPath } = require('node:url')
-const yaml = require('js-yaml')
 
 function heredoc (strings, ...values) {
   const first = strings[0]
@@ -62,7 +61,7 @@ async function scanTests (dir = process.cwd(), base = process.cwd()) {
       const basename = name.slice(0, name.length - 11)
       const inputPath = ospath.join(dir, name)
       const outputPath = ospath.join(dir, basename + '-output.json')
-      const configPath = ospath.join(dir, basename + '-config.yml')
+      const configPath = ospath.join(dir, basename + '-config.json')
       entries.push(
         await Promise.all([
           fsp.readFile(inputPath, 'utf8'),
@@ -77,11 +76,11 @@ async function scanTests (dir = process.cwd(), base = process.cwd()) {
             },
             () => []
           ),
-          fsp.readFile(configPath).then(yaml.load, () => Object.create(Object.prototype)),
+          fsp.readFile(configPath).then(JSON.parse, () => Object.create(Object.prototype)),
         ]).then(([input, [expected, expectedWithoutLocations], config]) => {
-          if (config.trim_trailing_whitespace) {
+          if (config.trimTrailingWhitespace) {
             input = input.trimEnd()
-          } else if (config.ensure_trailing_newline) {
+          } else if (config.ensureTrailingNewline) {
             if (input[input.length - 1] !== '\n') input += '\n'
           } else if (input[input.length - 1] === '\n') {
             input = input.slice(0, input.length - 1)

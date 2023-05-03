@@ -62,7 +62,7 @@ These tests are located in the _test/tests_ folder.
 Each test consists of at least an input file (ending in _-input.adoc_) and an output file (ending in _-output.json_).
 The input file (i.e., the test file) is an AsciiDoc file.
 The output file is the expected ASG that should be produced from it by a compliance AsciiDoc processor.
-Some tests also have a configuration file that ends in _-config.yml_).
+Some tests also have a configuration file that ends in _-config.json_).
 
 These data-driven tests are a blueprint of the tests that will be included in the AsciiDoc TCK.
 Once the tests are contributed to the AsciiDoc TCK, this test suite will be updated to use the AsciiDoc TCK directly.

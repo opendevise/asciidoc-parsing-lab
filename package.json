@@ -34,7 +34,6 @@
     "chai": "latest",
     "eslint": "latest",
     "eslint-config-standard": "latest",
-    "js-yaml": "latest",
     "mocha": "latest"
   },
   "files": [
