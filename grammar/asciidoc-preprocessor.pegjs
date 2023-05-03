@@ -6,8 +6,7 @@ const { splitLines } = require('#util')
 {
 if (!input) return { input }
 const documentAttributes = Object.assign({}, options.attributes)
-// locations maps line numbers to location objects
-const locations = { lineOffset: 0 }
+const locations = { lineOffset: 0 } // maps line numbers to location objects
 }
 document = body lf*
   {
