@@ -10,7 +10,7 @@ const tests = await scanTests(ospath.join(resolveDirname(import.meta), 'tests/in
 
 describe('inline', () => {
   makeTests(tests, function ({ input, options, inputPath, expected, expectedWithoutLocations }) {
-    //const actual = parse(input, { parseInlines: true }).blocks[0].inlines
+    //const actual = parse(input, Object.assign({ parseInlines: true }, options)).blocks[0].inlines
     const actual = parseInline(input, options)
     if (expected == null) {
       // Q: can we write data to expected file automatically?
