@@ -61,7 +61,7 @@ header = attribute_entries_above:attribute_entry* doctitle:doctitle attribute_en
     for (const attribute_entries of [attribute_entries_above, attribute_entries_below]) {
       if (!attribute_entries.length) continue
       for (const [name, val] of attribute_entries) {
-        if (!(name in documentAttributes)) attributes[name] = val
+        if (!(name in documentAttributes)) documentAttributes[name] = attributes[name] = val
       }
     }
     const titleStartLine = location().start.line + attribute_entries_above.length
