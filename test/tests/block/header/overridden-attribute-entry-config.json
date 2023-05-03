@@ -1,0 +1,7 @@
+{
+  "options": {
+    "attributes": {
+      "attribute-missing": "warn"
+    }
+  }
+}

@@ -2,6 +2,7 @@
 const { createContext, enterBlock, exitBlock, isBlockEnd, isCurrentList, isNestedSection, isNewList, toInlines } = require('#block-helpers')
 }}
 {
+const { attributes: documentAttributes = {} } = options
 const context = createContext()
 const parseInline = (options.inlineParser ?? require('#block-default-inline-parser')).parse
 
@@ -41,15 +42,16 @@ attribute_value = (' ' @$[^\n]+ / '')
 
 block_attribute_line = '[' @attrlist ']' eol
 
-// TODO clean up handling of attribute entries above/below
 // TODO allow doctitle to be optional
 header = attribute_entries_above:attribute_entry* doctitle:doctitle attribute_entries_below:attribute_entry* &eol
   {
-    const attributes = attribute_entries_above.length
-      ? attribute_entries_above.reduce((accum, [name, val]) => Object.assign(accum, { [name]: val }), {})
-      : {}
-    attribute_entries_below.length &&
-      attribute_entries_below.reduce((accum, [name, val]) => Object.assign(accum, { [name]: val }), attributes)
+    const attributes = {}
+    for (const attribute_entries of [attribute_entries_above, attribute_entries_below]) {
+      if (!attribute_entries.length) continue
+      for (const [name, val] of attribute_entries) {
+        if (!(name in documentAttributes)) attributes[name] = val
+      }
+    }
     const titleStartLine = location().start.line + attribute_entries_above.length
     return { title: { inlines: parseInline(doctitle, { startLine: titleStartLine, startCol: 3 }) }, attributes }
   }
