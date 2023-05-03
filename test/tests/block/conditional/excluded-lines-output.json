@@ -1,0 +1,20 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "unconditional line",
+          "location": [ { "line": 5, "col": 1 }, { "line": 5, "col": 18 } ]
+        }
+      ],
+      "location": [ { "line": 5, "col": 1 }, { "line": 5, "col": 18 } ]
+    }
+  ],
+  "location": [ { "line": 5, "col": 1 }, { "line": 5, "col": 18 } ]
+}

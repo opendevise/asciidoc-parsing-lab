@@ -1,0 +1,46 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "before",
+          "location": [ { "line": 1, "col": 1 }, { "line": 1, "col": 6 } ]
+        }
+      ],
+      "location": [ { "line": 1, "col": 1 }, { "line": 1, "col": 6 } ]
+    },
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "paragraph from include file",
+          "location": [ { "line": 1, "col": 1 }, { "line": 1, "col": 27 } ]
+        }
+      ],
+      "location": [ { "line": 1, "col": 1, "file": [ "paragraph.adoc" ] }, { "line": 1, "col": 27, "file": [ "paragraph.adoc" ] } ]
+    },
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "after",
+          "location": [ { "line": 5, "col": 1 }, { "line": 5, "col": 5 } ]
+        }
+      ],
+      "location": [ { "line": 5, "col": 1 }, { "line": 5, "col": 5 } ]
+    }
+  ],
+  "location": [ { "line": 1, "col": 1 }, { "line": 5, "col": 5 } ]
+}

@@ -1,5 +1,6 @@
 {{
 const fs = require('node:fs')
+const ospath = require('node:path')
 const { splitLines } = require('#util')
 }}
 {
@@ -100,7 +101,8 @@ pp_include = 'include::' target:$[^\[\n]+ '[]' eol
         locations[n] = { line: n + lineOffset, col: 1, lineOffset }
       }
     }
-    const contents = splitLines(fs.readFileSync(target, 'utf8'))
+    // FIXME include file should be resolved relative to nested include, when applicable
+    const contents = splitLines(fs.readFileSync(ospath.join(documentAttributes.docdir || '', target), 'utf8'))
     const contentsLastLine = contents.pop()
     contents.push(contentsLastLine[contentsLastLine.length - 1] === '\n' ? contentsLastLine : contentsLastLine + '\n')
     // TODO deal with case when no lines are added

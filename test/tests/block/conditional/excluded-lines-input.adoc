@@ -1,0 +1,5 @@
+ifdef::not-set[]
+conditional
+lines
+endif::[]
+unconditional line
