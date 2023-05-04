@@ -18,16 +18,14 @@
               "name": "listItem",
               "type": "block",
               "marker": "*",
-              "principal": {
-                "inlines": [
+              "principal": [
                   {
                     "name": "text",
                     "type": "string",
                     "value": "phone",
                     "location": [{ "line": 2, "col": 3 }, { "line": 2, "col": 7 }]
                   }
-                ]
-              },
+              ],
               "blocks": [],
               "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 7 }]
             },
@@ -35,16 +33,14 @@
               "name": "listItem",
               "type": "block",
               "marker": "*",
-              "principal": {
-                "inlines": [
+              "principal": [
                   {
                     "name": "text",
                     "type": "string",
                     "value": "wallet",
                     "location": [{ "line": 3, "col": 3 }, { "line": 3, "col": 8 }]
                   }
-                ]
-              },
+              ],
               "blocks": [],
               "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 8 }]
             },
@@ -52,16 +48,14 @@
               "name": "listItem",
               "type": "block",
               "marker": "*",
-              "principal": {
-                "inlines": [
+              "principal": [
                   {
                     "name": "text",
                     "type": "string",
                     "value": "keys",
                     "location": [{ "line": 4, "col": 3 }, { "line": 4, "col": 6 }]
                   }
-                ]
-              },
+              ],
               "blocks": [],
               "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 6 }]
             }

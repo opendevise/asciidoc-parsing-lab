@@ -79,7 +79,7 @@ header = attribute_entries_above:attribute_entry* titleOffset:grab_offset title:
     }
     const titleLocation = getLocation({ start: titleOffset, end: titleOffset + title.length })
     const titleInlines = parseInline(title, { locations: createLocationsForInlines(titleLocation, 3) })
-    return { title: { inlines: titleInlines }, attributes, location: toSourceLocation(getLocation()) }
+    return { title: titleInlines, attributes, location: toSourceLocation(getLocation()) }
   }
 
 // TODO be more strict about doctitle chars; namely require a non-space
@@ -145,8 +145,8 @@ heading = marker:'='+ ' ' title:line
   {
     const location_ = getLocation()
     const inlines = parseInline(title, { locations: createLocationsForInlines(location_, marker.length + 2) })
-    // Q should we store marker instead of or in addition to level?
-    return { name: 'heading', type: 'block', title: { inlines }, level: marker.length - 1, location: toSourceLocation(location_) }
+    // Q: store marker instead of or in addition to level?
+    return { name: 'heading', type: 'block', title: inlines, level: marker.length - 1, location: toSourceLocation(location_) }
   }
 
 listing_delimiter = @$('----' [-]*) eol
@@ -221,8 +221,8 @@ list_continuation_line = '+' eol
 list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line @(listing / example) / lf* @list)*
   {
     const location_ = getLocation()
-    const inlines = parseInline(principal, { locations: createLocationsForInlines(location_, marker.length + 2) })
-    return { name: 'listItem', type: 'block', marker, principal: { inlines }, blocks, location: toSourceLocation(location_) }
+    const principalInlines = parseInline(principal, { locations: createLocationsForInlines(location_, marker.length + 2) })
+    return { name: 'listItem', type: 'block', marker, principal: principalInlines, blocks, location: toSourceLocation(location_) }
   }
 
 image = 'image::' !space target:$[^\n\[]+ '[' attrlist:attrlist ']' eol

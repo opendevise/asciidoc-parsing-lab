@@ -5,16 +5,14 @@
     "reproducible": ""
   },
   "header": {
-    "title": {
-      "inlines": [
-        {
-          "name": "text",
-          "type": "string",
-          "value": "Document Title",
-          "location": [ { "line": 2, "col": 3, "file": [ "header.adoc" ] }, { "line": 2, "col": 16, "file": [ "header.adoc" ] } ]
-        }
-      ]
-    },
+    "title": [
+      {
+        "name": "text",
+        "type": "string",
+        "value": "Document Title",
+        "location": [ { "line": 2, "col": 3, "file": [ "header.adoc" ] }, { "line": 2, "col": 16, "file": [ "header.adoc" ] } ]
+      }
+    ],
     "location": [ { "line": 1, "col": 1, "file": [ "header.adoc" ] }, { "line": 2, "col": 16, "file": [ "header.adoc" ] } ]
   },
   "blocks": [
