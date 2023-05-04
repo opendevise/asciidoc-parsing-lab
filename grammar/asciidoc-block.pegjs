@@ -34,7 +34,7 @@ function toSourceLocation (location) {
 }
 
 function createLocationsForInlines ([start, end = start], startCol = 1) {
-  const mapping = {}
+  const mapping = {} // maps line numbers to location objects
   let localLine = 1
   if (locations) {
     for (let line = start.line, lastLine = end.line; line <= lastLine; line++) mapping[localLine++] = locations[line]
