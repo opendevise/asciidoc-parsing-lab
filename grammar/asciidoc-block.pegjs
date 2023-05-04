@@ -155,18 +155,23 @@ listing_delimiter = @$('----' [-]*) eol
 listing = (openingDelim:listing_delimiter { enterBlock(context, openingDelim) }) lines:(!(delim:listing_delimiter &{ return isBlockEnd(context, delim) }) @line_or_empty_line)* closingDelim:(@listing_delimiter / eof)
   {
     const delimiter = exitBlock(context)
+    let unclosed
     if (!closingDelim || (closingDelim !== delimiter && lines.push(closingDelim))) {
+      unclosed = true
       console.log('unclosed listing block')
     }
     // Q should start location include all block attribute lines? or should that information be on the attributedefs?
-    const location_ = toSourceLocation(getLocation())
-    // FIXME could this be captured from rule instead of computed?
+    const location_ = getLocation()
+    // FIXME could this logic be encapsulated in rule?
     let inlines = []
     if (lines.length) {
-      const contentsLocation = [{ line: location_[0].line + 1, col: 1 }, { line: location_[1].line - 1, col: lines[lines.length - 1].length }]
-      inlines = toInlines('text', lines.join('\n'), contentsLocation)
+      const contentsLocation = [
+        { line: location_[0].line + 1, col: lines[0] ? 1 : 0 },
+        { line: location_[1].line - (unclosed ? 0 : 1), col: lines[lines.length - 1].length },
+      ]
+      inlines = toInlines('text', lines.join('\n'), toSourceLocation(contentsLocation))
     }
-    return { name: 'listing', type: 'block', form: 'delimited', delimiter, inlines, location: location_ }
+    return { name: 'listing', type: 'block', form: 'delimited', delimiter, inlines, location: toSourceLocation(location_) }
   }
 
 example_delimiter_line = @$('====' [=]*) eol
