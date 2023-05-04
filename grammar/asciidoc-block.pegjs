@@ -22,7 +22,7 @@ function getLocation (range_) {
 }
 
 function toSourceLocation (location) {
-  if (locations === undefined) return location
+  if (!locations) return location
   const [start, end] = location
   const originalStart = Object.assign({}, locations[start.line])
   originalStart.col += start.col - 1
@@ -49,7 +49,7 @@ function createLocationsForInlines ([start, end = start], startCol = 1) {
 document = lf* header:header? body:body lf*
   {
     const location_ = toSourceLocation(getLocation(true))
-    if (header == null) return { name: 'document', type: 'block', blocks: body, location: location_ }
+    if (!header) return { name: 'document', type: 'block', blocks: body, location: location_ }
     const attributes = header.attributes
     delete header.attributes
     return { name: 'document', type: 'block', attributes, header, blocks: body, location: location_ }
@@ -155,7 +155,7 @@ listing_delimiter = @$('----' [-]*) eol
 listing = (openingDelim:listing_delimiter { enterBlock(context, openingDelim) }) lines:(!(delim:listing_delimiter &{ return isBlockEnd(context, delim) }) @line)* closingDelim:(@listing_delimiter / eof)
   {
     const delimiter = exitBlock(context)
-    if (closingDelim === undefined || (closingDelim !== delimiter && lines.push(closingDelim))) {
+    if (!closingDelim || (closingDelim !== delimiter && lines.push(closingDelim))) {
       console.log('unclosed listing block')
     }
     // Q should start location include all block attribute lines? or should that information be on the attributedefs?
@@ -174,7 +174,7 @@ example_delimiter_line = @$('====' [=]*) eol
 example = (openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(example / sidebar / list / paragraph))* closingDelim:(lf* @(example_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
-    if (closingDelim === undefined) console.log('unclosed example block')
+    if (!closingDelim) console.log('unclosed example block')
     return { name: 'example', type: 'block', form: 'delimited', delimiter, blocks, location: toSourceLocation(getLocation()) }
   }
 
@@ -183,7 +183,7 @@ sidebar_delimiter_line = @$('****' [*]*) eol
 sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(example / sidebar / list / paragraph))* closingDelim:(lf* @(sidebar_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
-    if (closingDelim === undefined) console.log('unclosed sidebar block')
+    if (!closingDelim) console.log('unclosed sidebar block')
     return { name: 'sidebar', type: 'block', form: 'delimited', delimiter, blocks, location: toSourceLocation(getLocation()) }
   }
 
