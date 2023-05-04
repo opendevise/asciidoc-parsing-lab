@@ -240,7 +240,7 @@ grab_offset = ''
 
 line = @$[^\n]+ eol
 
-line_or_empty_line = line / @'' lf
+line_or_empty_line = line / lf @''
 
 attrlist = $[^\n\]]*
 
