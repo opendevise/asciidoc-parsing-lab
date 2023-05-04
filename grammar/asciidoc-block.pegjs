@@ -155,11 +155,7 @@ listing_delimiter = @$('----' [-]*) eol
 listing = (openingDelim:listing_delimiter { enterBlock(context, openingDelim) }) lines:(!(delim:listing_delimiter &{ return isBlockEnd(context, delim) }) @line_or_empty_line)* closingDelim:(@listing_delimiter / eof)
   {
     const delimiter = exitBlock(context)
-    let unclosed
-    if (!closingDelim || (closingDelim !== delimiter && lines.push(closingDelim))) {
-      unclosed = true
-      console.log('unclosed listing block')
-    }
+    if (!closingDelim) console.log('unclosed listing block')
     // Q should start location include all block attribute lines? or should that information be on the attributedefs?
     const location_ = getLocation()
     // FIXME could this logic be encapsulated in rule?
@@ -167,7 +163,7 @@ listing = (openingDelim:listing_delimiter { enterBlock(context, openingDelim) })
     if (lines.length) {
       const contentsLocation = [
         { line: location_[0].line + 1, col: lines[0] ? 1 : 0 },
-        { line: location_[1].line - (unclosed ? 0 : 1), col: lines[lines.length - 1].length },
+        { line: location_[1].line - (closingDelim ? 1 : 0), col: lines[lines.length - 1].length },
       ]
       inlines = toInlines('text', lines.join('\n'), toSourceLocation(contentsLocation))
     }
