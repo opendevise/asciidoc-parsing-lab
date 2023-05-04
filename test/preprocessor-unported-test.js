@@ -3,11 +3,12 @@
 
 const { expect, heredoc } = require('#test-harness')
 const { parse } = require('#preprocessor-parser')
+const ospath = require('node:path')
 
 describe('preprocessor', () => {
-  const location = (spec) => {
+  const location = (spec, file) => {
     const [line, col, lineOffset] = spec.split(':').map(Number)
-    return { line, col, lineOffset }
+    return file ? { line, col, lineOffset, file } : { line, col, lineOffset }
   }
 
   it('should process empty input', () => {
@@ -408,5 +409,47 @@ describe('preprocessor', () => {
       },
     }
     expect(parse(input)).to.eql(expected)
+  })
+
+  it('should compute offsets for non-empty include correctly', () => {
+    const input = heredoc`
+    before
+    include::partial.adoc[]
+    after
+    `
+    const expected = {
+      input: heredoc`
+      before
+      partial
+      after
+      `,
+      locations: {
+        1: location('1:1:0'),
+        2: location('1:1:0', ['partial.adoc']),
+        3: location('3:1:0'),
+      },
+    }
+    expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
+  })
+
+  it('should compute offsets for non-empty include without trailing newline correctly', () => {
+    const input = heredoc`
+    before
+    include::partial-noeol.adoc[]
+    after
+    `
+    const expected = {
+      input: heredoc`
+      before
+      partial
+      after
+      `,
+      locations: {
+        1: location('1:1:0'),
+        2: location('1:1:0', ['partial-noeol.adoc']),
+        3: location('3:1:0'),
+      },
+    }
+    expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
   })
 })

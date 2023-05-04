@@ -102,10 +102,18 @@ pp_include = 'include::' target:$[^\[\n]+ '[]' eol
     }
     // FIXME include file should be resolved relative to nested include, when applicable
     const contents = splitLines(fs.readFileSync(ospath.join(documentAttributes.docdir || '', target), 'utf8'))
-    const contentsLastLine = contents.pop()
-    contents.push(contentsLastLine[contentsLastLine.length - 1] === '\n' ? contentsLastLine : contentsLastLine + '\n')
-    // TODO deal with case when no lines are added
-    const numAdded = contents.length
+    const contentsLastLineIdx = contents.length - 1
+    let numAdded = 0
+    if (~contentsLastLineIdx) {
+      numAdded = contentsLastLineIdx + 1
+      const contentsLastLine = contents[contentsLastLineIdx]
+      if (contentsLastLine) {
+        contents[contentsLastLineIdx] += '\n'
+        contents.push('')
+      } else {
+        numAdded--
+      }
+    }
     let n = endLine
     while (n in locations) locations[n + numAdded] = locations[n++]
     const file = [...locations[startLine]?.file || [], target]
