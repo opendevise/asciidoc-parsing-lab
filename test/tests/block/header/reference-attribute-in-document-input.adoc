@@ -1,0 +1,4 @@
+= Introduction
+:appname: ACME
+
+Welcome to {appname}!

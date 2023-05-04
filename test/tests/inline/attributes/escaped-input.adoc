@@ -1,0 +1,1 @@
+Use the syntax \{name} to insert the value of an attribute.

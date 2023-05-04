@@ -1,31 +1,53 @@
 {{
 const { computeLocation, transformToModel, unshiftOntoCopy } = require('#inline-helpers')
+const inlinePreprocessor = require('./asciidoc-inline-preprocessor')
 const { splitLines } = require('#util')
 }}
 {
 if (!input) return []
-//const locations = options.locations ?? splitLines(input).reduce((accum, _, lineIdx) => {
-//  const line = lineIdx + 1
-//  accum[line] = { line, col: 1 }
-//  return accum
-//}, {})
+const documentAttributes = options.attributes ?? {}
+const { input: preprocessedInput, sourceMapping } = inlinePreprocessor(input, documentAttributes)
+if (!preprocessedInput) return []
 const locations = options.locations
-if (!/[`_*#:<[\\]/.test(input)) {
-  // TODO extract the function to transform text and call it directly
-  return transformToModel([input], computeLocation.bind(null, peg$computeLocation, locations))
+const offsetToSourceLocation = locations
+  ? splitLines(input).reduce((accum, lineVal, lineIdx) => {
+      const location = locations[lineIdx + 1]
+      const startCol = location.col
+      for (let col = startCol, len = lineVal.length + startCol; col < len; col++) {
+        accum.push(Object.assign({}, location, { col }))
+      }
+      return accum
+    }, [])
+  : splitLines(input).reduce((accum, lineVal, lineIdx) => {
+      const line = lineIdx + 1
+      for (let col = 1, len = lineVal.length; col <= len; col++) accum.push({ line, col })
+      return accum
+    }, [])
+if (!/[`_*#:<[\\]/.test(preprocessedInput)) {
+  if (sourceMapping) {
+    if (~sourceMapping.findIndex((it) => it.pass)) {
+      const sourceLength = preprocessedInput.length
+      input = Object.assign(new String(preprocessedInput.replace(/\x10\0+/g, (_, idx) => sourceMapping[idx].contents)), { sourceLength })
+    } else {
+      input = preprocessedInput
+    }
+  }
+  // TODO extract the function to transform a single text node and call it directly
+  return transformToModel([input], computeLocation.bind(null, sourceMapping, offsetToSourceLocation))
 }
+input = preprocessedInput
 }
 // TODO instead of &any check here, could patch parser to node call parsenode() if peg$currPos === input.length
 root = nodes:(&any @node)*
   {
-    return transformToModel(nodes, computeLocation.bind(null, peg$computeLocation, locations))
+    return transformToModel(nodes, computeLocation.bind(null, sourceMapping, offsetToSourceLocation))
   }
 
 //node = span / macro / other
 node = other_left / span / macro / other_right
 
 // Q: should we rename span to marked?
-span = code / emphasis / strong / open
+span = code / emphasis / strong / open / saved_passthrough
 
 code = unconstrained_code / constrained_code
 
@@ -68,7 +90,7 @@ unconstrained_open = pre:($wordy+)? main:('##' contents:(code / emphasis / stron
 
 unconstrained_open_other = $(wordy ('`' / '_' / '*' / '#' !'#')) / $(not_mark_or_space+ (space not_mark_or_space+)* (space+ / &'##')) / [^#]
 
-constrained_code = '`' !space contents0:(unconstrained_code / emphasis / strong / open / macro / @'`' !wordy / constrained_code_other) contents1:(unconstrained_code / emphasis / strong / macro / constrained_code_other)* '`' !wordy
+constrained_code = '`' !space contents0:(unconstrained_code / emphasis / strong / open / macro / @'`' !wordy / saved_passthrough / constrained_code_other) contents1:(unconstrained_code / emphasis / strong / macro / saved_passthrough / constrained_code_other)* '`' !wordy
   {
     const contents = contents1.length ? unshiftOntoCopy(contents1, contents0) : [contents0]
     return { name: 'span', type: 'inline', variant: 'code', form: 'constrained', range: Object.assign(range(), { inlinesStart: offset() + 1 }), inlines: contents }
@@ -110,6 +132,13 @@ xref_shorthand = '<<' target:(!space @$[^,>]+) linktext:(',' space? @grab_offset
     return { name: 'ref', type: 'inline', variant: 'xref', target, range: Object.assign(range(), { inlinesStart: mark }), inlines: contents }
   }
 
+saved_passthrough = '\x10' '\0'+
+  {
+    const { start, end } = range()
+    const contents = sourceMapping[start].contents
+    return Object.assign(new String(contents), { pass: true, sourceLength: end - 1 - start })
+  }
+
 xref_shorthand_other = match:$[^>]+
 
 // FIXME attrlist_other prevents search for span following text (e.g., *foo* and *bar*)
@@ -127,7 +156,7 @@ other_left = $(not_mark_or_space+ (space / colon? !any))+
 other_right = $(wordy* constrained_left_mark) / space / escaped / any
 
 // TODO could add : to regexp and use wordy+ colon in second alternative
-escaped = '\\' match:([`_*<] / $(wordy* colon))
+escaped = '\\' match:([`_*<{+] / $(wordy* colon))
   {
     return Object.assign(new String(match), { escaped: true, sourceLength: match.length + 1 })
   }
@@ -135,7 +164,7 @@ escaped = '\\' match:([`_*<] / $(wordy* colon))
 wordy = [\p{Alpha}0-9]
 
 // NOTE we don't have to include \\ here since it's always paired with a mark (if it means something)
-not_mark_or_space = [^ `_*#:<\\]
+not_mark_or_space = [^ `_*#:<\\\x10]
 
 // NOTE regex starts to become faster than alternatives at ~ 3 characters
 constrained_left_mark = [`_*#]

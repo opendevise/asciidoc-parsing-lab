@@ -452,4 +452,53 @@ describe('preprocessor', () => {
     }
     expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
   })
+
+  it('should track location of inline markup in include file', () => {
+    const input = heredoc`
+      before
+      include::partial-with-markup.adoc[]
+      after
+    `
+    const expectedInlines = [
+      {
+        name: 'text',
+        type: 'string',
+        value: 'before\n',
+        location: [{ line: 1, col: 1 }, { line: 1, col: 7 }],
+      },
+      {
+        name: 'span',
+        type: 'inline',
+        variant: 'strong',
+        form: 'constrained',
+        inlines: [
+          {
+            name: 'text',
+            type: 'string',
+            value: 'partial',
+            location: [
+              { line: 1, col: 2, file: ['partial-with-markup.adoc'] },
+              { line: 1, col: 8, file: ['partial-with-markup.adoc'] },
+            ],
+          },
+        ],
+        location: [
+          { line: 1, col: 1, file: ['partial-with-markup.adoc'] },
+          { line: 1, col: 9, file: ['partial-with-markup.adoc'] },
+        ],
+      },
+      {
+        name: 'text',
+        type: 'string',
+        value: '\nafter',
+        location: [
+          { line: 1, col: 10, file: ['partial-with-markup.adoc'] },
+          { line: 3, col: 5 },
+        ],
+      },
+    ]
+    const fullParse = require('asciidoc-parsing-lab')
+    const actual = fullParse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') }, parseInlines: true })
+    expect(actual.blocks[0].inlines).to.eql(expectedInlines)
+  })
 })

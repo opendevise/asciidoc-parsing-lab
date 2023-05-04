@@ -1,0 +1,8 @@
+[
+  {
+    "name": "text",
+    "type": "string",
+    "value": "Use the constant __FILE__ to refer to the source file in __DIR__.",
+    "location": [ { "line": 1, "col": 1 }, { "line": 1, "col": 74 } ]
+  }
+]
