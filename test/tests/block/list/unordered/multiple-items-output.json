@@ -12,16 +12,14 @@
           "name": "listItem",
           "type": "block",
           "marker": "*",
-          "principal": {
-            "inlines": [
+          "principal": [
               {
                 "name": "text",
                 "type": "string",
                 "value": "Linux",
                 "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 7 }]
               }
-            ]
-          },
+          ],
           "blocks": [],
           "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7 }]
         },
@@ -29,16 +27,14 @@
           "name": "listItem",
           "type": "block",
           "marker": "*",
-          "principal": {
-            "inlines": [
+          "principal": [
               {
                 "name": "text",
                 "type": "string",
                 "value": "Windows",
                 "location": [{ "line": 2, "col": 3 }, { "line": 2, "col": 9 }]
               }
-            ]
-          },
+          ],
           "blocks": [],
           "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 9 }]
         },
@@ -46,16 +42,14 @@
           "name": "listItem",
           "type": "block",
           "marker": "*",
-          "principal": {
-            "inlines": [
+          "principal": [
               {
                 "name": "text",
                 "type": "string",
                 "value": "macOS",
                 "location": [{ "line": 3, "col": 3 }, { "line": 3, "col": 7 }]
               }
-            ]
-          },
+          ],
           "blocks": [],
           "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 7 }]
         }

@@ -12,16 +12,14 @@
           "name": "listItem",
           "type": "block",
           "marker": "*",
-          "principal": {
-            "inlines": [
+          "principal": [
               {
                 "name": "text",
                 "type": "string",
                 "value": "water",
                 "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 7 }]
               }
-            ]
-          },
+          ],
           "blocks": [],
           "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7 }]
         }
