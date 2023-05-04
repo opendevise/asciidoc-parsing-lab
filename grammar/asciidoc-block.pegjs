@@ -32,6 +32,18 @@ function toSourceLocation (location) {
   originalEnd.col += end.col - 1
   return [originalStart, originalEnd]
 }
+
+function createLocationsForInlines ([start, end = start], startCol = 1) {
+  const mapping = {}
+  let localLine = 1
+  if (locations) {
+    for (let line = start.line, lastLine = end.line; line <= lastLine; line++) mapping[localLine++] = locations[line]
+  } else {
+    for (let line = start.line, lastLine = end.line; line <= lastLine; line++) mapping[localLine++] = { line, col: 1 }
+  }
+  if (startCol > 1) (mapping[1] = Object.assign({}, mapping[1])).col += startCol - 1
+  return mapping
+}
 }
 document = header:header? body:body lf*
   {
@@ -55,7 +67,7 @@ attribute_value = (' ' @$[^\n]+ / '')
 block_attribute_line = '[' @attrlist ']' eol
 
 // TODO allow doctitle to be optional
-header = attribute_entries_above:attribute_entry* doctitle:doctitle attribute_entries_below:attribute_entry* &eol
+header = attribute_entries_above:attribute_entry* doctitleStart:grab_offset doctitle:doctitle attribute_entries_below:attribute_entry* &eol
   {
     const attributes = {}
     for (const attribute_entries of [attribute_entries_above, attribute_entries_below]) {
@@ -64,8 +76,9 @@ header = attribute_entries_above:attribute_entry* doctitle:doctitle attribute_en
         if (!(name in documentAttributes)) documentAttributes[name] = attributes[name] = val
       }
     }
-    const titleStartLine = location().start.line + attribute_entries_above.length
-    return { title: { inlines: parseInline(doctitle, { startLine: titleStartLine, startCol: 3 }) }, attributes }
+    const location_ = getLocation({ start: doctitleStart, end: doctitleStart + doctitle.length })
+    const inlines = parseInline(doctitle, { locations: createLocationsForInlines(location_, 3) })
+    return { title: { inlines }, attributes }
   }
 
 // TODO be more strict about doctitle chars; namely require a non-space
@@ -121,15 +134,18 @@ section_or_discrete_heading = heading:heading blocks:(&{ return options.currentA
 
 paragraph = !heading lines:(!(block_attribute_line / any_compound_block_delimiter_line) @line)+
   {
-    const location_ = toSourceLocation(getLocation())
-    return { name: 'paragraph', type: 'block', inlines: parseInline(lines.join('\n'), { startLine: location_[0].line }), location: location_ }
+    const location_ = getLocation()
+    const contents = lines.join('\n')
+    const inlines = parseInline(contents, { locations: createLocationsForInlines(location_) })
+    return { name: 'paragraph', type: 'block', inlines, location: toSourceLocation(location_) }
   }
 
 heading = marker:'='+ ' ' title:line
   {
-    const location_ = toSourceLocation(getLocation())
+    const location_ = getLocation()
+    const inlines = parseInline(title, { locations: createLocationsForInlines(location_, marker.length + 2) })
     // Q should we store marker instead of or in addition to level?
-    return { name: 'heading', type: 'block', title: { inlines: parseInline(title, { startLine: location_[0].line, startCol: marker.length + 2 }) }, level: marker.length - 1, location: location_ }
+    return { name: 'heading', type: 'block', title: { inlines }, level: marker.length - 1, location: toSourceLocation(location_) }
   }
 
 listing_delimiter = @$('----' [-]*) eol
@@ -203,8 +219,9 @@ list_continuation_line = '+' eol
 // TODO process block attribute lines above attached blocks
 list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line @(listing / example) / lf* @list)*
   {
-    const location_ = toSourceLocation(getLocation())
-    return { name: 'listItem', type: 'block', marker, principal: { inlines: parseInline(principal, { startLine: location_[0].line, startCol: marker.length + 2 }) }, blocks, location: location_ }
+    const location_ = getLocation()
+    const inlines = parseInline(principal, { locations: createLocationsForInlines(location_, marker.length + 2) })
+    return { name: 'listItem', type: 'block', marker, principal: { inlines }, blocks, location: toSourceLocation(location_) }
   }
 
 image = 'image::' !space target:$[^\n\[]+ '[' attrlist:attrlist ']' eol

@@ -1,20 +1,24 @@
 {{
 const { computeLocation, transformToModel, unshiftOntoCopy } = require('#inline-helpers')
+const { splitLines } = require('#util')
 }}
 {
 if (!input) return []
-// perhaps change this to start to capture line and col?
-options.startLine ??= 1
-options.startCol ??= 1
+//const locations = options.locations ?? splitLines(input).reduce((accum, _, lineIdx) => {
+//  const line = lineIdx + 1
+//  accum[line] = { line, col: 1 }
+//  return accum
+//}, {})
+const locations = options.locations
 if (!/[`_*#:<[\\]/.test(input)) {
   // TODO extract the function to transform text and call it directly
-  return transformToModel([input], computeLocation.bind(null, peg$computeLocation, options.startLine - 1, options.startCol - 1))
+  return transformToModel([input], computeLocation.bind(null, peg$computeLocation, locations))
 }
 }
 // TODO instead of &any check here, could patch parser to node call parsenode() if peg$currPos === input.length
 root = nodes:(&any @node)*
   {
-    return transformToModel(nodes, computeLocation.bind(null, peg$computeLocation, options.startLine - 1, options.startCol - 1))
+    return transformToModel(nodes, computeLocation.bind(null, peg$computeLocation, locations))
   }
 
 //node = span / macro / other
