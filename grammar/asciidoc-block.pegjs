@@ -68,7 +68,7 @@ attribute_value = (' ' @$[^\n]+ / '')
 block_attribute_line = '[' @attrlist ']' eol
 
 // TODO allow doctitle to be optional
-header = attribute_entries_above:attribute_entry* doctitleStart:grab_offset doctitle:doctitle attribute_entries_below:attribute_entry* &eol
+header = attribute_entries_above:attribute_entry* titleOffset:grab_offset title:doctitle attribute_entries_below:attribute_entry* &eol
   {
     const attributes = {}
     for (const attribute_entries of [attribute_entries_above, attribute_entries_below]) {
@@ -77,9 +77,9 @@ header = attribute_entries_above:attribute_entry* doctitleStart:grab_offset doct
         if (!(name in documentAttributes)) documentAttributes[name] = attributes[name] = val
       }
     }
-    const location_ = getLocation({ start: doctitleStart, end: doctitleStart + doctitle.length })
-    const inlines = parseInline(doctitle, { locations: createLocationsForInlines(location_, 3) })
-    return { title: { inlines }, attributes }
+    const titleLocation = getLocation({ start: titleOffset, end: titleOffset + title.length })
+    const titleInlines = parseInline(title, { locations: createLocationsForInlines(titleLocation, 3) })
+    return { title: { inlines: titleInlines }, attributes, location: toSourceLocation(getLocation()) }
   }
 
 // TODO be more strict about doctitle chars; namely require a non-space

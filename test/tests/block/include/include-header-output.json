@@ -14,7 +14,8 @@
           "location": [ { "line": 2, "col": 3, "file": [ "header.adoc" ] }, { "line": 2, "col": 16, "file": [ "header.adoc" ] } ]
         }
       ]
-    }
+    },
+    "location": [ { "line": 1, "col": 1, "file": [ "header.adoc" ] }, { "line": 2, "col": 16, "file": [ "header.adoc" ] } ]
   },
   "blocks": [
     {

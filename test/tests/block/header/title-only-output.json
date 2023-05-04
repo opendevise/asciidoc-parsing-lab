@@ -10,7 +10,8 @@
         "value": "Document Title",
         "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 16 }]
       }]
-    }
+    },
+    "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 16 }]
   },
   "blocks": [],
   "location": [{ "line": 1,"col": 1 }, { "line": 1, "col": 16 }]
