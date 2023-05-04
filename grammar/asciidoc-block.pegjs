@@ -45,7 +45,7 @@ function createLocationsForInlines ([start, end = start], startCol = 1) {
   return mapping
 }
 }
-// TODO if surrounding lf are not part of document, group inner two rules to a new rule
+// TODO if surrounding lf are not part of document, group inner two rules as a new rule
 document = lf* header:header? body:body lf*
   {
     const location_ = toSourceLocation(getLocation(true))
