@@ -152,7 +152,7 @@ heading = marker:'='+ ' ' title:line
 listing_delimiter = @$('----' [-]*) eol
 
 // FIXME pull lines out as separate rule to track location without having to hack location of parent
-listing = (openingDelim:listing_delimiter { enterBlock(context, openingDelim) }) lines:(!(delim:listing_delimiter &{ return isBlockEnd(context, delim) }) @line)* closingDelim:(@listing_delimiter / eof)
+listing = (openingDelim:listing_delimiter { enterBlock(context, openingDelim) }) lines:(!(delim:listing_delimiter &{ return isBlockEnd(context, delim) }) @line_or_empty_line)* closingDelim:(@listing_delimiter / eof)
   {
     const delimiter = exitBlock(context)
     if (!closingDelim || (closingDelim !== delimiter && lines.push(closingDelim))) {
@@ -238,6 +238,8 @@ grab_offset = ''
   }
 
 line = @$[^\n]+ eol
+
+line_or_empty_line = line / @'' lf
 
 attrlist = $[^\n\]]*
 
