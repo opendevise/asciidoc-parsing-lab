@@ -68,12 +68,12 @@ attribute_value = (' ' @$[^\n]+ / '')
 block_attribute_line = '[' @attrlist ']' eol
 
 // TODO allow doctitle to be optional
-header = attribute_entries_above:attribute_entry* titleOffset:grab_offset title:doctitle attribute_entries_below:attribute_entry* &eol
+header = attributeEntriesAbove:attribute_entry* titleOffset:grab_offset title:doctitle attributeEntriesBelow:attribute_entry* &eol
   {
     const attributes = {}
-    for (const attribute_entries of [attribute_entries_above, attribute_entries_below]) {
-      if (!attribute_entries.length) continue
-      for (const [name, val] of attribute_entries) {
+    for (const attributeEntries of [attributeEntriesAbove, attributeEntriesBelow]) {
+      if (!attributeEntries.length) continue
+      for (const [name, val] of attributeEntries) {
         if (!(name in documentAttributes)) documentAttributes[name] = attributes[name] = val
       }
     }

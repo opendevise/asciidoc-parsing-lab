@@ -119,7 +119,7 @@ pp_include = 'include::' target:$[^\[\n]+ '[]' eol
     return true
   }
 
-pp_conditional_short = operator:('ifdef' / 'ifndef') '::' attribute_name:attribute_name '[' mark:grab_offset contents:$([^\n\]]+ &(']' eol) / ([^\n\]] / ']' !eol)+) ']' eol:eol
+pp_conditional_short = operator:('ifdef' / 'ifndef') '::' attributeName:attribute_name '[' mark:grab_offset contents:$([^\n\]]+ &(']' eol) / ([^\n\]] / ']' !eol)+) ']' eol:eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
     const lineOffset = locations.lineOffset
@@ -127,7 +127,7 @@ pp_conditional_short = operator:('ifdef' / 'ifndef') '::' attribute_name:attribu
       if (n in locations) break
       locations[n] = { line: n + lineOffset, col: 1, lineOffset }
     }
-    const drop = operator === 'ifdef' ? !(attribute_name in documentAttributes) : (attribute_name in documentAttributes)
+    const drop = operator === 'ifdef' ? !(attributeName in documentAttributes) : (attributeName in documentAttributes)
     if (drop) {
       if (eol) {
         let n = endLine
@@ -150,7 +150,7 @@ pp_conditional_short = operator:('ifdef' / 'ifndef') '::' attribute_name:attribu
 
 // TODO always succeed even if endif::[] is missing
 // Q could the positive case only process the opening directive and process the closing directive separately? the negative case would still have to consume lines, so this might require the use of a semantic predicate
-pp_conditional = operator:('ifdef' / 'ifndef') '::' attribute_name:attribute_name '[]\n' contents:conditional_lines 'endif::[]' eol:eol
+pp_conditional = operator:('ifdef' / 'ifndef') '::' attributeName:attribute_name '[]\n' contents:conditional_lines 'endif::[]' eol:eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
     const newEndLine = endLine - 2
@@ -162,7 +162,7 @@ pp_conditional = operator:('ifdef' / 'ifndef') '::' attribute_name:attribute_nam
         locations[n] = { line: n + lineOffset, col: 1, lineOffset }
       }
     }
-    const drop = operator === 'ifdef' ? !(attribute_name in documentAttributes) : (attribute_name in documentAttributes)
+    const drop = operator === 'ifdef' ? !(attributeName in documentAttributes) : (attributeName in documentAttributes)
     if (drop) {
       const numDropped = contents.length + 2
       let l = endLine
