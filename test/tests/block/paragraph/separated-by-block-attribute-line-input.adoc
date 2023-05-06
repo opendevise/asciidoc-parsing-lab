@@ -1,0 +1,3 @@
+first paragraph
+[role=more]
+second paragraph

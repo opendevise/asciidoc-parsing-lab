@@ -7,6 +7,11 @@
       "type": "block",
       "form": "delimited",
       "delimiter": "****",
+      "metadata": {
+        "attributes": { "foo": "bar", "yin": "yang" },
+        "options": [],
+        "location": [ { "line": 2, "col": 1 }, { "line": 4, "col": 10 } ]
+      },
       "blocks": [
         {
           "name": "paragraph",
@@ -22,12 +27,7 @@
           "location": [ { "line": 7, "col": 1 }, { "line": 7, "col": 29 } ]
         }
       ],
-      "location": [ { "line": 6, "col": 1 }, { "line": 8, "col": 4 } ],
-      "metadata": {
-        "attributes": { "foo": "bar", "yin": "yang" },
-        "options": [],
-        "location": [ { "line": 2, "col": 1 }, { "line": 4, "col": 10 } ]
-      }
+      "location": [ { "line": 6, "col": 1 }, { "line": 8, "col": 4 } ]
     }
   ],
   "location": [ { "line": 1, "col": 1 }, { "line": 8, "col": 4 } ]

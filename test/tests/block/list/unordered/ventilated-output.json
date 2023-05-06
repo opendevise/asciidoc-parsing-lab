@@ -1,0 +1,61 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "unordered",
+      "marker": "*",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "*",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Linux",
+              "location": [ { "line": 1, "col": 3 }, { "line": 1, "col": 7 } ]
+            }
+          ],
+          "blocks": [],
+          "location": [ { "line": 1, "col": 1 }, { "line": 1, "col": 7 } ]
+        },
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "*",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Windows",
+              "location": [ { "line": 3, "col": 3 }, { "line": 3, "col": 9 } ]
+            }
+          ],
+          "blocks": [],
+          "location": [ { "line": 3, "col": 1 }, { "line": 3, "col": 9 } ]
+        },
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "*",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "macOS",
+              "location": [ { "line": 6, "col": 3 }, { "line": 6, "col": 7 } ]
+            }
+          ],
+          "blocks": [],
+          "location": [ { "line": 6, "col": 1 }, { "line": 6, "col": 7 } ]
+        }
+      ],
+      "location": [ { "line": 1, "col": 1 }, { "line": 6, "col": 7 } ]
+    }
+  ],
+  "location": [ { "line": 1, "col": 1 }, { "line": 6, "col": 7 } ]
+}

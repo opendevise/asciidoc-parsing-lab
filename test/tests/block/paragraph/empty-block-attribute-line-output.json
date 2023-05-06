@@ -1,0 +1,25 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "metadata": {
+        "attributes": {},
+        "options": [],
+        "location": [ { "line": 1, "col": 1 }, { "line": 1, "col": 2 } ]
+      },
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "A paragraph with empty metadata.",
+          "location": [ { "line": 2, "col": 1 }, { "line": 2, "col": 32 } ]
+        }
+      ],
+      "location": [ { "line": 2, "col": 1 }, { "line": 2, "col": 32 } ]
+    }
+  ],
+  "location": [ { "line": 1, "col": 1 }, { "line": 2, "col": 32 } ]
+}

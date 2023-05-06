@@ -97,7 +97,7 @@ block = lf* metadataStart:grab_offset metadata:(attrlists:(@block_attribute_line
     const attributes = {}
     const options = []
     for (const attrlist of attrlists) {
-      if (!attrlist) return next
+      if (!attrlist) continue
       // FIXME this is a quick hack
       let positionalIndex = 0
       attrlist.split(',').forEach((it) => {
