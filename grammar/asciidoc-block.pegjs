@@ -162,7 +162,7 @@ listing = (openingDelim:listing_delimiter { enterBlock(context, openingDelim) })
     let inlines = []
     if (lines.length) {
       const contentsLocation = [
-        { line: location_[0].line + 1, col: lines[0] ? 1 : 0 },
+        { line: location_[0].line + 1, col: 1 },
         { line: location_[1].line - (closingDelim ? 1 : 0), col: lines[lines.length - 1].length },
       ]
       inlines = toInlines('text', lines.join('\n'), toSourceLocation(contentsLocation))

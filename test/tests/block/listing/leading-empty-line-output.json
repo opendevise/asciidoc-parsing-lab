@@ -12,7 +12,7 @@
           "type": "string",
           "name": "text",
           "value": "\nputs 1",
-          "location": [ { "line": 2, "col": 0 }, { "line": 3, "col": 6 } ]
+          "location": [ { "line": 2, "col": 1 }, { "line": 3, "col": 6 } ]
         }
       ],
       "location": [ { "line": 1, "col": 1 }, { "line": 4, "col": 4 } ]
