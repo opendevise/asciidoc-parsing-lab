@@ -1,9 +1,7 @@
 {
   "name": "document",
   "type": "block",
-  "attributes": {
-    "toc": ""
-  },
+  "attributes": { "toc": "" },
   "header": {
     "title": [
       {

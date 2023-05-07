@@ -1,9 +1,7 @@
 {
   "name": "document",
   "type": "block",
-  "attributes": {
-    "reproducible": ""
-  },
+  "attributes": { "reproducible": "" },
   "header": {
     "title": [
       {
