@@ -14,7 +14,7 @@ function getLocation (range_) {
   if (end === start) return [startDetails, startDetails]
   if (eof) {
     const { line: endLine, column: endCol } = peg$computePosDetails(end)
-    return [startDetails, { line: endLine, col: (endCol - 1) || 1 }]
+    return [startDetails, { line: endLine, col: endCol - 1 }]
   } else {
     const { line: endLine, column: endCol } = peg$computePosDetails(end - (end < input.length || (input[end - 1] ?? '\n') === '\n' ? 2 : 1))
     return [startDetails, { line: endLine, col: endCol }]
