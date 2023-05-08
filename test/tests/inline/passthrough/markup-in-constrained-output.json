@@ -3,6 +3,6 @@
     "name": "text",
     "type": "string",
     "value": "*stars*",
-    "location": [ { "line": 1, "col": 1 }, { "line": 1, "col": 9 } ]
+    "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 9 }]
   }
 ]

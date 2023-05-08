@@ -10,11 +10,11 @@
           "name": "text",
           "type": "string",
           "value": "unconditional line",
-          "location": [ { "line": 5, "col": 1 }, { "line": 5, "col": 18 } ]
+          "location": [{ "line": 5, "col": 1 }, { "line": 5, "col": 18 }]
         }
       ],
-      "location": [ { "line": 5, "col": 1 }, { "line": 5, "col": 18 } ]
+      "location": [{ "line": 5, "col": 1 }, { "line": 5, "col": 18 }]
     }
   ],
-  "location": [ { "line": 5, "col": 1 }, { "line": 5, "col": 18 } ]
+  "location": [{ "line": 5, "col": 1 }, { "line": 5, "col": 18 }]
 }

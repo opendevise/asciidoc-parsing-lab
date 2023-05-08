@@ -3,6 +3,6 @@
     "name": "text",
     "type": "string",
     "value": "Use *strong* to apply strong emphasis to text.",
-    "location": [ { "line": 1, "col": 1 }, { "line": 1, "col": 53 } ]
+    "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 53 }]
   }
 ]

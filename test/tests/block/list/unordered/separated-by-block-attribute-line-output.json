@@ -17,14 +17,14 @@
               "name": "text",
               "type": "string",
               "value": "first list",
-              "location": [ { "line": 1, "col": 3 }, { "line": 1, "col": 12 } ]
+              "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 12 }]
             }
           ],
           "blocks": [],
-          "location": [ { "line": 1, "col": 1 }, { "line": 1, "col": 12 } ]
+          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 12 }]
         }
       ],
-      "location": [ { "line": 1, "col": 1 }, { "line": 1, "col": 12 } ]
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 12 }]
     },
     {
       "name": "list",
@@ -34,7 +34,7 @@
       "metadata": {
         "attributes": {},
         "options": [],
-        "location": [ { "line": 2, "col": 1 }, { "line": 2, "col": 2 } ]
+        "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 2 }]
       },
       "items": [
         {
@@ -46,15 +46,15 @@
               "name": "text",
               "type": "string",
               "value": "second list",
-              "location": [ { "line": 3, "col": 3 }, { "line": 3, "col": 13 } ]
+              "location": [{ "line": 3, "col": 3 }, { "line": 3, "col": 13 }]
             }
           ],
           "blocks": [],
-          "location": [ { "line": 3, "col": 1 }, { "line": 3, "col": 13 } ]
+          "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 13 }]
         }
       ],
-      "location": [ { "line": 3, "col": 1 }, { "line": 3, "col": 13 } ]
+      "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 13 }]
     }
   ],
-  "location": [ { "line": 1, "col": 1 }, { "line": 3, "col": 13 } ]
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 13 }]
 }

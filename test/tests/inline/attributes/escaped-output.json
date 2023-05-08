@@ -3,6 +3,6 @@
     "name": "text",
     "type": "string",
     "value": "Use the syntax {name} to insert the value of an attribute.",
-    "location": [ { "line": 1, "col": 1 }, { "line": 1, "col": 59 } ]
+    "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 59 }]
   }
 ]

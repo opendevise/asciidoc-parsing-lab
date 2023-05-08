@@ -8,10 +8,10 @@
         "name": "text",
         "type": "string",
         "value": "Document Title",
-        "location": [ { "line": 2, "col": 3, "file": [ "header.adoc" ] }, { "line": 2, "col": 16, "file": [ "header.adoc" ] } ]
+        "location": [{ "line": 2, "col": 3, "file": ["header.adoc"] }, { "line": 2, "col": 16, "file": ["header.adoc"] }]
       }
     ],
-    "location": [ { "line": 1, "col": 1, "file": [ "header.adoc" ] }, { "line": 2, "col": 16, "file": [ "header.adoc" ] } ]
+    "location": [{ "line": 1, "col": 1, "file": ["header.adoc"] }, { "line": 2, "col": 16, "file": ["header.adoc"] }]
   },
   "blocks": [
     {
@@ -22,11 +22,11 @@
           "name": "text",
           "type": "string",
           "value": "body",
-          "location": [ { "line": 3, "col": 1 }, { "line": 3, "col": 4 } ]
+          "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 4 }]
         }
       ],
-      "location": [ { "line": 3, "col": 1 }, { "line": 3, "col": 4 } ]
+      "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 4 }]
     }
   ],
-  "location": [ { "line": 1, "col": 1, "file": [ "header.adoc" ] }, { "line": 3, "col": 4 } ]
+  "location": [{ "line": 1, "col": 1, "file": ["header.adoc"] }, { "line": 3, "col": 4 }]
 }
