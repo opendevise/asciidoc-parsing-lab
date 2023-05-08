@@ -66,17 +66,15 @@ async function scanTests (dir = process.cwd(), base = process.cwd()) {
       entries.push(
         await Promise.all([
           fsp.readFile(inputPath, 'utf8'),
-          fsp.readFile(outputPath).then(
-            (data) => {
-              try {
-                return [JSON.parse(data), JSON.parse(data, (key, val) => key === 'location' ? undefined : val)]
-              } catch (e) {
-                e.message += ' in ' + ospath.relative(base, outputPath)
-                throw e
-              }
-            },
-            () => []
-          ),
+          fsp
+            .readFile(outputPath)
+            .then(
+              (data) => [JSON.parse(data), JSON.parse(data, (key, val) => key === 'location' ? undefined : val)],
+              () => []
+            )
+            .catch((ex) => {
+              throw Object.assign(ex, { message: ex.message + ' in ' + ospath.relative(base, outputPath) })
+            }),
           fsp.readFile(configPath).then(JSON.parse, () => ({})),
         ]).then(([input, [expected, expectedWithoutLocations], config]) => {
           if (config.trimTrailingWhitespace) {
