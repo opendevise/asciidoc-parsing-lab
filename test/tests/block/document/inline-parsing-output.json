@@ -1,0 +1,46 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "unordered",
+      "marker": "*",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "*",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "integration ",
+              "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 14 }]
+            },
+            {
+              "name": "span",
+              "type": "inline",
+              "variant": "strong",
+              "form": "constrained",
+              "inlines": [
+                {
+                  "name": "text",
+                  "type": "string",
+                  "value": "FTW!",
+                  "location": [{ "line": 1, "col": 16 }, { "line": 1, "col": 19 }]
+                }
+              ],
+              "location": [{ "line": 1, "col": 15 }, { "line": 1, "col": 20 }]
+            }
+          ],
+          "blocks": [],
+          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 20 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 20 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 20 }]
+}
