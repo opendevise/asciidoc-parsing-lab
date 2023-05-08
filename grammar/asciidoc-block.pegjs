@@ -78,7 +78,7 @@ header = attributeEntriesAbove:attribute_entry* titleOffset:grab_offset title:do
       }
     }
     const titleLocation = getLocation({ start: titleOffset, end: titleOffset + title.length })
-    const titleInlines = parseInline(title, { locations: createLocationsForInlines(titleLocation, 3) })
+    const titleInlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(titleLocation, 3) })
     return { title: titleInlines, attributes, location: toSourceLocation(getLocation()) }
   }
 
@@ -137,14 +137,14 @@ paragraph = !heading lines:(!(block_attribute_line / any_compound_block_delimite
   {
     const location_ = getLocation()
     const contents = lines.join('\n')
-    const inlines = parseInline(contents, { locations: createLocationsForInlines(location_) })
+    const inlines = parseInline(contents, { attributes: documentAttributes, locations: createLocationsForInlines(location_) })
     return { name: 'paragraph', type: 'block', inlines, location: toSourceLocation(location_) }
   }
 
 heading = marker:'='+ ' ' title:line
   {
     const location_ = getLocation()
-    const inlines = parseInline(title, { locations: createLocationsForInlines(location_, marker.length + 2) })
+    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, marker.length + 2) })
     // Q: store marker instead of or in addition to level?
     return { name: 'heading', type: 'block', title: inlines, level: marker.length - 1, location: toSourceLocation(location_) }
   }
@@ -222,7 +222,7 @@ list_continuation_line = '+' eol
 list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line @(listing / example) / lf* @list)*
   {
     const location_ = getLocation()
-    const principalInlines = parseInline(principal, { locations: createLocationsForInlines(location_, marker.length + 2) })
+    const principalInlines = parseInline(principal, { attributes: documentAttributes, locations: createLocationsForInlines(location_, marker.length + 2) })
     return { name: 'listItem', type: 'block', marker, principal: principalInlines, blocks, location: toSourceLocation(location_) }
   }
 

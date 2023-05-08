@@ -1,0 +1,8 @@
+[
+  {
+    "name": "text",
+    "type": "string",
+    "value": "++i and i++ both increment the value of i.",
+    "location": [ { "line": 1, "col": 1 }, { "line": 1, "col": 45 } ]
+  }
+]

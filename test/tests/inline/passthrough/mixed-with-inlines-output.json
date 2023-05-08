@@ -1,0 +1,50 @@
+[
+  {
+    "name": "text",
+    "type": "string",
+    "value": "The ",
+    "location": [ { "line": 1, "col": 1 }, { "line": 1, "col": 4 } ]
+  },
+  {
+    "name": "span",
+    "type": "inline",
+    "variant": "code",
+    "form": "constrained",
+    "inlines": [
+      {
+        "name": "text",
+        "type": "string",
+        "value": "__FILE__",
+        "location": [ { "line": 1, "col": 6 }, { "line": 1, "col": 14 } ]
+      }
+    ],
+    "location": [ { "line": 1, "col": 5 }, { "line": 1, "col": 16 } ]
+  },
+  {
+    "name": "text",
+    "type": "string",
+    "value": " constant refers to the current file regardless of the ",
+    "location": [ { "line": 1, "col": 17 }, { "line": 1, "col": 71 } ]
+  },
+  {
+    "name": "span",
+    "type": "inline",
+    "variant": "code",
+    "form": "constrained",
+    "inlines": [
+      {
+        "name": "text",
+        "type": "string",
+        "value": "$PWD",
+        "location": [ { "line": 1, "col": 73 }, { "line": 1, "col": 76 } ]
+      }
+    ],
+    "location": [ { "line": 1, "col": 72 }, { "line": 1, "col": 77 } ]
+  },
+  {
+    "name": "text",
+    "type": "string",
+    "value": " value.",
+    "location": [ { "line": 1, "col": 78 }, { "line": 1, "col": 84 } ]
+  }
+]

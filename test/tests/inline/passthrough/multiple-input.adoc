@@ -1,0 +1,1 @@
+Use the constant pass:[__FILE__] to refer to the source file in +__DIR__+.

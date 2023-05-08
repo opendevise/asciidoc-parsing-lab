@@ -1,0 +1,34 @@
+{
+  "name": "document",
+  "type": "block",
+  "attributes": {
+    "appname": "ACME"
+  },
+  "header": {
+    "title": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "Introduction",
+          "location": [ { "line": 1, "col": 3 }, { "line": 1, "col": 14 } ]
+        }
+    ],
+    "location": [ { "line": 1, "col": 1 }, { "line": 2, "col": 14 } ]
+  },
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "Welcome to ACME!",
+          "location": [ { "line": 4, "col": 1 }, { "line": 4, "col": 21 } ]
+        }
+      ],
+      "location": [ { "line": 4, "col": 1 }, { "line": 4, "col": 21 } ]
+    }
+  ],
+  "location": [ { "line": 1, "col": 1 }, { "line": 4, "col": 21 } ]
+}

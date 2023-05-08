@@ -1,0 +1,8 @@
+[
+  {
+    "name": "text",
+    "type": "string",
+    "value": "If you are running Fedora, download the rpm.",
+    "location": [ { "line": 1, "col": 1 }, { "line": 1, "col": 48 } ]
+  }
+]

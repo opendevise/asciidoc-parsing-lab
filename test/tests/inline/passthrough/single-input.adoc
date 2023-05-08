@@ -1,0 +1,1 @@
+Use pass:[*strong*] to apply strong emphasis to text.
