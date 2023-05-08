@@ -76,7 +76,7 @@ async function scanTests (dir = process.cwd(), base = process.cwd()) {
             },
             () => []
           ),
-          fsp.readFile(configPath).then(JSON.parse, () => Object.create(Object.prototype)),
+          fsp.readFile(configPath).then(JSON.parse, () => ({})),
         ]).then(([input, [expected, expectedWithoutLocations], config]) => {
           if (config.trimTrailingWhitespace) {
             input = input.trimEnd()
