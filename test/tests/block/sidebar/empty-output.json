@@ -7,7 +7,6 @@
       "type": "block",
       "form": "delimited",
       "delimiter": "****",
-      "blocks": [],
       "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 4 }]
     }
   ],

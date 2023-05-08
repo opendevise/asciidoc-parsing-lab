@@ -48,11 +48,15 @@ function createLocationsForInlines ([start, end = start], startCol = 1) {
 // TODO if surrounding lf are not part of document, group inner two rules as a new rule
 document = lf* header:header? body:body lf*
   {
-    const location_ = toSourceLocation(getLocation(true))
-    if (!header) return { name: 'document', type: 'block', blocks: body, location: location_ }
-    const attributes = header.attributes
-    delete header.attributes
-    return { name: 'document', type: 'block', attributes, header, blocks: body, location: location_ }
+    const node = { name: 'document', type: 'block' }
+    if (header) {
+      node.attributes = header.attributes
+      delete header.attributes
+      node.header = header
+    }
+    if (body.length) node.blocks = body
+    node.location = toSourceLocation(getLocation(true))
+    return node
   }
 
 attribute_entry = ':' name:attribute_name ':' value:attribute_value eol
@@ -130,7 +134,12 @@ section_or_discrete_heading = heading:heading blocks:(&{ return options.currentA
   {
     if (!blocks) return heading
     context.sectionStack.pop()
-    return Object.assign(heading, { name: 'section', blocks, location: toSourceLocation(getLocation()) })
+    heading.name = 'section'
+    if (blocks.length) {
+      heading.blocks = blocks
+      heading.location = toSourceLocation(getLocation())
+    }
+    return heading
   }
 
 paragraph = !heading lines:(!(block_attribute_line / any_compound_block_delimiter_line) @line)+
@@ -176,7 +185,9 @@ example = (openingDelim:example_delimiter_line &{ return enterBlock(context, ope
   {
     const delimiter = exitBlock(context)
     if (!closingDelim) console.log('unclosed example block')
-    return { name: 'example', type: 'block', form: 'delimited', delimiter, blocks, location: toSourceLocation(getLocation()) }
+    const node = { name: 'example', type: 'block', form: 'delimited', delimiter, blocks, location: toSourceLocation(getLocation()) }
+    if (!blocks.length) delete node.blocks
+    return node
   }
 
 sidebar_delimiter_line = @$('****' [*]*) eol
@@ -185,7 +196,9 @@ sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, ope
   {
     const delimiter = exitBlock(context)
     if (!closingDelim) console.log('unclosed sidebar block')
-    return { name: 'sidebar', type: 'block', form: 'delimited', delimiter, blocks, location: toSourceLocation(getLocation()) }
+    const node = { name: 'sidebar', type: 'block', form: 'delimited', delimiter, blocks, location: toSourceLocation(getLocation()) }
+    if (!blocks.length) delete node.blocks
+    return node
   }
 
 // NOTE: use items:(@list_item @(lf* @list_item)*) to avoid having to check lf and list_marker on first item
@@ -223,7 +236,9 @@ list_item = marker:list_marker &{ return isCurrentList(context, marker) } princi
   {
     const location_ = getLocation()
     const principalInlines = parseInline(principal, { attributes: documentAttributes, locations: createLocationsForInlines(location_, marker.length + 2) })
-    return { name: 'listItem', type: 'block', marker, principal: principalInlines, blocks, location: toSourceLocation(location_) }
+    const node = { name: 'listItem', type: 'block', marker, principal: principalInlines, blocks, location: toSourceLocation(location_) }
+    if (!blocks.length) delete node.blocks
+    return node
   }
 
 image = 'image::' !space target:$[^\n\[]+ '[' attrlist:attrlist ']' eol

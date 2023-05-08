@@ -35,7 +35,6 @@
               "location": [{ "line": 1, "col": 15 }, { "line": 1, "col": 20 }]
             }
           ],
-          "blocks": [],
           "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 20 }]
         }
       ],
