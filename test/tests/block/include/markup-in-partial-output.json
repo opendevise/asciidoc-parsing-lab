@@ -1,0 +1,41 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "before\n",
+          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7 }]
+        },
+        {
+          "name": "span",
+          "type": "inline",
+          "variant": "strong",
+          "form": "constrained",
+          "inlines": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "partial",
+              "location": [{ "line": 1, "col": 2, "file": ["markup.adoc"] }, { "line": 1, "col": 8, "file": ["markup.adoc"] }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1, "file": ["markup.adoc"] }, { "line": 1, "col": 9, "file": ["markup.adoc"] }]
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "value": "\nafter",
+          "location": [{ "line": 1, "col": 10, "file": ["markup.adoc"] }, { "line": 3, "col": 5 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 5 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 5 }]
+}
