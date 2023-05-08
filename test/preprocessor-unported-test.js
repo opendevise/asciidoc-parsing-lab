@@ -6,7 +6,7 @@ const { parse } = require('#preprocessor-parser')
 const ospath = require('node:path')
 
 describe('preprocessor', () => {
-  const location = (spec, file) => {
+  const loc = (spec, file) => {
     const [line, col, lineOffset] = spec.split(':').map(Number)
     return file ? { line, col, lineOffset, file } : { line, col, lineOffset }
   }
@@ -51,7 +51,7 @@ describe('preprocessor', () => {
     const input = 'ifndef::foo[foo is not set]'
     const expected = {
       input: 'foo is not set',
-      locations: { 1: location('1:13:0') },
+      locations: { 1: loc('1:13:0') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -60,7 +60,7 @@ describe('preprocessor', () => {
     const input = 'ifndef::foo[foo is not set]\n'
     const expected = {
       input: 'foo is not set\n',
-      locations: { 1: location('1:13:0') },
+      locations: { 1: loc('1:13:0') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -81,7 +81,7 @@ describe('preprocessor', () => {
       foo is not set
       fin
       `,
-      locations: { 1: location('1:13:0'), 2: location('2:1:0') },
+      locations: { 1: loc('1:13:0'), 2: loc('2:1:0') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -93,7 +93,7 @@ describe('preprocessor', () => {
     `
     const expected = {
       input: 'fin',
-      locations: { 1: location('2:1:1') },
+      locations: { 1: loc('2:1:1') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -108,7 +108,7 @@ describe('preprocessor', () => {
       début
       foo is not set
       `,
-      locations: { 1: location('1:1:0'), 2: location('2:13:0') },
+      locations: { 1: loc('1:1:0'), 2: loc('2:13:0') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -120,7 +120,7 @@ describe('preprocessor', () => {
     `
     const expected = {
       input: 'début\n',
-      locations: { 1: location('1:1:0') },
+      locations: { 1: loc('1:1:0') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -136,7 +136,7 @@ describe('preprocessor', () => {
       début
       foo is not set
       fin`,
-      locations: { 1: location('1:1:0'), 2: location('2:13:0'), 3: location('3:1:0') },
+      locations: { 1: loc('1:1:0'), 2: loc('2:13:0'), 3: loc('3:1:0') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -152,7 +152,7 @@ describe('preprocessor', () => {
       début
       fin
       `,
-      locations: { 1: location('1:1:0'), 2: location('3:1:1') },
+      locations: { 1: loc('1:1:0'), 2: loc('3:1:1') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -165,7 +165,7 @@ describe('preprocessor', () => {
     `
     const expected = {
       input: 'foo is not set\n',
-      locations: { 1: location('2:1:1') },
+      locations: { 1: loc('2:1:1') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -182,7 +182,7 @@ describe('preprocessor', () => {
       foo is not set
       fin
       `,
-      locations: { 1: location('2:1:1'), 2: location('4:1:2') },
+      locations: { 1: loc('2:1:1'), 2: loc('4:1:2') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -200,7 +200,7 @@ describe('preprocessor', () => {
       début
       foo is not set
       ` + '\n',
-      locations: { 1: location('1:1:0'), 2: location('3:1:1') },
+      locations: { 1: loc('1:1:0'), 2: loc('3:1:1') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -219,7 +219,7 @@ describe('preprocessor', () => {
       foo is not set
       fin
       `,
-      locations: { 1: location('1:1:0'), 2: location('3:1:1'), 3: location('5:1:2') },
+      locations: { 1: loc('1:1:0'), 2: loc('3:1:1'), 3: loc('5:1:2') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -236,7 +236,7 @@ describe('preprocessor', () => {
 
       foo is set
       `,
-      locations: { 1: location('1:1:0'), 2: location('2:1:0'), 3: location('3:12:0') },
+      locations: { 1: loc('1:1:0'), 2: loc('2:1:0'), 3: loc('3:12:0') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -255,7 +255,7 @@ describe('preprocessor', () => {
 
       foo is set
       `,
-      locations: { 1: location('1:1:0'), 2: location('2:1:0'), 3: location('3:1:0'), 4: location('4:12:0') },
+      locations: { 1: loc('1:1:0'), 2: loc('2:1:0'), 3: loc('3:1:0'), 4: loc('4:12:0') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -272,7 +272,7 @@ describe('preprocessor', () => {
 
       app-name is set
       `,
-      locations: { 1: location('1:1:0'), 2: location('2:1:0'), 3: location('3:17:0') },
+      locations: { 1: loc('1:1:0'), 2: loc('2:1:0'), 3: loc('3:17:0') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -289,7 +289,7 @@ describe('preprocessor', () => {
 
       asciidoc-lang is set
       `,
-      locations: { 1: location('1:1:0'), 2: location('2:1:0'), 3: location('3:21:0') },
+      locations: { 1: loc('1:1:0'), 2: loc('2:1:0'), 3: loc('3:21:0') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -305,7 +305,7 @@ describe('preprocessor', () => {
       foo is set
       fin
       `,
-      locations: { 1: location('1:12:0'), 2: location('2:1:0') },
+      locations: { 1: loc('1:12:0'), 2: loc('2:1:0') },
     }
     expect(parse(input, { attributes })).to.eql(expected)
   })
@@ -325,7 +325,7 @@ describe('preprocessor', () => {
       foo is set
       yin is set
       `,
-      locations: { 1: location('1:1:0'), 2: location('2:1:0'), 3: location('3:12:0'), 4: location('4:12:0') },
+      locations: { 1: loc('1:1:0'), 2: loc('2:1:0'), 3: loc('3:12:0'), 4: loc('4:12:0') },
     }
     expect(parse(input, { attributes })).to.eql(expected)
     expect(Object.keys(attributes)).to.eql(['foo'])
@@ -346,7 +346,7 @@ describe('preprocessor', () => {
 
       fin
       `,
-      locations: { 1: location('1:1:0'), 2: location('2:1:0'), 3: location('3:1:0'), 4: location('5:1:1') },
+      locations: { 1: loc('1:1:0'), 2: loc('2:1:0'), 3: loc('3:1:0'), 4: loc('5:1:1') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -369,11 +369,11 @@ describe('preprocessor', () => {
       fin
       `,
       locations: {
-        1: location('1:1:0'),
-        2: location('2:1:0'),
-        3: location('3:1:0'),
-        4: location('4:1:0'),
-        5: location('6:1:1'),
+        1: loc('1:1:0'),
+        2: loc('2:1:0'),
+        3: loc('3:1:0'),
+        4: loc('4:1:0'),
+        5: loc('6:1:1'),
       },
     }
     expect(parse(input)).to.eql(expected)
@@ -400,12 +400,12 @@ describe('preprocessor', () => {
       ----
       `,
       locations: {
-        1: location('1:1:0'),
-        2: location('2:1:0'),
-        3: location('3:1:0'),
-        4: location('5:1:1'),
-        5: location('7:1:2'),
-        6: location('8:1:2'),
+        1: loc('1:1:0'),
+        2: loc('2:1:0'),
+        3: loc('3:1:0'),
+        4: loc('5:1:1'),
+        5: loc('7:1:2'),
+        6: loc('8:1:2'),
       },
     }
     expect(parse(input)).to.eql(expected)
@@ -423,8 +423,8 @@ describe('preprocessor', () => {
       after
       `,
       locations: {
-        1: location('1:1:0'),
-        2: location('3:1:1'),
+        1: loc('1:1:0'),
+        2: loc('3:1:1'),
       },
     }
     expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
@@ -443,9 +443,9 @@ describe('preprocessor', () => {
       after
       `,
       locations: {
-        1: location('1:1:0'),
-        2: location('1:1:0', ['partial.adoc']),
-        3: location('3:1:0'),
+        1: loc('1:1:0'),
+        2: loc('1:1:0', ['partial.adoc']),
+        3: loc('3:1:0'),
       },
     }
     expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
@@ -464,9 +464,9 @@ describe('preprocessor', () => {
       after
       `,
       locations: {
-        1: location('1:1:0'),
-        2: location('1:1:0', ['partial-noeol.adoc']),
-        3: location('3:1:0'),
+        1: loc('1:1:0'),
+        2: loc('1:1:0', ['partial-noeol.adoc']),
+        3: loc('3:1:0'),
       },
     }
     expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
