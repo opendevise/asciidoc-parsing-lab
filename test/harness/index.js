@@ -112,7 +112,7 @@ function stringifyASG (asg) {
   return JSON
     .stringify(asg, (key, val) => key === 'location' ? locations.push(val) - 1 : val, 2)
     .replace(/("location": )(\d+)/g, (_, key, idx) => {
-      return key + JSON.stringify(locations[Number(idx)], null, 2).replace(/\n */g, ' ')
+      return key + JSON.stringify(locations[Number(idx)], null, 2).replace(/\n */g, ' ').replace(/(\[) | (\])/g, '$1$2')
     })
 }
 
