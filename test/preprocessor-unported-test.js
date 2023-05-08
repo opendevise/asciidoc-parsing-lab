@@ -411,6 +411,25 @@ describe('preprocessor', () => {
     expect(parse(input)).to.eql(expected)
   })
 
+  it('should compute offsets for empty include correctly', () => {
+    const input = heredoc`
+    before
+    include::partial-empty.adoc[]
+    after
+    `
+    const expected = {
+      input: heredoc`
+      before
+      after
+      `,
+      locations: {
+        1: location('1:1:0'),
+        2: location('3:1:1'),
+      },
+    }
+    expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
+  })
+
   it('should compute offsets for non-empty include correctly', () => {
     const input = heredoc`
     before
