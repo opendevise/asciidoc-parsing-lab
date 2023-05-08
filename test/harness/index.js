@@ -4,6 +4,7 @@
 const { expect } = require('chai')
 const fsp = require('node:fs/promises')
 const ospath = require('node:path')
+const process = require('node:process')
 const { fileURLToPath } = require('node:url')
 
 function heredoc (strings, ...values) {
