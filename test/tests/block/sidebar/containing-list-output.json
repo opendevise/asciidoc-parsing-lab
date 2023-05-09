@@ -26,7 +26,6 @@
                     "location": [{ "line": 2, "col": 3 }, { "line": 2, "col": 7 }]
                   }
               ],
-              "blocks": [],
               "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 7 }]
             },
             {
@@ -41,7 +40,6 @@
                     "location": [{ "line": 3, "col": 3 }, { "line": 3, "col": 8 }]
                   }
               ],
-              "blocks": [],
               "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 8 }]
             },
             {
@@ -56,7 +54,6 @@
                     "location": [{ "line": 4, "col": 3 }, { "line": 4, "col": 6 }]
                   }
               ],
-              "blocks": [],
               "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 6 }]
             }
           ],
