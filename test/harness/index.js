@@ -42,8 +42,7 @@ function makeTests (tests, testBlock) {
     if (type === 'dir') {
       describe(name, () => makeTests(test.entries, testBlock))
     } else {
-      const testMethod = it[test.status] || it
-      testMethod(name, function () {
+      ;(it[test.condition] || it)(name, function () {
         return testBlock.call(this, test)
       })
     }
@@ -94,7 +93,7 @@ async function scanTests (dir = process.cwd(), base = process.cwd()) {
             options: config.options,
             expected,
             expectedWithoutLocations,
-            status: config.only ? 'only' : config.skip ? 'skip' : undefined,
+            condition: config.only ? 'only' : config.skip ? 'skip' : undefined,
           }
         })
       )
