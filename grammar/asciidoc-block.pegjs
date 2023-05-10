@@ -121,7 +121,6 @@ block = lf* metadataStart:grab_offset metadata:(attrlists:(@block_attribute_line
         }
       })
     }
-    // NOTE once we get into parsing attribute values, this will change to an overlay object
     return { attributes, options, location: toSourceLocation(getLocation({ start: metadataStart, end: metadataEnd })) }
   }) block:(section_or_discrete_heading / listing / example / sidebar / list / literal_paragraph / image / paragraph)
   {
@@ -174,14 +173,13 @@ listing = (openingDelim:listing_delimiter { enterBlock(context, openingDelim) })
     if (!closingDelim) console.log('unclosed listing block')
     // Q should start location include all block attribute lines? or should that information be on the attributedefs?
     const location_ = getLocation()
-    // FIXME could this logic be encapsulated in rule?
-    let inlines = []
+    const inlines = []
     if (lines.length) {
       const contentsLocation = [
         { line: location_[0].line + 1, col: 1 },
         { line: location_[1].line - (closingDelim ? 1 : 0), col: lines[lines.length - 1].length },
       ]
-      inlines = toInlines('text', lines.join('\n'), toSourceLocation(contentsLocation))
+      inlines.push(toInlines('text', lines.join('\n'), toSourceLocation(contentsLocation))[0])
     }
     return { name: 'listing', type: 'block', form: 'delimited', delimiter, inlines, location: toSourceLocation(location_) }
   }

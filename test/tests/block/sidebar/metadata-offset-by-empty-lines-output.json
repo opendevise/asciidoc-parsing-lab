@@ -9,7 +9,6 @@
       "delimiter": "****",
       "metadata": {
         "attributes": { "foo": "bar", "yin": "yang" },
-        "options": [],
         "location": [{ "line": 2, "col": 1 }, { "line": 4, "col": 10 }]
       },
       "blocks": [

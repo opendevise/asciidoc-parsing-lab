@@ -31,8 +31,6 @@
       "variant": "unordered",
       "marker": "*",
       "metadata": {
-        "attributes": {},
-        "options": [],
         "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 2 }]
       },
       "items": [
