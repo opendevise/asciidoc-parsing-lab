@@ -1,0 +1,20 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "literal",
+      "type": "block",
+      "inlines": [
+        {
+          "type": "string",
+          "name": "text",
+          "value": "  keep\nas\n  entered",
+          "location": [{ "line": 1, "col": 3 }, { "line": 3, "col": 11 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 11 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 11 }]
+}

@@ -125,7 +125,7 @@ block = lf* metadataStart:grab_offset metadata:(attrlists:(@block_attribute_line
     }
     // NOTE once we get into parsing attribute values, this will change to an overlay object
     return { attributes, options, location: toSourceLocation(getLocation({ start: metadataStart, end: metadataEnd })) }
-  }) block:(section_or_discrete_heading / listing / example / sidebar / list / image / paragraph)
+  }) block:(section_or_discrete_heading / listing / example / sidebar / list / literal_paragraph / image / paragraph)
   {
     return metadata ? Object.assign(block, { metadata }) : block
   }
@@ -148,6 +148,18 @@ paragraph = !heading lines:(!(block_attribute_line / any_compound_block_delimite
     const contents = lines.join('\n')
     const inlines = parseInline(contents, { attributes: documentAttributes, locations: createLocationsForInlines(location_) })
     return { name: 'paragraph', type: 'block', inlines, location: toSourceLocation(location_) }
+  }
+
+literal_paragraph = lines:indented_line+
+  {
+    const indents = []
+    for (const line of lines) indents.push(line.length - line.trimStart().length)
+    const outdent = Math.min.apply(null, indents)
+    const contents = lines.reduce((accum, l) => accum + '\n' + l.slice(outdent), '').slice(1)
+    const sourceLocation = toSourceLocation(getLocation())
+    const inlinesSourceLocation = [Object.assign({}, sourceLocation[0], { col: sourceLocation[0].col + outdent }), sourceLocation[1]]
+    const inlines = toInlines('text', contents, inlinesSourceLocation)
+    return { name: 'literal', type: 'block', inlines, location: sourceLocation }
   }
 
 heading = marker:'='+ ' ' title:line
@@ -256,6 +268,8 @@ grab_offset = ''
 line = @$[^\n]+ eol
 
 line_or_empty_line = line / lf @''
+
+indented_line = @$(' ' [^\n]+) eol
 
 attrlist = $[^\n\]]*
 
