@@ -1,0 +1,26 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "[]",
+          "location": [{ "line": 2, "col": 2 }, { "line": 2, "col": 3 }]
+        }
+      ],
+      "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 3 }],
+      "metadata": {
+        "attributes": {
+          "1": "normal"
+        },
+        "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 8 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 3 }]
+}

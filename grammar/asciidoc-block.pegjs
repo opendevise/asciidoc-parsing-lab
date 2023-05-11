@@ -155,10 +155,18 @@ literal_paragraph = lines:indented_line+
     for (const line of lines) indents.push(line.length - line.trimStart().length)
     const outdent = Math.min.apply(null, indents)
     const contents = lines.reduce((accum, l) => accum + '\n' + l.slice(outdent), '').slice(1)
-    const sourceLocation = toSourceLocation(getLocation())
-    const inlinesSourceLocation = [Object.assign({}, sourceLocation[0], { col: sourceLocation[0].col + outdent }), sourceLocation[1]]
-    const inlines = toInlines('text', contents, inlinesSourceLocation)
-    return { name: 'literal', type: 'block', inlines, location: sourceLocation }
+    const metadata = metadataCache[offset()]
+    if (metadata?.attributes.style === 'normal') {
+      delete metadata.attributes.style
+      const location_ = getLocation()
+      const inlines = parseInline(contents, { attributes: documentAttributes, locations: createLocationsForInlines(location_, outdent + 1) })
+      return { name: 'paragraph', type: 'block', inlines, location: toSourceLocation(location_) }
+    } else {
+      const sourceLocation = toSourceLocation(getLocation())
+      const inlinesSourceLocation = [Object.assign({}, sourceLocation[0], { col: sourceLocation[0].col + outdent }), sourceLocation[1]]
+      const inlines = toInlines('text', contents, inlinesSourceLocation)
+      return { name: 'literal', type: 'block', inlines, location: sourceLocation }
+    }
   }
 
 heading = marker:'='+ ' ' title:line
