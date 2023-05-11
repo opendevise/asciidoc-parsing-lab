@@ -20,7 +20,6 @@
       "type": "block",
       "metadata": {
         "attributes": { "role": "more" },
-        "options": [],
         "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 11 }]
       },
       "inlines": [
