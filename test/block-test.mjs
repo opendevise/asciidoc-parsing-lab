@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 'use strict'
 
-import { expect, makeTests, resolveDirname, scanTests, stringifyASG } from '#test-harness'
+import { expect, makeTests, resolveDirname, scanTests, populateASGDefaults, stringifyASG } from '#test-harness'
 import parse from 'asciidoc-parsing-lab'
 import ospath from 'node:path'
 
@@ -19,7 +19,7 @@ describe('block', () => {
       this.skip()
     } else {
       const msg = `actual output does not match expected output for ${inputPath}`
-      expect(actual, msg).to.eql('location' in actual ? expected : expectedWithoutLocations)
+      expect(actual, msg).to.eql(populateASGDefaults('location' in actual ? expected : expectedWithoutLocations))
     }
   })
 })

@@ -105,13 +105,51 @@ async function scanTests (dir = process.cwd(), base = process.cwd()) {
   })
 }
 
+function populateASGDefaults (node) {
+  if (node.type !== 'block') return node
+  const metadata = node.metadata
+  if (metadata) {
+    metadata.attributes ??= {}
+    metadata.options ??= []
+  }
+  if (node.form === 'macro' || node.name === 'break') return node
+  if (['listing', 'literal', 'pass', 'stem', 'paragraph', 'verse'].includes(node.name)) {
+    node.inlines ??= []
+  } else if (['list', 'dlist'].includes(node.name)) {
+    node.items.forEach(populateASGDefaults)
+  } else {
+    ;(node.blocks ??= []).forEach(populateASGDefaults)
+  }
+  return node
+}
+
+function stripASGDefaults (node) {
+  if (node.type !== 'block') return node
+  const metadata = node.metadata
+  if (metadata) {
+    if (!Object.keys(metadata.attributes).length) delete metadata.attributes
+    if (!metadata.options.length) delete metadata.options
+  }
+  if (node.form === 'macro' || node.name === 'break') return node
+  if (['listing', 'literal', 'pass', 'stem', 'paragraph', 'verse'].includes(node.name)) {
+    if (!node.inlines.length) delete node.inlines
+  } else if (['list', 'dlist'].includes(node.name)) {
+    node.items.forEach(stripASGDefaults)
+  } else if (node.blocks?.length) {
+    node.blocks.forEach(stripASGDefaults)
+  } else {
+    delete node.blocks
+  }
+  return node
+}
+
 function stringifyASG (asg) {
   const locations = []
   return JSON
-    .stringify(asg, (key, val) => key === 'location' ? locations.push(val) - 1 : val, 2)
+    .stringify(stripASGDefaults(asg), (key, val) => key === 'location' ? locations.push(val) - 1 : val, 2)
     .replace(/("location": )(\d+)/g, (_, key, idx) => {
       return key + JSON.stringify(locations[Number(idx)], null, 2).replace(/\n */g, ' ').replace(/(\[) | (\])/g, '$1$2')
     })
 }
 
-module.exports = { expect, heredoc, resolveDirname, scanTests, makeTests, stringifyASG }
+module.exports = { expect, heredoc, resolveDirname, scanTests, makeTests, populateASGDefaults, stringifyASG }
