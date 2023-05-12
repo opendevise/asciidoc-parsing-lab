@@ -1,0 +1,4 @@
+[discrete]
+== Discrete Heading
+
+paragraph

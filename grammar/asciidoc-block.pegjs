@@ -139,7 +139,7 @@ section_or_discrete_heading = headingStart:grab_offset heading:heading blocks:(&
     return heading
   }
 
-paragraph = !heading lines:(!(block_attribute_line / any_compound_block_delimiter_line) @line)+
+paragraph = lines:(!(block_attribute_line / any_compound_block_delimiter_line) @line)+
   {
     const location_ = getLocation()
     const contents = lines.join('\n')
@@ -189,7 +189,7 @@ listing = (openingDelim:listing_delimiter { enterBlock(context, openingDelim) })
 
 example_delimiter_line = @$('====' [=]*) eol
 
-example = (openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(example / sidebar / list / paragraph))* closingDelim:(lf* @(example_delimiter_line / eof))
+example = (openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(heading / example / sidebar / list / paragraph))* closingDelim:(lf* @(example_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
     if (!closingDelim) console.log('unclosed example block')
@@ -198,7 +198,7 @@ example = (openingDelim:example_delimiter_line &{ return enterBlock(context, ope
 
 sidebar_delimiter_line = @$('****' [*]*) eol
 
-sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(example / sidebar / list / paragraph))* closingDelim:(lf* @(sidebar_delimiter_line / eof))
+sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(heading / example / sidebar / list / paragraph))* closingDelim:(lf* @(sidebar_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
     if (!closingDelim) console.log('unclosed sidebar block')
