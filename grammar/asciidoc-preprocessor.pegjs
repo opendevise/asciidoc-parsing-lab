@@ -212,7 +212,7 @@ attribute_name = !'-' @$[a-zA-Z0-9_-]+
 
 grab_offset = ''
   {
-    return offset()
+    return peg$currPos
   }
 
 lf = '\n'

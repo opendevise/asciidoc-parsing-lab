@@ -180,7 +180,7 @@ constrained_left_mark_in_open = '`' / '_' / '*'
 
 grab_offset = ''
   {
-    return offset()
+    return peg$currPos
   }
 
 colon = ':'

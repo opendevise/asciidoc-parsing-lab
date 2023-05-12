@@ -252,7 +252,7 @@ any_compound_block_delimiter_line = example_delimiter_line / sidebar_delimiter_l
 
 grab_offset = ''
   {
-    return offset()
+    return peg$currPos
   }
 
 line = @$[^\n]+ eol
