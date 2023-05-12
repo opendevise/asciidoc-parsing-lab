@@ -5,6 +5,7 @@ const { createContext, enterBlock, exitBlock, isBlockEnd, isCurrentList, isNeste
 const { attributes: documentAttributes = {}, locations } = options
 const context = createContext()
 const parseInline = (options.inlineParser ?? require('#block-default-inline-parser')).parse
+const metadataCache = {}
 
 function getLocation (range_) {
   let eof
@@ -95,6 +96,7 @@ body = block*
 block = lf* metadataStart:grab_offset metadata:(attrlists:(@block_attribute_line lf*)* metadataEnd:grab_offset {
     // TODO move this logic to a helper function or grammar rule
     if (!attrlists.length) return undefined
+    const cacheKey = metadataEnd
     while (input[metadataEnd - 1] === '\n' && input[metadataEnd - 2] === '\n') metadataEnd--
     const attributes = {}
     const options = []
@@ -118,16 +120,17 @@ block = lf* metadataStart:grab_offset metadata:(attrlists:(@block_attribute_line
           }
         } else {
           attributes[++positionalIndex] = it
+          if (positionalIndex === 1) attributes.style = it
         }
       })
     }
-    return { attributes, options, location: toSourceLocation(getLocation({ start: metadataStart, end: metadataEnd })) }
+    return (metadataCache[cacheKey] = { attributes, options, location: toSourceLocation(getLocation({ start: metadataStart, end: metadataEnd })) })
   }) block:(section_or_discrete_heading / listing / example / sidebar / list / literal_paragraph / image / paragraph)
   {
     return metadata ? Object.assign(block, { metadata }) : block
   }
 
-section_or_discrete_heading = heading:heading blocks:(&{ return options.currentAttributes?.['1'] === 'discrete' } / &{ return isNestedSection(context, heading) } @block*)
+section_or_discrete_heading = headingStart:grab_offset heading:heading blocks:(&{ return metadataCache[headingStart]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, heading) } @block*)
   {
     if (!blocks) return heading
     context.sectionStack.pop()

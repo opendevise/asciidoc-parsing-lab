@@ -112,7 +112,7 @@ function populateASGDefaults (node) {
     metadata.attributes ??= {}
     metadata.options ??= []
   }
-  if (node.form === 'macro' || node.name === 'break') return node
+  if (node.form === 'macro' || node.name === 'break' || node.name === 'heading') return node
   if (['listing', 'literal', 'pass', 'stem', 'paragraph', 'verse'].includes(node.name)) {
     node.inlines ??= []
   } else if (['list', 'dlist'].includes(node.name)) {
@@ -130,7 +130,7 @@ function stripASGDefaults (node) {
     if (!Object.keys(metadata.attributes).length) delete metadata.attributes
     if (!metadata.options.length) delete metadata.options
   }
-  if (node.form === 'macro' || node.name === 'break') return node
+  if (node.form === 'macro' || node.name === 'break' || node.name === 'heading') return node
   if (['listing', 'literal', 'pass', 'stem', 'paragraph', 'verse'].includes(node.name)) {
     if (!node.inlines.length) delete node.inlines
   } else if (['list', 'dlist'].includes(node.name)) {
