@@ -99,7 +99,7 @@ block = lf* metadataStart:grab_offset metadata:(attrlists:(@block_attribute_line
     const cacheKey = metadataEnd
     while (input[metadataEnd - 1] === '\n' && input[metadataEnd - 2] === '\n') metadataEnd--
     const attributes = {}
-    const options = []
+    const options_ = []
     for (const attrlist of attrlists) {
       if (!attrlist) continue
       // FIXME this is a quick hack
@@ -111,7 +111,7 @@ block = lf* metadataStart:grab_offset metadata:(attrlists:(@block_attribute_line
           const value = it.slice(equalsIdx + 1)
           if (name === 'opts' || name === 'options') {
             for (const opt of value.split(',')) {
-              if (!~options.indexOf(opt)) options.push(opt)
+              if (!~options_.indexOf(opt)) options_.push(opt)
             }
           } else if (name === 'role' && 'role' in attributes) {
             if (value) attributes.role += ' ' + value
@@ -124,7 +124,7 @@ block = lf* metadataStart:grab_offset metadata:(attrlists:(@block_attribute_line
         }
       })
     }
-    return (metadataCache[cacheKey] = { attributes, options, location: toSourceLocation(getLocation({ start: metadataStart, end: metadataEnd })) })
+    return (metadataCache[cacheKey] = { attributes, options: options_, location: toSourceLocation(getLocation({ start: metadataStart, end: metadataEnd })) })
   }) block:(section_or_discrete_heading / listing / example / sidebar / list / literal_paragraph / image / paragraph)
   {
     return metadata ? Object.assign(block, { metadata }) : block
