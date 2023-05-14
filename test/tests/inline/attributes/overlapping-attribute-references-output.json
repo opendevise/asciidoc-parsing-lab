@@ -1,0 +1,44 @@
+[
+  {
+    "name": "span",
+    "type": "inline",
+    "variant": "strong",
+    "form": "constrained",
+    "inlines": [
+      {
+        "name": "text",
+        "type": "string",
+        "value": "No Bad Data",
+        "location": [{ "line": 1, "col": 2 }, { "line": 1, "col": 10 }]
+      }
+    ],
+    "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 11 }]
+  },
+  {
+    "name": "text",
+    "type": "string",
+    "value": " will ",
+    "location": [{ "line": 1, "col": 12 }, { "line": 1, "col": 17 }]
+  },
+  {
+    "name": "span",
+    "type": "inline",
+    "variant": "emphasis",
+    "form": "constrained",
+    "inlines": [
+      {
+        "name": "text",
+        "type": "string",
+        "value": "validate your response objects",
+        "location": [{ "line": 1, "col": 19 }, { "line": 1, "col": 28 }]
+      }
+    ],
+    "location": [{ "line": 1, "col": 18 }, { "line": 1, "col": 29 }]
+  },
+  {
+    "name": "text",
+    "type": "string",
+    "value": ".",
+    "location": [{ "line": 1, "col": 30 }, { "line": 1, "col": 30 }]
+  }
+]

@@ -1295,10 +1295,24 @@ describe('inline (unported)', () => {
   })
 
   describe('preprocessor', () => {
+    const makeSourceMapping = (ranges) => {
+      const sourceMapping = []
+      for (const { range, offset, attr } of ranges) {
+        if (attr) {
+          const entry = { offset, attr }
+          for (let i = range[0], to = range[1]; i <= to; i++) sourceMapping[i] = entry
+        } else {
+          let nextOffset = offset
+          for (let i = range[0], to = range[1]; i <= to; i++) sourceMapping[i] = { offset: nextOffset++ }
+        }
+      }
+      return sourceMapping
+    }
+
     it('should define offset for attribute as range when value is shorter than reference', () => {
-      const input = 'hi {name}'
+      const input = 'hi {name}!'
       const expected = {
-        input: 'hi Dan',
+        input: 'hi Dan!',
         sourceMapping: [
           { offset: 0 },
           { offset: 1 },
@@ -1306,15 +1320,16 @@ describe('inline (unported)', () => {
           { offset: [3, 8], attr: 'name' },
           { offset: [3, 8], attr: 'name' },
           { offset: [3, 8], attr: 'name' },
+          { offset: 9 },
         ],
       }
       expect(inlinePreprocessor(input, { name: 'Dan' })).to.eql(expected)
     })
 
     it('should define offset for attribute as range when value is longer than reference', () => {
-      const input = 'hi {name}'
+      const input = 'hi {name}!'
       const expected = {
-        input: 'hi Guillaume',
+        input: 'hi Guillaume!',
         sourceMapping: [
           { offset: 0 },
           { offset: 1 },
@@ -1328,9 +1343,45 @@ describe('inline (unported)', () => {
           { offset: [3, 8], attr: 'name' },
           { offset: [3, 8], attr: 'name' },
           { offset: [3, 8], attr: 'name' },
+          { offset: 9 },
         ],
       }
       expect(inlinePreprocessor(input, { name: 'Guillaume' })).to.eql(expected)
+    })
+
+    it('should track offsets across multiple attribute references', () => {
+      const input = 'The case of {plantiff} vs {defendant}.'
+      const expected = {
+        input: 'The case of Wile E. Coyote vs ACME Corp.',
+        sourceMapping: makeSourceMapping([
+          { range: [0, 11], offset: 0 },
+          { range: [12, 25], offset: [12, 21], attr: 'plantiff' },
+          { range: [26, 29], offset: 22 },
+          { range: [30, 38], offset: [26, 36], attr: 'defendant' },
+          { range: [39, 39], offset: 37 },
+        ]),
+      }
+      expect(inlinePreprocessor(input, { plantiff: 'Wile E. Coyote', defendant: 'ACME Corp' })).to.eql(expected)
+    })
+
+    it('should track offsets when first attribute value overlaps location of second attribute reference', () => {
+      const input = 'A {url-formal-grammar}[formal grammar] for the {url-asciidoc-lang}[AsciiDoc Language].'
+      const attributes = {
+        'url-asciidoc-lang': 'https://gitlab.eclipse.org/eclipse/asciidoc-lang/asciidoc-lang',
+        'url-formal-grammar': 'https://en.wikipedia.org/wiki/Formal_grammar',
+      }
+      const expected = {
+        input: 'A https://en.wikipedia.org/wiki/Formal_grammar[formal grammar] for the ' +
+          'https://gitlab.eclipse.org/eclipse/asciidoc-lang/asciidoc-lang[AsciiDoc Language].',
+        sourceMapping: makeSourceMapping([
+          { range: [0, 1], offset: 0 },
+          { range: [2, 45], offset: [2, 21], attr: 'url-formal-grammar' },
+          { range: [46, 70], offset: 22 },
+          { range: [71, 132], offset: [47, 65], attr: 'url-asciidoc-lang' },
+          { range: [133, 152], offset: 66 },
+        ]),
+      }
+      expect(inlinePreprocessor(input, attributes)).to.eql(expected)
     })
   })
 })
