@@ -3,6 +3,7 @@
 
 const { expect } = require('#test-harness')
 const { parse } = require('#inline-parser')
+const inlinePreprocessor = require('#inline-preprocessor')
 
 describe('inline (unported)', () => {
   const loc = (start, end = start) => {
@@ -1290,6 +1291,46 @@ describe('inline (unported)', () => {
         ]
         expect(parse(input)).to.eql(expected)
       })
+    })
+  })
+
+  describe('preprocessor', () => {
+    it('should define offset for attribute as range when value is shorter than reference', () => {
+      const input = 'hi {name}'
+      const expected = {
+        input: 'hi Dan',
+        sourceMapping: [
+          { offset: 0 },
+          { offset: 1 },
+          { offset: 2 },
+          { offset: [3, 8], attr: 'name' },
+          { offset: [3, 8], attr: 'name' },
+          { offset: [3, 8], attr: 'name' },
+        ],
+      }
+      expect(inlinePreprocessor(input, { name: 'Dan' })).to.eql(expected)
+    })
+
+    it('should define offset for attribute as range when value is longer than reference', () => {
+      const input = 'hi {name}'
+      const expected = {
+        input: 'hi Guillaume',
+        sourceMapping: [
+          { offset: 0 },
+          { offset: 1 },
+          { offset: 2 },
+          { offset: [3, 8], attr: 'name' },
+          { offset: [3, 8], attr: 'name' },
+          { offset: [3, 8], attr: 'name' },
+          { offset: [3, 8], attr: 'name' },
+          { offset: [3, 8], attr: 'name' },
+          { offset: [3, 8], attr: 'name' },
+          { offset: [3, 8], attr: 'name' },
+          { offset: [3, 8], attr: 'name' },
+          { offset: [3, 8], attr: 'name' },
+        ],
+      }
+      expect(inlinePreprocessor(input, { name: 'Guillaume' })).to.eql(expected)
     })
   })
 })
