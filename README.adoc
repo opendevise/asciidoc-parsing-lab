@@ -16,7 +16,7 @@ The grammars and grammar-related helpers formulated in this repository will be c
 The development of the AsciiDoc Language Specification is now in full swing.
 The center piece of this specification is the normative definition of the AsciiDoc Language.
 
-Up until now, the AsciiDoc syntax rules have only been informally described through pre-spec implementation code (Asciidoctor) and user-oriented documentation (https://docs.asciidoctor.org/asciidoc/latest/).
+Up until now, the AsciiDoc syntax rules have only been informally described through pre-spec implementation code (Asciidoctor) and https://docs.asciidoctor.org/asciidoc/latest/[user-oriented documentation].
 Developing a specification for the AsciiDoc Language necessitates formalizing the syntax into a grammar.
 
 A formal grammar describes the sequences of characters (i.e., markup) that are valid according to the syntax using a set of rules.
