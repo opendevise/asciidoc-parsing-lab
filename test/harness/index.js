@@ -38,12 +38,11 @@ function resolveDirname ({ url }) {
 
 function makeTests (tests, testBlock) {
   for (const test of tests) {
-    const { name, type } = test
-    if (type === 'dir') {
-      describe(name, () => makeTests(test.entries, testBlock))
+    if (test.type === 'dir') {
+      describe(test.name, () => makeTests(test.entries, testBlock))
     } else {
-      ;(it[test.condition] || it)(name, function () {
-        return testBlock.call(this, test)
+      ;(it[test.condition] || it)(test.name, function () {
+        return testBlock.call(this, test.data)
       })
     }
   }
@@ -85,15 +84,17 @@ async function scanTests (dir = process.cwd(), base = process.cwd()) {
           }
           return {
             type: 'test',
-            basename,
             name: config.name || basename.replace(/-/g, ' '),
-            inputPath: ospath.relative(base, inputPath),
-            outputPath: ospath.relative(base, outputPath),
-            input,
-            options: config.options,
-            expected,
-            expectedWithoutLocations,
             condition: config.only ? 'only' : config.skip ? 'skip' : undefined,
+            data: {
+              basename,
+              inputPath: ospath.relative(base, inputPath),
+              outputPath: ospath.relative(base, outputPath),
+              input,
+              options: config.options,
+              expected,
+              expectedWithoutLocations,
+            },
           }
         })
       )
