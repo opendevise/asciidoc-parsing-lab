@@ -80,6 +80,8 @@ header = attributeEntriesAbove:attribute_entry* titleOffset:grab_offset title:do
         if (!(name in documentAttributes)) documentAttributes[name] = attributes[name] = val
       }
     }
+    // FIXME need to move this between entries above/below so it is available to below
+    documentAttributes.doctitle = title
     const titleLocation = getLocation({ start: titleOffset, end: titleOffset + title.length })
     const titleInlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(titleLocation, 3) })
     return { title: titleInlines, attributes, location: toSourceLocation(getLocation()) }
