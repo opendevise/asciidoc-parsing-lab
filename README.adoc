@@ -33,9 +33,9 @@ Thus, in order to work with it, you first need to have {url-nodejs}[Node.js] ins
 
 The best way to install Node.js is to use {url-nvm}[nvm] (Node Version Manager).
 
- $ nvm install 19
+ $ nvm install 20
 
-Once Node.js 19 is installed, switch to it:
+Once Node.js 20 is installed, switch to it:
 
  $ nvm use
 
