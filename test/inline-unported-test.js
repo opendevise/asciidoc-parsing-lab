@@ -1310,6 +1310,13 @@ describe('inline (unported)', () => {
       return sourceMapping
     }
 
+    it('should allow inline preprocessor to be deactivated', () => {
+      const input = '{name}'
+      const attributes = { name: 'Dan' }
+      const expected = [{ type: 'string', name: 'text', value: '{name}', location: loc(1, input) }]
+      expect(parse(input, { attributes, preprocess: false })).to.eql(expected)
+    })
+
     it('should define offset for attribute as range when value is shorter than reference', () => {
       const input = 'hi {name}!'
       const expected = {

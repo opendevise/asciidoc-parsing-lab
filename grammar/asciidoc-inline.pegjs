@@ -5,9 +5,12 @@ const { splitLines } = require('#util')
 }}
 {
 if (!input) return []
-const documentAttributes = options.attributes ?? {}
-const { input: preprocessedInput, sourceMapping } = inlinePreprocessor(input, { attributes: documentAttributes })
-if (!preprocessedInput) return []
+const { attributes: documentAttributes = {}, preprocess = true } = options
+let preprocessedInput, sourceMapping
+if (preprocess) {
+  ;({ input: preprocessedInput, sourceMapping } = inlinePreprocessor(input, { attributes: documentAttributes }))
+  if (!preprocessedInput) return []
+}
 const locations = options.locations
 const offsetToSourceLocation = locations
   ? splitLines(input).reduce((accum, lineVal, lineIdx) => {
@@ -23,19 +26,17 @@ const offsetToSourceLocation = locations
       for (let col = 1, len = lineVal.length; col <= len; col++) accum.push({ line, col })
       return accum
     }, [])
-if (!/[`_*#:<[\\]/.test(preprocessedInput)) {
+if (sourceMapping) input = preprocessedInput
+if (!/[`_*#:<[\\]/.test(input)) {
   if (sourceMapping) {
     if (~sourceMapping.findIndex((it) => it.pass)) {
       const sourceLength = preprocessedInput.length
-      input = Object.assign(new String(preprocessedInput.replace(/\x10\0+/g, (_, idx) => sourceMapping[idx].contents)), { sourceLength })
-    } else {
-      input = preprocessedInput
+      input = Object.assign(new String(input.replace(/\x10\0+/g, (_, idx) => sourceMapping[idx].contents)), { sourceLength })
     }
   }
   // TODO extract the function to transform a single text node and call it directly
   return transformToModel([input], computeLocation.bind(null, sourceMapping, offsetToSourceLocation))
 }
-input = preprocessedInput
 }
 // TODO instead of &any check here, could patch parser to node call parsenode() if peg$currPos === input.length
 root = nodes:(&any @node)*
