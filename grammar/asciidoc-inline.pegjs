@@ -6,7 +6,7 @@ const { splitLines } = require('#util')
 {
 if (!input) return []
 const documentAttributes = options.attributes ?? {}
-const { input: preprocessedInput, sourceMapping } = inlinePreprocessor(input, documentAttributes)
+const { input: preprocessedInput, sourceMapping } = inlinePreprocessor(input, { attributes: documentAttributes })
 if (!preprocessedInput) return []
 const locations = options.locations
 const offsetToSourceLocation = locations

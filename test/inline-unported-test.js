@@ -1323,7 +1323,7 @@ describe('inline (unported)', () => {
           { offset: 9 },
         ],
       }
-      expect(inlinePreprocessor(input, { name: 'Dan' })).to.eql(expected)
+      expect(inlinePreprocessor(input, { attributes: { name: 'Dan' } })).to.eql(expected)
     })
 
     it('should define offset for attribute as range when value is longer than reference', () => {
@@ -1346,11 +1346,15 @@ describe('inline (unported)', () => {
           { offset: 9 },
         ],
       }
-      expect(inlinePreprocessor(input, { name: 'Guillaume' })).to.eql(expected)
+      expect(inlinePreprocessor(input, { attributes: { name: 'Guillaume' } })).to.eql(expected)
     })
 
     it('should track offsets across multiple attribute references', () => {
       const input = 'The case of {plantiff} vs {defendant}.'
+      const attributes = {
+        plantiff: 'Wile E. Coyote',
+        defendant: 'ACME Corp',
+      }
       const expected = {
         input: 'The case of Wile E. Coyote vs ACME Corp.',
         sourceMapping: makeSourceMapping([
@@ -1361,7 +1365,7 @@ describe('inline (unported)', () => {
           { range: [39, 39], offset: 37 },
         ]),
       }
-      expect(inlinePreprocessor(input, { plantiff: 'Wile E. Coyote', defendant: 'ACME Corp' })).to.eql(expected)
+      expect(inlinePreprocessor(input, { attributes })).to.eql(expected)
     })
 
     it('should track offsets when first attribute value overlaps location of second attribute reference', () => {
@@ -1381,7 +1385,7 @@ describe('inline (unported)', () => {
           { range: [133, 152], offset: 66 },
         ]),
       }
-      expect(inlinePreprocessor(input, attributes)).to.eql(expected)
+      expect(inlinePreprocessor(input, { attributes })).to.eql(expected)
     })
   })
 })
