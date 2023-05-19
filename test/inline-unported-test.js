@@ -1416,5 +1416,21 @@ describe('inline (unported)', () => {
       }
       expect(inlinePreprocessor(input)).to.eql(expected)
     })
+
+    it('should allow initial sourceMapping to be specified', () => {
+      const input = '{name}.'
+      const attributes = { name: 'a +val+' }
+      const { input: preprocessedInput, sourceMapping } = inlinePreprocessor(input, { attributes })
+      const expected = {
+        input: 'a \x10\0\0\0\0.',
+        sourceMapping: makeSourceMapping([
+          { range: [0, 1], offset: [0, 5], attr: 'name' },
+          { range: [2, 2], offset: [0, 5], attr: 'name', contents: 'val', form: 'constrained', pass: true },
+          { range: [3, 6], offset: [0, 5], attr: 'name', pass: true },
+          { range: [7, 7], offset: 6 },
+        ]),
+      }
+      expect(inlinePreprocessor(preprocessedInput, { sourceMapping })).to.eql(expected)
+    })
   })
 })
