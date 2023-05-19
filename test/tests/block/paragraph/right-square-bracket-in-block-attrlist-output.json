@@ -1,0 +1,24 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "Paragraph with title [vars].",
+          "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 28 }]
+        }
+      ],
+      "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 28 }],
+      "metadata": {
+        "attributes": { "title": "[vars]" },
+        "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 14 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 28 }]
+}

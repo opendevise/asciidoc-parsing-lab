@@ -271,7 +271,7 @@ line_or_empty_line = line / lf @''
 
 indented_line = @$(' ' [^\n]+) eol
 
-attrlist = $[^\n\]]*
+attrlist = $(!('\n' / ']' eol) .)*
 
 space = ' '
 

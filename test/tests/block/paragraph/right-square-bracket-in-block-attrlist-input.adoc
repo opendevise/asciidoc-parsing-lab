@@ -1,0 +1,2 @@
+[title=[vars]]
+Paragraph with title [vars].
