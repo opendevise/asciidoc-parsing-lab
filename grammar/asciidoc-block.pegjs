@@ -66,7 +66,7 @@ attribute_entry = ':' name:attribute_name ':' value:attribute_value eol
 // TODO permit non-ASCII letters in attribute name
 attribute_name = !'-' @$[a-zA-Z0-9_-]+
 
-attribute_value = (' ' @$[^\n]+ / '')
+attribute_value = (space @$[^\n]+ / '')
 
 block_attribute_line = '[' @attrlist ']' eol
 
@@ -169,7 +169,7 @@ literal_paragraph = lines:indented_line+
     }
   }
 
-heading = marker:'='+ ' ' title:line
+heading = marker:'='+ space title:line
   {
     const location_ = getLocation()
     const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, marker.length + 2) })
@@ -233,9 +233,9 @@ list = &(marker:list_start &{ return isNewList(context, marker) }) items:(lf* @l
     return { name: 'list', type: 'block', variant, marker, items: items, location: toSourceLocation(getLocation()) }
   }
 
-list_start = @list_marker ![ \n]
+list_start = @list_marker !(space / lf)
 
-list_marker = @($'*'+ / $'.'+ / '-' / $([0-9]+ '.')) ' '
+list_marker = @($'*'+ / $'.'+ / '-' / $([0-9]+ '.')) space
 
 list_item_principal = first:line wrapped:(!(block_attribute_line / list_continuation_line / list_start / any_compound_block_delimiter_line) @line)*
   {
@@ -269,9 +269,9 @@ line = @$[^\n]+ eol
 
 line_or_empty_line = line / lf @''
 
-indented_line = @$(' ' [^\n]+) eol
+indented_line = @$(space [^\n]+) eol
 
-attrlist = !' ' @$(!('\n' / ' '? ']' eol) .)*
+attrlist = !space @$(!(lf / space? ']' eol) .)*
 
 space = ' '
 
