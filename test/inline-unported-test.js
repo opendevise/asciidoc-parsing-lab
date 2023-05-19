@@ -1297,13 +1297,14 @@ describe('inline (unported)', () => {
   describe('preprocessor', () => {
     const makeSourceMapping = (ranges) => {
       const sourceMapping = []
-      for (const { range, offset, attr } of ranges) {
-        if (attr) {
-          const entry = { offset, attr }
-          for (let i = range[0], to = range[1]; i <= to; i++) sourceMapping[i] = entry
+      for (const { range, offset, ...entry } of ranges) {
+        const range_ = Array.isArray(range) ? range : [range, range]
+        if (Object.keys(entry).length) {
+          entry.offset = offset
+          for (let i = range_[0], to = range_[1]; i <= to; i++) sourceMapping[i] = entry
         } else {
           let nextOffset = offset
-          for (let i = range[0], to = range[1]; i <= to; i++) sourceMapping[i] = { offset: nextOffset++ }
+          for (let i = range_[0], to = range_[1]; i <= to; i++) sourceMapping[i] = { offset: nextOffset++ }
         }
       }
       return sourceMapping
@@ -1386,6 +1387,34 @@ describe('inline (unported)', () => {
         ]),
       }
       expect(inlinePreprocessor(input, { attributes })).to.eql(expected)
+    })
+
+    it('should track location of inline passthrough and replace extent with placeholder', () => {
+      const input = '+keep+ pass:[out]!'
+      const expected = {
+        input: '\x10' + '\0'.repeat(5) + ' \x10' + '\0'.repeat(9) + '!',
+        sourceMapping: makeSourceMapping([
+          { range: 0, offset: 0, contents: 'keep', form: 'constrained', pass: true },
+          { range: 1, offset: 1, pass: true },
+          { range: 2, offset: 2, pass: true },
+          { range: 3, offset: 3, pass: true },
+          { range: 4, offset: 4, pass: true },
+          { range: 5, offset: 5, pass: true },
+          { range: 6, offset: 6 },
+          { range: 7, offset: 7, contents: 'out', form: 'macro', pass: true },
+          { range: 8, offset: 8, pass: true },
+          { range: 9, offset: 9, pass: true },
+          { range: 10, offset: 10, pass: true },
+          { range: 11, offset: 11, pass: true },
+          { range: 12, offset: 12, pass: true },
+          { range: 13, offset: 13, pass: true },
+          { range: 14, offset: 14, pass: true },
+          { range: 15, offset: 15, pass: true },
+          { range: 16, offset: 16, pass: true },
+          { range: 17, offset: 17 },
+        ]),
+      }
+      expect(inlinePreprocessor(input)).to.eql(expected)
     })
   })
 })
