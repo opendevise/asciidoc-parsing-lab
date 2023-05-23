@@ -1,0 +1,20 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "main\npartial",
+          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7, "file": ["partial.adoc"] }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7, "file": ["partial.adoc"] }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 0 }]
+}

@@ -9,17 +9,19 @@ const metadataCache = {}
 
 function getLocation (range_) {
   let eof
-  const { start, end } = range_ === true ? (eof = true) && range() : range_ || range()
+  let { start, end } = range_ === true ? (eof = true) && range() : range_ || range()
   const { line: startLine, column: startCol } = peg$computePosDetails(start)
   const startDetails = { line: startLine, col: startCol }
   if (end === start) return [startDetails, startDetails]
+  let hasEol
   if (eof) {
-    const { line: endLine, column: endCol } = peg$computePosDetails(end)
-    return [startDetails, { line: endLine, col: endCol - 1 }]
-  } else {
-    const { line: endLine, column: endCol } = peg$computePosDetails(end - (end < input.length || (input[end - 1] ?? '\n') === '\n' ? 2 : 1))
-    return [startDetails, { line: endLine, col: endCol }]
+    ;(hasEol = input[input.length - 1] === '\n') || end--
+  } else if (input[--end] === '\n') { // NOTE lf is the end of the block in this case
+    end--
   }
+  if (end === start) return [startDetails, startDetails]
+  const { line: endLine, column: endCol } = peg$computePosDetails(end)
+  return [startDetails, { line: endLine, col: hasEol ? 0 : endCol }]
 }
 
 function toSourceLocation (location) {
@@ -28,8 +30,7 @@ function toSourceLocation (location) {
   const originalStart = Object.assign({}, locations[start.line])
   originalStart.col += start.col - 1
   if (start === end) return [originalStart, originalStart]
-  // FIXME end fallback needed for newline at end of document added by include
-  const originalEnd = Object.assign({}, locations[end.line] || locations[end.line - 1])
+  const originalEnd = Object.assign({}, locations[end.line])
   originalEnd.col += end.col - 1
   return [originalStart, originalEnd]
 }

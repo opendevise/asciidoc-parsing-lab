@@ -60,7 +60,7 @@ describe('preprocessor', () => {
     const input = 'ifndef::foo[foo is not set]\n'
     const expected = {
       input: 'foo is not set\n',
-      locations: { 1: loc('1:13:0') },
+      locations: { 1: loc('1:13:0'), 2: loc('2:1:0') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -113,6 +113,7 @@ describe('preprocessor', () => {
     expect(parse(input)).to.eql(expected)
   })
 
+  // FIXME maybe don't keep trailing newline in this case?
   it('should process input with true single-line preprocessor conditional preceded by other lines', () => {
     const input = heredoc`
     début
@@ -120,7 +121,7 @@ describe('preprocessor', () => {
     `
     const expected = {
       input: 'début\n',
-      locations: { 1: loc('1:1:0') },
+      locations: { 1: loc('1:1:0'), 2: loc('2:1:0') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -157,6 +158,7 @@ describe('preprocessor', () => {
     expect(parse(input)).to.eql(expected)
   })
 
+  // FIXME maybe don't keep trailing newline in this case?
   it('should process input with only true preprocessor conditional enclosure', () => {
     const input = heredoc`
     ifndef::foo[]
@@ -165,7 +167,7 @@ describe('preprocessor', () => {
     `
     const expected = {
       input: 'foo is not set\n',
-      locations: { 1: loc('2:1:1') },
+      locations: { 1: loc('2:1:1'), 2: loc('4:1:2') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -200,7 +202,7 @@ describe('preprocessor', () => {
       début
       foo is not set
       ` + '\n',
-      locations: { 1: loc('1:1:0'), 2: loc('3:1:1') },
+      locations: { 1: loc('1:1:0'), 2: loc('3:1:1'), 3: loc('5:1:2') },
     }
     expect(parse(input)).to.eql(expected)
   })
@@ -466,6 +468,71 @@ describe('preprocessor', () => {
       locations: {
         1: loc('1:1:0'),
         2: loc('1:1:0', ['partial-noeol.adoc']),
+        3: loc('3:1:0'),
+      },
+    }
+    expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
+  })
+
+  it('should compute offsets for trailing non-empty include without trailing newline correctly', () => {
+    const input = heredoc`
+    before
+    include::partial-noeol.adoc[]
+    `
+    const expected = {
+      input: 'before\npartial',
+      locations: {
+        1: loc('1:1:0'),
+        2: loc('1:1:0', ['partial-noeol.adoc']),
+      },
+    }
+    expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
+  })
+
+  it('should compute offsets for non-empty include without trailing newline followed by newline correctly', () => {
+    const inputBase = heredoc`
+    before
+    include::partial-noeol.adoc[]
+    `
+    const input = inputBase + '\n'
+    const expected = {
+      input: 'before\npartial\n',
+      locations: {
+        1: loc('1:1:0'),
+        2: loc('1:1:0', ['partial-noeol.adoc']),
+        3: loc('3:1:0'),
+      },
+    }
+    expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
+  })
+
+  it('should compute offsets for trailing non-empty include with trailing newline correctly', () => {
+    const input = heredoc`
+    before
+    include::partial.adoc[]
+    `
+    const expected = {
+      input: 'before\npartial\n',
+      locations: {
+        1: loc('1:1:0'),
+        2: loc('1:1:0', ['partial.adoc']),
+        3: loc('2:1:0', ['partial.adoc']),
+      },
+    }
+    expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
+  })
+
+  it('should compute offsets for non-empty include with trailing newline followed by newline correctly', () => {
+    const inputBase = heredoc`
+    before
+    include::partial.adoc[]
+    `
+    const input = inputBase + '\n'
+    const expected = {
+      input: 'before\npartial\n',
+      locations: {
+        1: loc('1:1:0'),
+        2: loc('1:1:0', ['partial.adoc']),
         3: loc('3:1:0'),
       },
     }
