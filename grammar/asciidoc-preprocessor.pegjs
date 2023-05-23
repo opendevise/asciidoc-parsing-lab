@@ -84,7 +84,7 @@ pp_conditional_pair = opening:$(('ifdef' / 'ifndef') '::' attribute_name '[]\n')
   }
 
 //pp = (pp_directive* &{ return false })?
-pp = (pp_directive* . !.)?
+pp = (pp_directive* !. &.)?
 // Q: is there a cleaner way to fail pp_directive to restore currPos, but still keep checking??
 //pp = ((modified:(&{ return true } { return {} }) (pp_directive &{ return !(modified.true = true) } / &{ return modified.true }))* . !.)?
 
