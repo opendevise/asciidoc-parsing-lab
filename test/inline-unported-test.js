@@ -1317,6 +1317,18 @@ describe('inline (unported)', () => {
       expect(parse(input, { attributes, preprocess: false })).to.eql(expected)
     })
 
+    it('should only return input if preprocessor does not run on input', () => {
+      const input = 'nothing to preprocess'
+      const expected = { input }
+      expect(inlinePreprocessor(input)).to.eql(expected)
+    })
+
+    it('should only return input if preprocessor does not match anything', () => {
+      const input = '{ + }'
+      const expected = { input }
+      expect(inlinePreprocessor(input)).to.eql(expected)
+    })
+
     it('should define offset for attribute as range when value is shorter than reference', () => {
       const input = 'hi {name}!'
       const expected = {
@@ -1424,20 +1436,32 @@ describe('inline (unported)', () => {
       expect(inlinePreprocessor(input)).to.eql(expected)
     })
 
-    it('should allow initial sourceMapping to be specified', () => {
-      const input = '{name}.'
-      const attributes = { name: 'a +val+' }
-      const { input: preprocessedInput, sourceMapping } = inlinePreprocessor(input, { attributes })
+    it('should allow initial sourceMapping from previous phase to be specified', () => {
+      const input = '{name} +val+.'
+      const attributes = { name: 'a' }
+      const { input: preprocessedInput, sourceMapping } = inlinePreprocessor(input, { attributes, mode: 'attributes' })
       const expected = {
         input: 'a \x10\0\0\0\0.',
         sourceMapping: makeSourceMapping([
-          { range: [0, 1], offset: [0, 5], attr: 'name' },
-          { range: [2, 2], offset: [0, 5], attr: 'name', contents: 'val', form: 'constrained', pass: true },
-          { range: [3, 6], offset: [0, 5], attr: 'name', pass: true },
-          { range: [7, 7], offset: 6 },
+          { range: 0, offset: [0, 5], attr: 'name' },
+          { range: 1, offset: 6 },
+          { range: 2, offset: 7, contents: 'val', form: 'constrained', pass: true },
+          { range: 3, offset: 8, pass: true },
+          { range: 4, offset: 9, pass: true },
+          { range: 5, offset: 10, pass: true },
+          { range: 6, offset: 11, pass: true },
+          { range: 7, offset: 12 },
         ]),
       }
-      expect(inlinePreprocessor(preprocessedInput, { sourceMapping })).to.eql(expected)
+      expect(inlinePreprocessor(preprocessedInput, { sourceMapping, mode: 'passthroughs' })).to.eql(expected)
+    })
+
+    it('should return specified sourceMapping if nothing is matched', () => {
+      const input = '{name}'
+      const attributes = { name: 'a' }
+      const { input: preprocessedInput, sourceMapping } = inlinePreprocessor(input, { attributes, mode: 'attributes' })
+      const expected = { input: 'a', sourceMapping }
+      expect(inlinePreprocessor(preprocessedInput, { sourceMapping, mode: 'passthroughs' })).to.eql(expected)
     })
 
     it('should only process attribute references if mode is attributes', () => {
