@@ -114,8 +114,12 @@ pp_include = 'include::' target:$[^\[\n]+ '[]' eol
         numAdded--
       }
     }
-    let n = endLine
-    while (n in locations) locations[n + numAdded] = locations[n++]
+    if (endLine in locations) {
+      const shiftedLocations = []
+      let n = endLine
+      while (n in locations) shiftedLocations[n + numAdded] = locations[n++]
+      Object.assign(locations, shiftedLocations)
+    }
     const file = [...locations[startLine]?.file || [], target]
     for (let l = 0, len = numAdded; l < len; l++) {
       locations[l + startLine] = { line: l + 1, col: 1, lineOffset: 0, file }
