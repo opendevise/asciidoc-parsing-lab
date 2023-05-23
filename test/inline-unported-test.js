@@ -1439,5 +1439,52 @@ describe('inline (unported)', () => {
       }
       expect(inlinePreprocessor(preprocessedInput, { sourceMapping })).to.eql(expected)
     })
+
+    it('should only process attribute references if mode is attributes', () => {
+      const input = '{name} +{name}+'
+      const attributes = { name: 'Chris' }
+      const expected = {
+        input: 'Chris +{name}+',
+        sourceMapping: makeSourceMapping([
+          { range: [0, 4], offset: [0, 5], attr: 'name' },
+          { range: 5, offset: 6 },
+          { range: 6, offset: 7 },
+          { range: 7, offset: 8 },
+          { range: 8, offset: 9 },
+          { range: 9, offset: 10 },
+          { range: 10, offset: 11 },
+          { range: 11, offset: 12 },
+          { range: 12, offset: 13 },
+          { range: 13, offset: 14 },
+        ]),
+      }
+      expect(inlinePreprocessor(input, { attributes, mode: 'attributes' })).to.eql(expected)
+    })
+
+    it('should only process passthroughs if mode is passthroughs', () => {
+      const input = '{name} +{name}+'
+      const attributes = { name: 'Chris' }
+      const expected = {
+        input: '{name} \x10\0\0\0\0\0\0\0',
+        sourceMapping: makeSourceMapping([
+          { range: 0, offset: 0 },
+          { range: 1, offset: 1 },
+          { range: 2, offset: 2 },
+          { range: 3, offset: 3 },
+          { range: 4, offset: 4 },
+          { range: 5, offset: 5 },
+          { range: 6, offset: 6 },
+          { range: 7, offset: 7, contents: '{name}', form: 'constrained', pass: true },
+          { range: 8, offset: 8, pass: true },
+          { range: 9, offset: 9, pass: true },
+          { range: 10, offset: 10, pass: true },
+          { range: 11, offset: 11, pass: true },
+          { range: 12, offset: 12, pass: true },
+          { range: 13, offset: 13, pass: true },
+          { range: 14, offset: 14, pass: true },
+        ]),
+      }
+      expect(inlinePreprocessor(input, { attributes, mode: 'passthroughs' })).to.eql(expected)
+    })
   })
 })
