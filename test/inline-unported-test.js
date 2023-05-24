@@ -1314,7 +1314,7 @@ describe('inline (unported)', () => {
       const input = '{name}'
       const attributes = { name: 'Dan' }
       const expected = [{ type: 'string', name: 'text', value: '{name}', location: loc(1, input) }]
-      expect(parse(input, { attributes, preprocess: false })).to.eql(expected)
+      expect(parse(input, { attributes, preprocessorMode: 'none' })).to.eql(expected)
     })
 
     it('should only return input if preprocessor does not run on input', () => {

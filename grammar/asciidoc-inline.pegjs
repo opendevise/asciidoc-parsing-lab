@@ -5,9 +5,9 @@ const { splitLines } = require('#util')
 }}
 {
 if (!input) return []
-const { attributes: documentAttributes = {}, preprocess = true } = options
+const { attributes: documentAttributes = {}, preprocessorMode } = options
 let preprocessedInput, sourceMapping
-if (preprocess) {
+if (preprocessorMode !== 'none') {
   ;({ input: preprocessedInput, sourceMapping } = inlinePreprocessor(input, { attributes: documentAttributes }))
   if (!preprocessedInput) return []
 }
