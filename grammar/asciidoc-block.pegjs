@@ -127,7 +127,7 @@ block = lf* metadataStart:grab_offset metadata:(attrlists:(@block_attribute_line
       })
     }
     return (metadataCache[cacheKey] = { attributes, options: options_, location: toSourceLocation(getLocation({ start: metadataStart, end: metadataEnd })) })
-  }) block:(section_or_discrete_heading / listing / example / sidebar / list / literal_paragraph / image / paragraph)
+  }) block:(!heading @(listing / example / sidebar / list / literal_paragraph / image / paragraph) / section_or_discrete_heading)
   {
     return metadata ? Object.assign(block, { metadata }) : block
   }
