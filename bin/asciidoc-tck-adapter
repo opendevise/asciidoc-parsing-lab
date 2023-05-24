@@ -7,4 +7,4 @@ const parse = require('asciidoc-parsing-lab')
 
 process.title = 'asciidoc-parsing-lab'
 
-process.stdout.write(JSON.stringify(parse(fs.readFileSync(0).toString(), { parseInlines: true })))
+process.stdout.write(JSON.stringify(parse(fs.readFileSync(0).toString(), { parseInlines: true })) + '\n')
