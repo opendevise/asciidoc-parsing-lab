@@ -93,7 +93,7 @@ doctitle = '= ' @line
 body = block*
 
 // blocks = // does not include check for section; paragraph can just be paragraph
-// blocks_in_section_body = // includes check for section; paragraph has to be paragraph_not_heading
+// blocks_in_section_body = // includes check for section; should start with !at_heading
 
 block = lf* metadataStart:grab_offset metadata:(attrlists:(@block_attribute_line lf*)* metadataEnd:grab_offset {
     // TODO move this logic to a helper function or grammar rule
@@ -127,11 +127,12 @@ block = lf* metadataStart:grab_offset metadata:(attrlists:(@block_attribute_line
       })
     }
     return (metadataCache[cacheKey] = { attributes, options: options_, location: toSourceLocation(getLocation({ start: metadataStart, end: metadataEnd })) })
-  }) block:(!heading @(listing / example / sidebar / list / literal_paragraph / image / paragraph) / section_or_discrete_heading)
+  }) block:(!at_heading @(listing / example / sidebar / list / literal_paragraph / image / paragraph) / section_or_discrete_heading)
   {
     return metadata ? Object.assign(block, { metadata }) : block
   }
 
+// FIXME inlines in heading are being parsed multiple times when encountering sibling or parent section
 section_or_discrete_heading = headingStart:grab_offset heading:heading blocks:(&{ return metadataCache[headingStart]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, heading) } @block*)
   {
     if (!blocks) return heading
@@ -168,6 +169,8 @@ literal_paragraph = lines:indented_line+
       return { name: 'literal', type: 'block', inlines, location: sourceLocation }
     }
   }
+
+at_heading = '='+ space line
 
 heading = marker:'='+ space title:line
   {
