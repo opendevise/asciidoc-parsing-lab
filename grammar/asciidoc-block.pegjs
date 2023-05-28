@@ -59,15 +59,15 @@ document = lf* header:header? blocks:body lf*
     return Object.assign(node, { blocks, location: toSourceLocation(getLocation(true)) })
   }
 
-attribute_entry = ':' name:attribute_name ':' value:attribute_value eol
+attribute_entry = ':' name:attribute_name ':' value:attribute_value? eol
   {
-    return [name, value]
+    return [name, value || '']
   }
 
 // TODO permit non-ASCII letters in attribute name
 attribute_name = !'-' @$[a-zA-Z0-9_-]+
 
-attribute_value = (space @$[^\n]+ / '')
+attribute_value = space @$(!'\n' .)+
 
 block_attribute_line = '[' @attrlist ']' eol
 
@@ -257,7 +257,7 @@ list_item = marker:list_marker &{ return isCurrentList(context, marker) } princi
     return { name: 'listItem', type: 'block', marker, principal: principalInlines, blocks, location: toSourceLocation(location_) }
   }
 
-image = 'image::' !space target:$[^\n\[]+ '[' attrlist:attrlist ']' eol
+image = 'image::' !space target:$(!'\n' !'[' .)+ '[' attrlist:attrlist ']' eol
   {
     return { name: 'image', type: 'block', form: 'macro', target, attributes: attrlist ? attrlist.split(',') : [], location: toSourceLocation(getLocation()) }
   }
@@ -269,11 +269,11 @@ grab_offset = ''
     return peg$currPos
   }
 
-line = @$[^\n]+ eol
+line = @$(!'\n' .)+ eol
 
 line_or_empty_line = line / lf @''
 
-indented_line = @$(space [^\n]+) eol
+indented_line = @$(space (!'\n' .)+) eol
 
 attrlist = !space @$(!(lf / space? ']' eol) .)*
 
