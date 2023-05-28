@@ -14,7 +14,7 @@ document = body lf*
     const lineOffset = locations.lineOffset
     delete locations.lineOffset
     const end = location().end
-    let lastLine = !end.offset || input[input.length - 1] === '\n' ? end.line - 1 : end.line
+    let lastLine = end.offset && end.line
     for (let n = lastLine; n > 0; n--) {
       if (n in locations) break
       locations[n] = { line: n + lineOffset, col: 1, lineOffset }
@@ -90,7 +90,7 @@ pp = (pp_directive* !. &.)?
 
 pp_directive = &('if' / 'inc') @(pp_conditional_short / pp_conditional / pp_include)
 
-pp_include = 'include::' target:$[^\[\n]+ '[]' eol
+pp_include = 'include::' target:$[^\[\n]+ '[]' eol:eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
     const lineOffset = locations.lineOffset
@@ -106,12 +106,14 @@ pp_include = 'include::' target:$[^\[\n]+ '[]' eol
     let numAdded = 0
     if (~contentsLastLineIdx) {
       numAdded = contentsLastLineIdx + 1
-      const contentsLastLine = contents[contentsLastLineIdx]
-      if (contentsLastLine) {
-        contents[contentsLastLineIdx] += '\n'
-        contents.push('')
-      } else {
-        numAdded--
+      if (eol) {
+        const contentsLastLine = contents[contentsLastLineIdx]
+        if (contentsLastLine) {
+          contents[contentsLastLineIdx] += '\n'
+          contents.push('')
+        } else {
+          numAdded--
+        }
       }
     }
     if (endLine in locations) {
