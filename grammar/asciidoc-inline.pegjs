@@ -157,7 +157,7 @@ other_left = $(not_mark_or_space+ (space / colon? !any))+
 other_right = $(wordy* constrained_left_mark) / space / escaped / any
 
 // TODO could add : to regexp and use wordy+ colon in second alternative
-escaped = '\\' match:([`_*<{+] / $(wordy* colon))
+escaped = '\\' match:([`_*#<{+] / $(wordy* colon))
   {
     return Object.assign(new String(match), { escaped: true, sourceLength: match.length + 1 })
   }

@@ -56,16 +56,22 @@ describe('inline (unported)', () => {
   })
 
   describe('escaped markup', () => {
-    it('escaped lone constrained strong mark', () => {
-      const input = '\\*'
-      const expected = [{ type: 'string', name: 'text', value: '*', location: loc(1, input) }]
-      expect(parse(input)).to.eql(expected)
+    it('escaped lone formatting mark', () => {
+      const marks = ['`', '_', '*', '#']
+      marks.forEach((mark) => {
+        const input = '\\' + mark
+        const expected = [{ type: 'string', name: 'text', value: mark, location: loc(1, input) }]
+        expect(parse(input)).to.eql(expected)
+      })
     })
 
-    it('escaped unclosed constrained strong', () => {
-      const input = '\\*disclaimer'
-      const expected = [{ type: 'string', name: 'text', value: '*disclaimer', location: loc(1, input) }]
-      expect(parse(input)).to.eql(expected)
+    it('escaped formatting mark followed by wordy', () => {
+      const marks = ['`', '_', '*', '#']
+      marks.forEach((mark) => {
+        const input = '\\' + mark + 'disclaimer'
+        const expected = [{ type: 'string', name: 'text', value: mark + 'disclaimer', location: loc(1, input) }]
+        expect(parse(input)).to.eql(expected)
+      })
     })
 
     it('escaped opening constrained strong mark', () => {
