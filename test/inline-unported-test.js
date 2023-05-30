@@ -56,6 +56,12 @@ describe('inline (unported)', () => {
   })
 
   describe('escaped markup', () => {
+    it('escaped backslash', () => {
+      const input = '\\\\'
+      const expected = [{ type: 'string', name: 'text', value: '\\', location: loc(1, input) }]
+      expect(parse(input)).to.eql(expected)
+    })
+
     it('escaped lone formatting mark', () => {
       const marks = ['`', '_', '*', '#']
       marks.forEach((mark) => {
@@ -74,9 +80,31 @@ describe('inline (unported)', () => {
       })
     })
 
+    it('constrained strong preceded by escaped backslash', () => {
+      const input = '\\\\*seeing stars*'
+      const expected = [
+        { type: 'string', name: 'text', value: '\\', location: loc(1, 2) },
+        {
+          type: 'inline',
+          name: 'span',
+          variant: 'strong',
+          form: 'constrained',
+          location: loc(3, 16),
+          inlines: [{ type: 'string', name: 'text', value: 'seeing stars', location: loc(4, 15) }],
+        },
+      ]
+      expect(parse(input)).to.eql(expected)
+    })
+
     it('escaped opening constrained strong mark', () => {
       const input = '\\*seeing stars*'
       const expected = [{ type: 'string', name: 'text', value: '*seeing stars*', location: loc(1, input) }]
+      expect(parse(input)).to.eql(expected)
+    })
+
+    it('escaped opening constrained strong mark preceded by escaped backslash', () => {
+      const input = '\\\\\\*seeing stars*'
+      const expected = [{ type: 'string', name: 'text', value: '\\*seeing stars*', location: loc(1, input) }]
       expect(parse(input)).to.eql(expected)
     })
 
