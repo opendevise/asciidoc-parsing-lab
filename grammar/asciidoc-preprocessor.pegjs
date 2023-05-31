@@ -46,10 +46,9 @@ paragraph = contents0:line contents1:(pp !('====' eol / list_start) @line)*
     return { name: 'paragraph', contents: unshiftOntoCopy(contents1, contents0), location: location() }
   }
 
-// TODO don't need to check pp on first list iteem
-list = items:(pp @list_item)+
+list = item0:list_item items:(pp @list_item)*
   {
-    return { name: 'list', items, location: location() }
+    return { name: 'list', items: unshiftOntoCopy(items, item0), location: location() }
   }
 
 list_start = list_marker !eol
