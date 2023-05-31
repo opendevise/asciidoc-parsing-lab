@@ -1,7 +1,7 @@
 {{
 const fs = require('node:fs')
 const ospath = require('node:path')
-const { splitLines } = require('#util')
+const { splitLines, unshiftOntoCopy } = require('#util')
 }}
 {
 if (!input) return { input }
@@ -40,12 +40,13 @@ listing = '----\n' contents:$(pp !('----' eol) line / lf)* pp '----' eol
     return { name: 'listing', contents, location: location() }
   }
 
-// TODO don't need to check pp on first line
-paragraph = contents:(pp !('====' eol / list_start) @line)+
+// NOTE could possibly use contents:line|.., pp !('====' eol / list_start)| but peggy doesn't want to allow it
+paragraph = contents0:line contents1:(pp !('====' eol / list_start) @line)*
   {
-    return { name: 'paragraph', contents, location: location() }
+    return { name: 'paragraph', contents: unshiftOntoCopy(contents1, contents0), location: location() }
   }
 
+// TODO don't need to check pp on first list iteem
 list = items:(pp @list_item)+
   {
     return { name: 'list', items, location: location() }
