@@ -1331,13 +1331,18 @@ describe('inline (unported)', () => {
   describe('preprocessor', () => {
     const makeSourceMapping = (ranges) => {
       const sourceMapping = []
-      for (const { range, offset, ...entry } of ranges) {
+      for (const { range, offset, startOffset = offset, ...entry } of ranges) {
         const range_ = Array.isArray(range) ? range : [range, range]
-        if (Object.keys(entry).length) {
+        if (Array.isArray(offset)) {
           entry.offset = offset
           for (let i = range_[0], to = range_[1]; i <= to; i++) sourceMapping[i] = entry
+        } else if (Object.keys(entry).length) {
+          let nextOffset = startOffset
+          for (let i = range_[0], to = range_[1]; i <= to; i++) {
+            sourceMapping[i] = Object.assign({}, entry, { offset: nextOffset++ })
+          }
         } else {
-          let nextOffset = offset
+          let nextOffset = startOffset
           for (let i = range_[0], to = range_[1]; i <= to; i++) sourceMapping[i] = { offset: nextOffset++ }
         }
       }
@@ -1412,11 +1417,11 @@ describe('inline (unported)', () => {
       const expected = {
         input: 'The case of Wile E. Coyote vs ACME Corp.',
         sourceMapping: makeSourceMapping([
-          { range: [0, 11], offset: 0 },
+          { range: [0, 11], startOffset: 0 },
           { range: [12, 25], offset: [12, 21], attr: 'plantiff' },
-          { range: [26, 29], offset: 22 },
+          { range: [26, 29], startOffset: 22 },
           { range: [30, 38], offset: [26, 36], attr: 'defendant' },
-          { range: [39, 39], offset: 37 },
+          { range: 39, offset: 37 },
         ]),
       }
       expect(inlinePreprocessor(input, { attributes })).to.eql(expected)
@@ -1432,11 +1437,11 @@ describe('inline (unported)', () => {
         input: 'A https://en.wikipedia.org/wiki/Formal_grammar[formal grammar] for the ' +
           'https://gitlab.eclipse.org/eclipse/asciidoc-lang/asciidoc-lang[AsciiDoc Language].',
         sourceMapping: makeSourceMapping([
-          { range: [0, 1], offset: 0 },
+          { range: [0, 1], startOffset: 0 },
           { range: [2, 45], offset: [2, 21], attr: 'url-formal-grammar' },
-          { range: [46, 70], offset: 22 },
+          { range: [46, 70], startOffset: 22 },
           { range: [71, 132], offset: [47, 65], attr: 'url-asciidoc-lang' },
-          { range: [133, 152], offset: 66 },
+          { range: [133, 152], startOffset: 66 },
         ]),
       }
       expect(inlinePreprocessor(input, { attributes })).to.eql(expected)
@@ -1448,22 +1453,10 @@ describe('inline (unported)', () => {
         input: '\x10' + '\0'.repeat(5) + ' \x10' + '\0'.repeat(9) + '!',
         sourceMapping: makeSourceMapping([
           { range: 0, offset: 0, contents: 'keep', form: 'constrained', pass: true },
-          { range: 1, offset: 1, pass: true },
-          { range: 2, offset: 2, pass: true },
-          { range: 3, offset: 3, pass: true },
-          { range: 4, offset: 4, pass: true },
-          { range: 5, offset: 5, pass: true },
+          { range: [1, 5], startOffset: 1, pass: true },
           { range: 6, offset: 6 },
           { range: 7, offset: 7, contents: 'out', form: 'macro', pass: true },
-          { range: 8, offset: 8, pass: true },
-          { range: 9, offset: 9, pass: true },
-          { range: 10, offset: 10, pass: true },
-          { range: 11, offset: 11, pass: true },
-          { range: 12, offset: 12, pass: true },
-          { range: 13, offset: 13, pass: true },
-          { range: 14, offset: 14, pass: true },
-          { range: 15, offset: 15, pass: true },
-          { range: 16, offset: 16, pass: true },
+          { range: [8, 16], startOffset: 8, pass: true },
           { range: 17, offset: 17 },
         ]),
       }
@@ -1480,10 +1473,7 @@ describe('inline (unported)', () => {
           { range: 0, offset: [0, 5], attr: 'name' },
           { range: 1, offset: 6 },
           { range: 2, offset: 7, contents: 'val', form: 'constrained', pass: true },
-          { range: 3, offset: 8, pass: true },
-          { range: 4, offset: 9, pass: true },
-          { range: 5, offset: 10, pass: true },
-          { range: 6, offset: 11, pass: true },
+          { range: [3, 6], startOffset: 8, pass: true },
           { range: 7, offset: 12 },
         ]),
       }
@@ -1505,15 +1495,7 @@ describe('inline (unported)', () => {
         input: 'Chris +{name}+',
         sourceMapping: makeSourceMapping([
           { range: [0, 4], offset: [0, 5], attr: 'name' },
-          { range: 5, offset: 6 },
-          { range: 6, offset: 7 },
-          { range: 7, offset: 8 },
-          { range: 8, offset: 9 },
-          { range: 9, offset: 10 },
-          { range: 10, offset: 11 },
-          { range: 11, offset: 12 },
-          { range: 12, offset: 13 },
-          { range: 13, offset: 14 },
+          { range: [5, 13], startOffset: 6 },
         ]),
       }
       expect(inlinePreprocessor(input, { attributes, mode: 'attributes' })).to.eql(expected)
@@ -1525,21 +1507,9 @@ describe('inline (unported)', () => {
       const expected = {
         input: '{name} \x10\0\0\0\0\0\0\0',
         sourceMapping: makeSourceMapping([
-          { range: 0, offset: 0 },
-          { range: 1, offset: 1 },
-          { range: 2, offset: 2 },
-          { range: 3, offset: 3 },
-          { range: 4, offset: 4 },
-          { range: 5, offset: 5 },
-          { range: 6, offset: 6 },
+          { range: [0, 6], startOffset: 0 },
           { range: 7, offset: 7, contents: '{name}', form: 'constrained', pass: true },
-          { range: 8, offset: 8, pass: true },
-          { range: 9, offset: 9, pass: true },
-          { range: 10, offset: 10, pass: true },
-          { range: 11, offset: 11, pass: true },
-          { range: 12, offset: 12, pass: true },
-          { range: 13, offset: 13, pass: true },
-          { range: 14, offset: 14, pass: true },
+          { range: [8, 14], startOffset: 8, pass: true },
         ]),
       }
       expect(inlinePreprocessor(input, { attributes, mode: 'passthroughs' })).to.eql(expected)
