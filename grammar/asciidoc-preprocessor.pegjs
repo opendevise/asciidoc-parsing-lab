@@ -76,7 +76,7 @@ conditional_lines = lines:(!('endif::[]' eol) @(pp_conditional_pair / line / lf)
 pp_conditional_pair = opening:$(('ifdef' / 'ifndef') '::' attribute_name '[]\n') contents:conditional_lines closing:$('endif::[]' eol)?
   {
     if (closing) contents.push(closing)
-    return [opening, ...contents]
+    return unshiftOntoCopy(contents, opening)
   }
 
 //pp = (pp_directive* &{ return false })?
