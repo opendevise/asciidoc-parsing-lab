@@ -86,8 +86,8 @@ pp = (pp_directive* !. &.)?
 
 pp_directive = &('if' / 'inc') @(pp_conditional_short / pp_conditional / pp_include)
 
-//pp_include = 'include::' target:$([^\n\[ ] ([^\n\[ ] / ' ' !'[')*) '[]' eol:eol
-pp_include = 'include::' !space target:$([^\n\[ ] / ' ' !'[')+ '[]' eol:eol
+//pp_include = 'include::' target:$((!'\n' !'[' !' ' .) ((!'\n' !'[' !' ' .) / space !'[')*) '[]' eol:eol
+pp_include = 'include::' !space target:$((!'\n' !'[' !' ' .) / space !'[')+ '[]' eol:eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
     const lineOffset = locations.lineOffset
@@ -130,7 +130,7 @@ pp_include = 'include::' !space target:$([^\n\[ ] / ' ' !'[')+ '[]' eol:eol
     return true
   }
 
-pp_conditional_short = operator:('ifdef' / 'ifndef') '::' attributeName:attribute_name '[' mark:grab_offset contents:$([^\n\]]+ &(']' eol) / ([^\n\]] / ']' !eol)+) ']' eol:eol
+pp_conditional_short = operator:$('if' ('def' / 'ndef')) '::' attributeName:attribute_name '[' mark:grab_offset contents:$((!'\n' '!]' .)+ &(']' eol) / ((!'\n' !']' .) / ']' !eol)+) ']' eol:eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
     const lineOffset = locations.lineOffset
@@ -220,7 +220,7 @@ grab_offset = ''
     return peg$currPos
   }
 
-line = $([^\n]+ eol)
+line = $((!'\n' .)+ eol)
 
 space = ' '
 
