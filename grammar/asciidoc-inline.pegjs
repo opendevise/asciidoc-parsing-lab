@@ -1,6 +1,6 @@
 {{
 const { computeLocation, transformToModel } = require('#inline-helpers')
-const inlinePreprocessor = require('./asciidoc-inline-preprocessor')
+const inlinePreprocessor = require('#inline-preprocessor')
 const { splitLines, unshiftOntoCopy } = require('#util')
 }}
 {
