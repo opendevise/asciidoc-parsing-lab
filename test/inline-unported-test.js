@@ -1372,15 +1372,11 @@ describe('inline (unported)', () => {
       const input = 'hi {name}!'
       const expected = {
         input: 'hi Dan!',
-        sourceMapping: [
-          { offset: 0 },
-          { offset: 1 },
-          { offset: 2 },
-          { offset: [3, 8], attr: 'name' },
-          { offset: [3, 8], attr: 'name' },
-          { offset: [3, 8], attr: 'name' },
-          { offset: 9 },
-        ],
+        sourceMapping: makeSourceMapping([
+          { range: [0, 2], startOffset: 0 },
+          { range: [3, 5], offset: [3, 8], attr: 'name' },
+          { range: 6, offset: 9 },
+        ]),
       }
       expect(inlinePreprocessor(input, { attributes: { name: 'Dan' } })).to.eql(expected)
     })
@@ -1389,21 +1385,11 @@ describe('inline (unported)', () => {
       const input = 'hi {name}!'
       const expected = {
         input: 'hi Guillaume!',
-        sourceMapping: [
-          { offset: 0 },
-          { offset: 1 },
-          { offset: 2 },
-          { offset: [3, 8], attr: 'name' },
-          { offset: [3, 8], attr: 'name' },
-          { offset: [3, 8], attr: 'name' },
-          { offset: [3, 8], attr: 'name' },
-          { offset: [3, 8], attr: 'name' },
-          { offset: [3, 8], attr: 'name' },
-          { offset: [3, 8], attr: 'name' },
-          { offset: [3, 8], attr: 'name' },
-          { offset: [3, 8], attr: 'name' },
-          { offset: 9 },
-        ],
+        sourceMapping: makeSourceMapping([
+          { range: [0, 2], startOffset: 0 },
+          { range: [3, 11], offset: [3, 8], attr: 'name' },
+          { range: 12, offset: 9 },
+        ]),
       }
       expect(inlinePreprocessor(input, { attributes: { name: 'Guillaume' } })).to.eql(expected)
     })
