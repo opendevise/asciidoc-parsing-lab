@@ -216,12 +216,14 @@ pp_conditional = operator:('ifdef' / 'ifndef') '::' attributeName:attribute_name
 // TODO permit non-ASCII letters in attribute name
 attribute_name = !'-' @$[a-zA-Z0-9_-]+
 
-attribute_value = ' ' @$(!'\n' .)+
+attribute_value = space @$(!'\n' .)+
 
 grab_offset = ''
   {
     return peg$currPos
   }
+
+space = ' '
 
 lf = '\n'
 
