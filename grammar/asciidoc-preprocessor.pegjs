@@ -90,7 +90,8 @@ pp = (pp_directive* !. &.)?
 
 pp_directive = &('if' / 'inc') @(pp_conditional_short / pp_conditional / pp_include)
 
-pp_include = 'include::' !space target:$[^\[\n]+ '[]' eol:eol
+//pp_include = 'include::' target:$([^\n\[ ] ([^\n\[ ] / ' ' !'[')*) '[]' eol:eol
+pp_include = 'include::' !space target:$([^\n\[ ] / ' ' !'[')+ '[]' eol:eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
     const lineOffset = locations.lineOffset
