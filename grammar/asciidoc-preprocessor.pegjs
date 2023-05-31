@@ -62,9 +62,9 @@ list_item = list_start principal:$([^\n]+ eol (pp !('+\n' / list_start / '====' 
 
 attached_block = pp '+\n' @(example / paragraph)
 
-attribute_entry = ':' name:attribute_name ':' value:(' ' @$[^\n]+ / '') eol
+attribute_entry = ':' name:attribute_name ':' value:attribute_value? eol
   {
-    documentAttributes[name] = value
+    documentAttributes[name] = value || ''
   }
 
 line = value:$([^\n]+ eol)
@@ -215,6 +215,8 @@ pp_conditional = operator:('ifdef' / 'ifndef') '::' attributeName:attribute_name
 
 // TODO permit non-ASCII letters in attribute name
 attribute_name = !'-' @$[a-zA-Z0-9_-]+
+
+attribute_value = ' ' @$(!'\n' .)+
 
 grab_offset = ''
   {
