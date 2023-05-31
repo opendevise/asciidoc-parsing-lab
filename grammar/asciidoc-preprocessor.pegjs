@@ -35,7 +35,7 @@ example = '====\n' contents:paragraph pp '====' eol
     return { name: 'example', contents, location: location() }
   }
 
-listing = '----\n' contents:$(pp !('----' eol) [^\n]+ eol / '\n')* pp '----' eol
+listing = '----\n' contents:$(pp !('----' eol) line / lf)* pp '----' eol
   {
     return { name: 'listing', contents, location: location() }
   }
@@ -55,7 +55,7 @@ list_start = list_marker !eol
 
 list_marker = '* '
 
-list_item = list_start principal:$([^\n]+ eol (pp !('+\n' / list_start / '====' eol) [^\n]+ eol)*) blocks:attached_block*
+list_item = list_start principal:$(line (pp !('+\n' / list_start / '====' eol) line)*) blocks:attached_block*
   {
     return { name: 'listItem', principal, blocks, location: location() }
   }
@@ -67,12 +67,7 @@ attribute_entry = ':' name:attribute_name ':' value:attribute_value? eol
     documentAttributes[name] = value || ''
   }
 
-line = value:$([^\n]+ eol)
-  {
-    return { value, location: location() }
-  }
-
-conditional_lines = lines:(!('endif::[]' eol) @(pp_conditional_pair / $([^\n]+ eol) / '\n'))*
+conditional_lines = lines:(!('endif::[]' eol) @(pp_conditional_pair / line / lf))*
   {
     return lines.flat()
   }
@@ -223,6 +218,8 @@ grab_offset = ''
   {
     return peg$currPos
   }
+
+line = $([^\n]+ eol)
 
 space = ' '
 
