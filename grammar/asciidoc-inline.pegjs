@@ -1,7 +1,7 @@
 {{
-const { computeLocation, transformToModel, unshiftOntoCopy } = require('#inline-helpers')
+const { computeLocation, transformToModel } = require('#inline-helpers')
 const inlinePreprocessor = require('./asciidoc-inline-preprocessor')
-const { splitLines } = require('#util')
+const { splitLines, unshiftOntoCopy } = require('#util')
 }}
 {
 if (!input) return []
