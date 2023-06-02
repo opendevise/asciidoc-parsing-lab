@@ -112,6 +112,7 @@ function populateASGDefaults (node) {
   if (metadata) {
     metadata.attributes ??= {}
     metadata.options ??= []
+    metadata.roles ??= []
   }
   if (node.form === 'macro' || node.name === 'break' || node.name === 'heading') return node
   if (['listing', 'literal', 'pass', 'stem', 'paragraph', 'verse'].includes(node.name)) {
@@ -130,6 +131,7 @@ function stripASGDefaults (node) {
   if (metadata) {
     if (!Object.keys(metadata.attributes).length) delete metadata.attributes
     if (!metadata.options.length) delete metadata.options
+    if (!metadata.roles.length) delete metadata.roles
   }
   if (node.form === 'macro' || node.name === 'break' || node.name === 'heading') return node
   if (['listing', 'literal', 'pass', 'stem', 'paragraph', 'verse'].includes(node.name)) {

@@ -103,6 +103,7 @@ block = lf* metadataStart:offset metadata:(attrlists:(@block_attribute_line lf*)
     while (input[metadataEnd - 1] === '\n' && input[metadataEnd - 2] === '\n') metadataEnd--
     const attributes = {}
     const options_ = []
+    const roles = []
     for (const attrlist of attrlists) {
       if (!attrlist) continue
       // FIXME this is a quick hack
@@ -113,11 +114,11 @@ block = lf* metadataStart:offset metadata:(attrlists:(@block_attribute_line lf*)
           const name = it.slice(0, equalsIdx)
           const value = it.slice(equalsIdx + 1)
           if (name === 'opts' || name === 'options') {
-            for (const opt of value.split(',')) {
-              if (!~options_.indexOf(opt)) options_.push(opt)
-            }
-          } else if (name === 'role' && 'role' in attributes) {
-            if (value) attributes.role += ' ' + value
+            if (value) value.split(',').forEach((name) => options_.includes(name) || options_.push(name))
+            attributes.opts = options_.join(',')
+          } else if (name === 'role') {
+            if (value) value.split(' ').forEach((name) => roles.includes(name) || roles.push(name))
+            attributes.role = roles.join(' ')
           } else {
             attributes[name] = value
           }
@@ -127,7 +128,7 @@ block = lf* metadataStart:offset metadata:(attrlists:(@block_attribute_line lf*)
         }
       })
     }
-    return (metadataCache[cacheKey] = { attributes, options: options_, location: toSourceLocation(getLocation({ start: metadataStart, end: metadataEnd })) })
+    return (metadataCache[cacheKey] = { attributes, options: options_, roles, location: toSourceLocation(getLocation({ start: metadataStart, end: metadataEnd })) })
   }) block:(!at_heading @(listing / example / sidebar / list / literal_paragraph / image / paragraph) / section_or_discrete_heading)
   {
     return metadata ? Object.assign(block, { metadata }) : block
