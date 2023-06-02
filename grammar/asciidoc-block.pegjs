@@ -72,7 +72,7 @@ attribute_value = space @$(!'\n' .)+
 block_attribute_line = '[' @attrlist ']' eol
 
 // TODO allow doctitle to be optional
-header = attributeEntriesAbove:attribute_entry* titleOffset:grab_offset title:doctitle attributeEntriesBelow:attribute_entry* &eol
+header = attributeEntriesAbove:attribute_entry* titleOffset:offset title:doctitle attributeEntriesBelow:attribute_entry* &eol
   {
     const attributes = {}
     for (const attributeEntries of [attributeEntriesAbove, attributeEntriesBelow]) {
@@ -96,7 +96,7 @@ body = block*
 // blocks = // does not include check for section; paragraph can just be paragraph
 // blocks_in_section_body = // includes check for section; should start with !at_heading
 
-block = lf* metadataStart:grab_offset metadata:(attrlists:(@block_attribute_line lf*)* metadataEnd:grab_offset {
+block = lf* metadataStart:offset metadata:(attrlists:(@block_attribute_line lf*)* metadataEnd:offset {
     // TODO move this logic to a helper function or grammar rule
     if (!attrlists.length) return undefined
     const cacheKey = metadataEnd
@@ -134,7 +134,7 @@ block = lf* metadataStart:grab_offset metadata:(attrlists:(@block_attribute_line
   }
 
 // FIXME inlines in heading are being parsed multiple times when encountering sibling or parent section
-section_or_discrete_heading = headingStart:grab_offset heading:heading blocks:(&{ return metadataCache[headingStart]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, heading) } @block*)
+section_or_discrete_heading = headingStart:offset heading:heading blocks:(&{ return metadataCache[headingStart]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, heading) } @block*)
   {
     if (!blocks) return heading
     context.sectionStack.pop()
@@ -264,7 +264,7 @@ image = 'image::' !space target:$(!'\n' !'[' .)+ '[' attrlist:attrlist ']' eol
 
 any_compound_block_delimiter_line = example_delimiter_line / sidebar_delimiter_line
 
-grab_offset = ''
+offset = ''
   {
     return peg$currPos
   }

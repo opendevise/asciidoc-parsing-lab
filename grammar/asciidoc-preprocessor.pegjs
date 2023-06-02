@@ -129,7 +129,7 @@ pp_include = 'include::' !space target:$((!'\n' !'[' !' ' .) / space !'[')+ '[]'
     return true
   }
 
-pp_conditional_short = operator:$('if' ('def' / 'ndef')) '::' attributeName:attribute_name '[' mark:grab_offset contents:$((!'\n' '!]' .)+ &(']' eol) / ((!'\n' !']' .) / ']' !eol)+) ']' eol:eol
+pp_conditional_short = operator:$('if' ('def' / 'ndef')) '::' attributeName:attribute_name '[' mark:offset contents:$((!'\n' '!]' .)+ &(']' eol) / ((!'\n' !']' .) / ']' !eol)+) ']' eol:eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
     const lineOffset = locations.lineOffset
@@ -214,7 +214,7 @@ attribute_name = !'-' @$[a-zA-Z0-9_-]+
 
 attribute_value = space @$(!'\n' .)+
 
-grab_offset = ''
+offset = ''
   {
     return peg$currPos
   }

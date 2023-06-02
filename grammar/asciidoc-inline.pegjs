@@ -127,7 +127,7 @@ constrained_open_other = $(wordy* constrained_left_mark_in_open) / $(not_mark_or
 
 // FIXME: xref_shorthand_other prevents search for span following text (e.g., *foo* and *bar*)
 // Q: should we use !space at start of target?
-xref_shorthand = '<<' target:(!space @$[^,>]+) linktext:(',' space? @grab_offset @(span / xref_shorthand_other)+)? '>>'
+xref_shorthand = '<<' target:(!space @$[^,>]+) linktext:(',' space? @offset @(span / xref_shorthand_other)+)? '>>'
   {
     const [mark, contents] = linktext ?? [offset() + 2 + target.length, []]
     return { name: 'ref', type: 'inline', variant: 'xref', target, range: Object.assign(range(), { inlinesStart: mark }), inlines: contents }
@@ -144,7 +144,7 @@ xref_shorthand_other = match:$[^>]+
 
 // FIXME attrlist_other prevents search for span following text (e.g., *foo* and *bar*)
 // TODO implement attrlist following optional link text
-url_macro = protocol:('link:' @'' / @('https://' / 'http://')) target:$macro_target '[' mark:grab_offset contents:(span / attrlist_other)* ']'
+url_macro = protocol:('link:' @'' / @('https://' / 'http://')) target:$macro_target '[' mark:offset contents:(span / attrlist_other)* ']'
   {
     return { name: 'ref', type: 'inline', variant: 'link', target: protocol + target, range: Object.assign(range(), { inlinesStart: mark }), inlines: contents }
   }
@@ -179,7 +179,7 @@ constrained_left_mark_in_strong = '`' / '_' / '#'
 
 constrained_left_mark_in_open = '`' / '_' / '*'
 
-grab_offset = ''
+offset = ''
   {
     return peg$currPos
   }
