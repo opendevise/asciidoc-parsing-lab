@@ -35,6 +35,7 @@ function toSourceLocation (location) {
   return [originalStart, originalEnd]
 }
 
+// TODO change startCol to offset to make it easier to compute
 function createLocationsForInlines ([start, end = start], startCol = 1) {
   const mapping = {} // maps line numbers to location objects
   let localLine = 1
@@ -172,12 +173,12 @@ literal_paragraph = lines:indented_line+
     }
   }
 
-at_heading = '='+ space line
+at_heading = '='+ space+ line
 
-heading = marker:'='+ space title:line
+heading = marker:'='+ space+ titleOffset:offset title:line
   {
     const location_ = getLocation()
-    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, marker.length + 2) })
+    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset + 1 - offset()) })
     // Q: store marker instead of or in addition to level?
     return { name: 'heading', type: 'block', title: inlines, level: marker.length - 1, location: toSourceLocation(location_) }
   }
@@ -240,7 +241,7 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:(lf* @
     return { name: 'list', type: 'block', variant, marker, items: items, location: toSourceLocation(getLocation()) }
   }
 
-list_marker = @($'*'+ / $'.'+ / '-' / $([0-9]+ '.')) space !(space / lf)
+list_marker = @($'*'+ / $'.'+ / '-' / $([0-9]+ '.')) space+ !lf
 
 list_item_principal = first:line wrapped:(!(block_attribute_line / list_continuation_line / list_marker / any_compound_block_delimiter_line) @line)*
   {
@@ -251,10 +252,10 @@ list_continuation_line = '+' eol
 
 // TODO transform list_item_principal before blocks (perform in list_item_principal rule)
 // TODO process block attribute lines above attached blocks
-list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line @(listing / example) / lf* @list)*
+list_item = marker:list_marker &{ return isCurrentList(context, marker) } principalOffset:offset principal:list_item_principal blocks:(list_continuation_line @(listing / example) / lf* @list)*
   {
     const location_ = getLocation()
-    const principalInlines = parseInline(principal, { attributes: documentAttributes, locations: createLocationsForInlines(location_, marker.length + 2) })
+    const principalInlines = parseInline(principal, { attributes: documentAttributes, locations: createLocationsForInlines(location_, principalOffset + 1 - offset()) })
     return { name: 'listItem', type: 'block', marker, principal: principalInlines, blocks, location: toSourceLocation(location_) }
   }
 

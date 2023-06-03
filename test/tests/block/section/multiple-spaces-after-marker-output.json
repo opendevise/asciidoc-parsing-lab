@@ -1,0 +1,21 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "section",
+      "type": "block",
+      "title": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "Section Title",
+          "location": [{ "line": 1, "col": 5 }, { "line": 1, "col": 17 }]
+        }
+      ],
+      "level": 1,
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 17 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 17 }]
+}
