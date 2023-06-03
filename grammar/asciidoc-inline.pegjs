@@ -5,29 +5,21 @@ const { splitLines, unshiftOntoCopy } = require('#util')
 }}
 {
 if (!input) return []
-const { attributes: documentAttributes = {}, preprocessorMode } = options
+const { attributes: documentAttributes = {}, locations, preprocessorMode } = options
 let preprocessedInput, sourceMapping
 if (preprocessorMode !== 'none') {
   ;({ input: preprocessedInput, sourceMapping } = inlinePreprocessor(input, { attributes: documentAttributes }))
   if (!preprocessedInput) return []
 }
-const locations = options.locations
-const offsetToSourceLocation = locations
-  ? splitLines(input).reduce((accum, lineVal, lineIdx) => {
-      const location = locations[lineIdx + 1]
-      const startCol = location.col
-      for (let col = startCol, len = lineVal.length + startCol; col < len; col++) {
-        accum.push(Object.assign({}, location, { col }))
-      }
-      return accum
-    }, [])
-  : splitLines(input).reduce((accum, lineVal, lineIdx) => {
-      const line = lineIdx + 1
-      for (let col = 1, len = lineVal.length; col <= len; col++) accum.push({ line, col })
-      return accum
-    }, [])
-if (sourceMapping) input = preprocessedInput
-if (!/[`_*#:<[\\]/.test(input)) {
+const offsetToSourceLocation = splitLines(input)
+  .reduce((accum, lineVal, lineIdx) => {
+    const location = locations ? locations[lineIdx + 1] : { line: lineIdx + 1, col: 1 }
+    let col = location.col
+    let stopCol = col + lineVal.length
+    for (; col < stopCol; col++) accum.push(Object.assign({}, location, { col }))
+    return accum
+  }, [])
+if (!/[`_*#:<[\\]/.test(sourceMapping ? (input = preprocessedInput) : input)) {
   if (sourceMapping) {
     if (~sourceMapping.findIndex((it) => it.pass)) {
       const sourceLength = preprocessedInput.length
