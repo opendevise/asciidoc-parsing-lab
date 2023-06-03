@@ -73,7 +73,7 @@ attribute_value = space @$(!'\n' .)+
 block_attribute_line = '[' @attrlist ']' eol
 
 // TODO allow doctitle to be optional
-header = attributeEntriesAbove:attribute_entry* titleOffset:offset title:doctitle attributeEntriesBelow:attribute_entry* &eol
+header = attributeEntriesAbove:attribute_entry* title:doctitle attributeEntriesBelow:attribute_entry* &eol
   {
     const attributes = {}
     for (const attributeEntries of [attributeEntriesAbove, attributeEntriesBelow]) {
@@ -82,15 +82,15 @@ header = attributeEntriesAbove:attribute_entry* titleOffset:offset title:doctitl
         if (!(name in documentAttributes)) documentAttributes[name] = attributes[name] = val
       }
     }
-    // FIXME need to move this between entries above/below so it is available to below
-    documentAttributes.doctitle = title
-    const titleLocation = getLocation({ start: titleOffset, end: titleOffset + title.length })
-    const titleInlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(titleLocation, 3) })
-    return { title: titleInlines, attributes, location: toSourceLocation(getLocation()) }
+    return { title, attributes, location: toSourceLocation(getLocation()) }
   }
 
-// TODO be more strict about doctitle chars; namely require a non-space
-doctitle = '= ' @line
+doctitle = '=' space+ titleOffset:offset title:line
+  {
+    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(getLocation(), titleOffset + 1 - offset()) })
+    documentAttributes.doctitle = title
+    return inlines
+  }
 
 body = block*
 
