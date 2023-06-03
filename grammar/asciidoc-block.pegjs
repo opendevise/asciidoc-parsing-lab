@@ -85,7 +85,7 @@ header = attributeEntriesAbove:attribute_entry* title:doctitle attributeEntriesB
     return { title, attributes, location: toSourceLocation(getLocation()) }
   }
 
-doctitle = '=' space+ titleOffset:offset title:line
+doctitle = '=' space space* titleOffset:offset title:line
   {
     const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(getLocation(), titleOffset + 1 - offset()) })
     documentAttributes.doctitle = title
@@ -173,9 +173,9 @@ literal_paragraph = lines:indented_line+
     }
   }
 
-at_heading = '='+ space+ line
+at_heading = '='+ space space* line
 
-heading = marker:'='+ space+ titleOffset:offset title:line
+heading = marker:'='+ space space* titleOffset:offset title:line
   {
     const location_ = getLocation()
     const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset + 1 - offset()) })
@@ -241,7 +241,7 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:(lf* @
     return { name: 'list', type: 'block', variant, marker, items: items, location: toSourceLocation(getLocation()) }
   }
 
-list_marker = @($'*'+ / $'.'+ / '-' / $([0-9]+ '.')) space+ !lf
+list_marker = @($'*'+ / $'.'+ / '-' / $([0-9]+ '.')) space space* !lf
 
 list_item_principal = first:line wrapped:(!(block_attribute_line / list_continuation_line / list_marker / any_compound_block_delimiter_line) @line)*
   {
