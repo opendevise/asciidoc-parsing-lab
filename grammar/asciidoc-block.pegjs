@@ -259,9 +259,9 @@ list_item = marker:list_marker &{ return isCurrentList(context, marker) } princi
     return { name: 'listItem', type: 'block', marker, principal: principalInlines, blocks, location: toSourceLocation(location_) }
   }
 
-image = 'image::' !space target:$(!'\n' !'[' .)+ '[' attrlist:attrlist ']' eol
+image = 'image::' !space target:$(!'\n' !'[' .)+ '[' attrlist ']' eol
   {
-    return { name: 'image', type: 'block', form: 'macro', target, attributes: attrlist ? attrlist.split(',') : [], location: toSourceLocation(getLocation()) }
+    return { name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()) }
   }
 
 any_compound_block_delimiter_line = example_delimiter_line / sidebar_delimiter_line
