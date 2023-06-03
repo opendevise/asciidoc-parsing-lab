@@ -223,7 +223,7 @@ sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, ope
   }
 
 // NOTE: use items:(@list_item @(lf* @list_item)*) to avoid having to check lf and list_marker on first item
-list = &(marker:list_start &{ return isNewList(context, marker) }) items:(lf* @list_item)+
+list = &(marker:list_marker &{ return isNewList(context, marker) }) items:(lf* @list_item)+
   {
     const marker = context.listStack.pop()
     if (marker === '1.') {
@@ -240,11 +240,9 @@ list = &(marker:list_start &{ return isNewList(context, marker) }) items:(lf* @l
     return { name: 'list', type: 'block', variant, marker, items: items, location: toSourceLocation(getLocation()) }
   }
 
-list_start = @list_marker !(space / lf)
+list_marker = @($'*'+ / $'.'+ / '-' / $([0-9]+ '.')) space !(space / lf)
 
-list_marker = @($'*'+ / $'.'+ / '-' / $([0-9]+ '.')) space
-
-list_item_principal = first:line wrapped:(!(block_attribute_line / list_continuation_line / list_start / any_compound_block_delimiter_line) @line)*
+list_item_principal = first:line wrapped:(!(block_attribute_line / list_continuation_line / list_marker / any_compound_block_delimiter_line) @line)*
   {
     return wrapped.length ? first + '\n' + wrapped.join('\n') : first
   }
