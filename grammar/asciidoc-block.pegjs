@@ -98,11 +98,11 @@ body = block*
 // blocks = // does not include check for section; paragraph can just be paragraph
 // blocks_in_section_body = // includes check for section; should start with !at_heading
 
-block = lf* metadataStart:offset metadata:(attrlists:(@block_attribute_line lf*)* metadataEnd:offset {
+block = lf* metadataStartOffset:offset metadata:(attrlists:(@block_attribute_line lf*)* metadataEndOffset:offset {
     // TODO move this logic to a helper function or grammar rule
     if (!attrlists.length) return undefined
-    const cacheKey = metadataEnd
-    while (input[metadataEnd - 1] === '\n' && input[metadataEnd - 2] === '\n') metadataEnd--
+    const cacheKey = metadataEndOffset
+    while (input[metadataEndOffset - 1] === '\n' && input[metadataEndOffset - 2] === '\n') metadataEndOffset--
     const attributes = {}
     const options_ = []
     const roles = []
@@ -130,14 +130,14 @@ block = lf* metadataStart:offset metadata:(attrlists:(@block_attribute_line lf*)
         }
       })
     }
-    return (metadataCache[cacheKey] = { attributes, options: options_, roles, location: toSourceLocation(getLocation({ start: metadataStart, end: metadataEnd })) })
+    return (metadataCache[cacheKey] = { attributes, options: options_, roles, location: toSourceLocation(getLocation({ start: metadataStartOffset, end: metadataEndOffset })) })
   }) block:(!at_heading @(listing / example / sidebar / list / literal_paragraph / image / paragraph) / section_or_discrete_heading)
   {
     return metadata ? Object.assign(block, { metadata }) : block
   }
 
 // FIXME inlines in heading are being parsed multiple times when encountering sibling or parent section
-section_or_discrete_heading = headingStart:offset heading:heading blocks:(&{ return metadataCache[headingStart]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, heading) } @block*)
+section_or_discrete_heading = headingStartOffset:offset heading:heading blocks:(&{ return metadataCache[headingStartOffset]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, heading) } @block*)
   {
     if (!blocks) return heading
     context.sectionStack.pop()

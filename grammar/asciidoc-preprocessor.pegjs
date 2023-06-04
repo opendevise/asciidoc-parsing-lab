@@ -129,7 +129,7 @@ pp_include = 'include::' !space target:$((!'\n' !'[' !' ' .) / space !'[')+ '[]'
     return true
   }
 
-pp_conditional_short = operator:$('if' ('def' / 'ndef')) '::' attributeName:attribute_name '[' mark:offset contents:$((!'\n' '!]' .)+ &(']' eol) / ((!'\n' !']' .) / ']' !eol)+) ']' eol:eol
+pp_conditional_short = operator:$('if' ('def' / 'ndef')) '::' attributeName:attribute_name '[' contentsOffset:offset contents:$((!'\n' '!]' .)+ &(']' eol) / ((!'\n' !']' .) / ']' !eol)+) ']' eol:eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
     const lineOffset = locations.lineOffset
@@ -151,7 +151,7 @@ pp_conditional_short = operator:$('if' ('def' / 'ndef')) '::' attributeName:attr
         delete locations[startLine]
       }
     } else {
-      locations[startLine].col = mark - startOffset + 1
+      locations[startLine].col = contentsOffset - startOffset + 1
     }
     input = input.slice(0, (peg$currPos = startOffset)) + (drop ? '' : contents + (eol || '')) + input.slice(endOffset)
     peg$posDetailsCache = [{ line: 1, col: 1 }]

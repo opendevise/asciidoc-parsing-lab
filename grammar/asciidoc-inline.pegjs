@@ -136,9 +136,9 @@ xref_shorthand_other = match:$[^>]+
 
 // FIXME attrlist_other prevents search for span following text (e.g., *foo* and *bar*)
 // TODO implement attrlist following optional link text
-url_macro = protocol:('link:' @'' / @('https://' / 'http://')) target:$macro_target '[' mark:offset contents:(span / attrlist_other)* ']'
+url_macro = protocol:('link:' @'' / @('https://' / 'http://')) target:$macro_target '[' contentsOffset:offset contents:(span / attrlist_other)* ']'
   {
-    return { name: 'ref', type: 'inline', variant: 'link', target: protocol + target, range: Object.assign(range(), { inlinesStart: mark }), inlines: contents }
+    return { name: 'ref', type: 'inline', variant: 'link', target: protocol + target, range: Object.assign(range(), { inlinesStart: contentsOffset }), inlines: contents }
   }
 
 macro_target = !space @[^\[]+
