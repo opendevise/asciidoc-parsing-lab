@@ -49,7 +49,8 @@ function createLocationsForInlines ([start, end = start], startCol = 1) {
 }
 }
 // TODO if surrounding lf are not part of document, group inner two rules as a new rule
-document = lf* header:header? blocks:body lf*
+//document = lf* header:header? blocks:body lf*
+document = lf* header:header? blocks:body .*
   {
     const node = { name: 'document', type: 'block' }
     if (header) {
