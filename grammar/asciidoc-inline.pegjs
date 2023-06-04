@@ -13,7 +13,8 @@ if (preprocessorMode !== 'none') {
 }
 const offsetToSourceLocation = splitLines(input)
   .reduce((accum, lineVal, lineIdx) => {
-    const location = locations ? locations[lineIdx + 1] : { line: lineIdx + 1, col: 1 }
+    const line = lineIdx + 1
+    const location = locations ? locations[line] : { line, col: 1 }
     let col = location.col
     let stopCol = col + lineVal.length
     for (; col < stopCol; col++) accum.push(Object.assign({}, location, { col }))
