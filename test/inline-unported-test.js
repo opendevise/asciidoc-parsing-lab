@@ -1475,13 +1475,17 @@ describe('inline (unported)', () => {
     })
 
     it('should only process attribute references if mode is attributes', () => {
-      const input = '{name} +{name}+'
-      const attributes = { name: 'Chris' }
+      const input = '{name} +{foo}+ \\{name}.'
+      const attributes = { name: 'Dave', foo: 'value' }
       const expected = {
-        input: 'Chris +{name}+',
+        input: 'Dave +value+ {name}.',
         sourceMapping: makeSourceMapping([
-          { range: [0, 4], offset: [0, 5], attr: 'name' },
-          { range: [5, 13], startOffset: 6 },
+          { range: [0, 3], offset: [0, 5], attr: 'name' },
+          { range: [4, 5], startOffset: 6 },
+          { range: [6, 10], offset: [8, 12], attr: 'foo' },
+          { range: [11, 12], startOffset: 13 },
+          { range: 13, startOffset: 15 },
+          { range: [14, 19], startOffset: 17 },
         ]),
       }
       expect(inlinePreprocessor(input, { attributes, mode: 'attributes' })).to.eql(expected)

@@ -1,0 +1,25 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "id": "idname",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "Paragraph with ID.",
+          "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 18 }]
+        }
+      ],
+      "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 18 }],
+      "metadata": {
+        "attributes": { "$1": "#idname", "id": "idname" },
+        "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 9 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 18 }]
+}

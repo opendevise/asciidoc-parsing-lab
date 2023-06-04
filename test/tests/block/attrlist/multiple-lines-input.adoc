@@ -1,0 +1,3 @@
+[#idname.rolename,opts=option1,foo=bar]
+[#p1.lead,opts=option2,foo=baz]
+Paragraph with multiple block attribute lines.

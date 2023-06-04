@@ -1,8 +1,13 @@
 {{
 const { createContext, enterBlock, exitBlock, isBlockEnd, isCurrentList, isNestedSection, isNewList, toInlines } = require('#block-helpers')
+const { parse: parseAttrlist } = require('#attrlist-parser')
 }}
 {
-const { attributes: documentAttributes = {}, locations } = options
+const {
+  attributes: documentAttributes = {},
+  contentAttributeNames = ['title', 'reftext', 'caption', 'citetitle', 'attribution'],
+  locations,
+} = options
 const context = createContext()
 const parseInline = (options.inlineParser ?? require('#block-default-inline-parser')).parse
 const metadataCache = {}
@@ -45,6 +50,24 @@ function createLocationsForInlines ([start, end = start], offset) {
   }
   if (offset) (mapping[1] = Object.assign({}, mapping[1])).col += offset
   return mapping
+}
+
+function parseMetadata (attrlists, metadataStartOffset, metadataEndOffset) {
+  if (!attrlists.length) return
+  const cacheKey = metadataEndOffset
+  if (cacheKey in metadataCache) return metadataCache[cacheKey]
+  while (input[metadataEndOffset - 1] === '\n' && input[metadataEndOffset - 2] === '\n') metadataEndOffset--
+  const attributes = {}
+  const metadata = { attributes, options: [], roles: [] }
+  for (const [attrlistOffset, attrlist] of attrlists) {
+    if (!attrlist) continue
+    const attrlistLocation = toSourceLocation(getLocation({ start: attrlistOffset, end: attrlistOffset + attrlist.length - 1 }))
+    parseAttrlist(attrlist, { attributes: documentAttributes, inlineParser: { parse: parseInline }, locations: { 1: attrlistLocation[0] }, initial: attributes })
+  }
+  if ('opts' in attributes) attributes.opts = (metadata.options = [...attributes.opts]).join(',')
+  if ('role' in attributes) attributes.role = (metadata.roles = [...attributes.role]).join(' ')
+  metadata.location = toSourceLocation(getLocation({ start: metadataStartOffset, end: metadataEndOffset }))
+  return (metadataCache[cacheKey] = metadata)
 }
 }
 // TODO if surrounding lf are not part of document, group inner two rules as a new rule
@@ -110,43 +133,19 @@ body = block*
 // blocks = // does not include check for section; paragraph can just be paragraph
 // blocks_in_section_body = // includes check for section; should start with !at_heading
 
-block = lf* metadataStartOffset:offset metadata:(attrlists:(@block_attribute_line lf*)* metadataEndOffset:offset {
-    // TODO move this logic to a helper function or grammar rule
-    if (!attrlists.length) return
-    const cacheKey = metadataEndOffset
-    if (cacheKey in metadataCache) return metadataCache[cacheKey]
-    while (input[metadataEndOffset - 1] === '\n' && input[metadataEndOffset - 2] === '\n') metadataEndOffset--
-    const attributes = {}
-    const options_ = []
-    const roles = []
-    for (const attrlist of attrlists) {
-      if (!attrlist) continue
-      // FIXME this is a quick hack
-      let positionalIndex = 0
-      attrlist.split(',').forEach((it) => {
-        let equalsIdx = it.indexOf('=')
-        if (~equalsIdx) {
-          const name = it.slice(0, equalsIdx)
-          const value = it.slice(equalsIdx + 1)
-          if (name === 'opts' || name === 'options') {
-            if (value) value.split(',').forEach((name) => options_.includes(name) || options_.push(name))
-            attributes.opts = options_.join(',')
-          } else if (name === 'role') {
-            if (value) value.split(' ').forEach((name) => roles.includes(name) || roles.push(name))
-            attributes.role = roles.join(' ')
-          } else {
-            attributes[name] = value
-          }
-        } else {
-          attributes[`$${++positionalIndex}`] = it
-          if (positionalIndex === 1) attributes.style = it
-        }
-      })
-    }
-    return (metadataCache[cacheKey] = { attributes, options: options_, roles, location: toSourceLocation(getLocation({ start: metadataStartOffset, end: metadataEndOffset })) })
-  }) block:(!at_heading @(listing / example / sidebar / list / literal_paragraph / image / paragraph) / section_or_discrete_heading)
+block = lf* metadataStartOffset:offset metadata:(attrlists:(@block_attribute_line lf*)* metadataEndOffset:offset { return parseMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) block:(!at_heading @(listing / example / sidebar / list / literal_paragraph / image / paragraph) / section_or_discrete_heading)
   {
-    return metadata ? Object.assign(block, { metadata }) : block
+    if (!metadata) return block
+    const attributes = metadata.attributes
+    if ('id' in attributes) block.id = attributes.id
+    contentAttributeNames.forEach((name) => {
+      let val
+      if (name in attributes && (val = attributes[name]).constructor === Object) {
+        block[name] = val.inlines
+        attributes[name] = val.value
+      }
+    })
+    return Object.assign(block, { metadata })
   }
 
 // FIXME inlines in heading are being parsed multiple times when encountering sibling or parent section
@@ -275,6 +274,7 @@ list_item = marker:list_marker &{ return isCurrentList(context, marker) } princi
 
 image = 'image::' !space target:$(!'\n' !'[' .)+ '[' attrlist ']' eol
   {
+    // TODO run parseAttrlist on attrlist[1]
     return { name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()) }
   }
 
@@ -291,7 +291,7 @@ line_or_empty_line = line / lf @''
 
 indented_line = @$(space (!'\n' .)+) eol
 
-attrlist = !space @$(!(lf / space? ']' eol) .)*
+attrlist = !space @offset @$(!(lf / space? ']' eol) .)*
 
 space = ' '
 

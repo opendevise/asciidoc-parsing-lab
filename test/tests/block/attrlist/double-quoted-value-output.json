@@ -1,0 +1,26 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "listing",
+      "type": "block",
+      "form": "delimited",
+      "delimiter": "----",
+      "inlines": [
+        {
+          "type": "string",
+          "name": "text",
+          "value": "a\nb\nc\nd\ne\nf",
+          "location": [{ "line": 3, "col": 1 }, { "line": 8, "col": 1 }]
+        }
+      ],
+      "location": [{ "line": 2, "col": 1 }, { "line": 9, "col": 4 }],
+      "metadata": {
+        "attributes": { "highlight": "2-4,5" },
+        "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 19 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 9, "col": 4 }]
+}

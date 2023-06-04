@@ -1,0 +1,27 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "Paragraph with multiple block attribute lines.",
+          "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 46 }]
+        }
+      ],
+      "id": "p1",
+      "metadata": {
+        "attributes": { "$1": "#p1.lead", "id": "p1", "role": "rolename lead", "opts": "option1,option2", "foo": "baz" },
+        "options": ["option1", "option2"],
+        "roles": ["rolename", "lead"],
+        "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 31 }]
+      },
+      "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 46 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 46 }]
+}

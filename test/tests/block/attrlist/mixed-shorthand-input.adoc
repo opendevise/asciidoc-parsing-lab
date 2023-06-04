@@ -1,0 +1,2 @@
+[%hardbreaks#idname.role1.role2]
+Paragraph with mixed shorthand.

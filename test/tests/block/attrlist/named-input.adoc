@@ -1,0 +1,2 @@
+[role=rolename]
+Paragraph with a role.

@@ -1,0 +1,2 @@
+[.rolename]
+Paragraph with role.

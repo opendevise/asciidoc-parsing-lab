@@ -1,0 +1,7 @@
+= Example
+:attrs: title='*Exhibit A*'
+
+[#e1,{attrs}]
+----
+Behold the exhibit.
+----
