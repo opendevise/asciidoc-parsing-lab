@@ -1,9 +1,7 @@
 {
   "name": "document",
   "type": "block",
-  "attributes": {
-    "appname": "ACME"
-  },
+  "attributes": { "appname": "ACME" },
   "header": {
     "title": [
         {

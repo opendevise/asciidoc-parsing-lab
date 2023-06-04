@@ -16,10 +16,7 @@
       "level": 1,
       "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 19 }],
       "metadata": {
-        "attributes": {
-          "1": "discrete",
-          "style": "discrete"
-        },
+        "attributes": { "1": "discrete", "style": "discrete" },
         "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 10 }]
       }
     }
