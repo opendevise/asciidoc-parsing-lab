@@ -102,6 +102,7 @@ block = lf* metadataStartOffset:offset metadata:(attrlists:(@block_attribute_lin
     // TODO move this logic to a helper function or grammar rule
     if (!attrlists.length) return undefined
     const cacheKey = metadataEndOffset
+    if (cacheKey in metadataCache) return metadataCache[cacheKey]
     while (input[metadataEndOffset - 1] === '\n' && input[metadataEndOffset - 2] === '\n') metadataEndOffset--
     const attributes = {}
     const options_ = []
