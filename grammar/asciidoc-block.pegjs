@@ -245,20 +245,20 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:(lf* @
 
 list_marker = @($'*'+ / $'.'+ / '-' / $([0-9]+ '.')) space space* !lf
 
-list_item_principal = first:line wrapped:(!(block_attribute_line / list_continuation_line / list_marker / any_compound_block_delimiter_line) @line)*
+list_item_principal = firstLine:line wrappedLines:(!(block_attribute_line / list_continuation_line / list_marker / any_compound_block_delimiter_line) @line)*
   {
-    return wrapped.length ? first + '\n' + wrapped.join('\n') : first
+    const location_ = getLocation()
+    const startCol = toSourceLocation(location_)[0].col
+    const text = wrappedLines.length ? firstLine + '\n' + wrappedLines.join('\n') : firstLine
+    return parseInline(text, { attributes: documentAttributes, locations: createLocationsForInlines(location_, startCol) })
   }
 
 list_continuation_line = '+' eol
 
-// TODO transform list_item_principal before blocks (perform in list_item_principal rule)
 // TODO process block attribute lines above attached blocks
-list_item = marker:list_marker &{ return isCurrentList(context, marker) } principalOffset:offset principal:list_item_principal blocks:(list_continuation_line @(listing / example) / lf* @list)*
+list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line @(listing / example) / lf* @list)*
   {
-    const location_ = getLocation()
-    const principalInlines = parseInline(principal, { attributes: documentAttributes, locations: createLocationsForInlines(location_, principalOffset + 1 - offset()) })
-    return { name: 'listItem', type: 'block', marker, principal: principalInlines, blocks, location: toSourceLocation(location_) }
+    return { name: 'listItem', type: 'block', marker, principal, blocks, location: toSourceLocation(getLocation()) }
   }
 
 image = 'image::' !space target:$(!'\n' !'[' .)+ '[' attrlist ']' eol
