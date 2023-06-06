@@ -72,17 +72,23 @@ attribute_value = space @$(!'\n' .)+
 
 block_attribute_line = '[' @attrlist ']' eol
 
-// TODO allow doctitle to be optional
-header = attributeEntriesAbove:attribute_entry* title:doctitle attributeEntriesBelow:attribute_entry* &eol
+header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doctitle attributeEntriesBelow:attribute_entry*)? &{ return doctitleAndAttributeEntries || attributeEntriesAbove.length } &eol
   {
+    const attributeEntryGroups = attributeEntriesAbove.length ? [attributeEntriesAbove] : []
+    let title
+    if (doctitleAndAttributeEntries) {
+      title = doctitleAndAttributeEntries[0]
+      attributeEntryGroups.push(doctitleAndAttributeEntries[1])
+    }
     const attributes = {}
-    for (const attributeEntries of [attributeEntriesAbove, attributeEntriesBelow]) {
+    for (const attributeEntries of attributeEntryGroups) {
       if (!attributeEntries.length) continue
       for (const [name, val] of attributeEntries) {
         if (!(name in documentAttributes)) documentAttributes[name] = attributes[name] = val
       }
     }
-    return { title, attributes, location: toSourceLocation(getLocation()) }
+    const sourceLocation = toSourceLocation(getLocation())
+    return title ? { title, attributes, location: sourceLocation } : { attributes, location: sourceLocation }
   }
 
 doctitle = '=' space space* titleOffset:offset title:line

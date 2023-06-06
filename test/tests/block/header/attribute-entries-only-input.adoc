@@ -1,0 +1,3 @@
+:attribute-missing: warn
+
+This document has a header without a document title.

@@ -1,0 +1,24 @@
+{
+  "name": "document",
+  "type": "block",
+  "attributes": { "attribute-missing": "warn" },
+  "header": {
+    "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 24 }]
+  },
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "This document has a header without a document title.",
+          "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 52 }]
+        }
+      ],
+      "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 52 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 52 }]
+}
