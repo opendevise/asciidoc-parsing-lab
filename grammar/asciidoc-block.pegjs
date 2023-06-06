@@ -27,11 +27,11 @@ function getLocation (range_) {
 function toSourceLocation (location) {
   if (!locations) return location
   const [start, end] = location
-  const originalStart = Object.assign({}, locations[start.line])
-  originalStart.col += start.col - 1
+  let originalStart = locations[start.line]
+  if (start.col !== 1) originalStart = Object.assign({}, originalStart, { col: originalStart.col + (start.col - 1) })
   if (start === end) return [originalStart, originalStart]
-  const originalEnd = Object.assign({}, locations[end.line])
-  originalEnd.col += end.col - 1
+  let originalEnd = locations[end.line]
+  if (end.col !== 1) originalEnd = Object.assign({}, originalEnd, { col: originalEnd.col + (end.col - 1) })
   return [originalStart, originalEnd]
 }
 
