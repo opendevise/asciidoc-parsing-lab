@@ -8,6 +8,7 @@
     "node": ">=19.0.0"
   },
   "scripts": {
+    "build": "npm run gen && npm run test",
     "lint": "eslint \"{lib,test}/**/*.js\"",
     "test": "_mocha",
     "gen": "npm run gen:block-parser && npm run gen:inline-parser && npm run gen:preprocessor-parser",
