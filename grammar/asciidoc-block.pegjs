@@ -35,8 +35,7 @@ function toSourceLocation (location) {
   return [originalStart, originalEnd]
 }
 
-// TODO change startCol to offset to make it easier to compute
-function createLocationsForInlines ([start, end = start], startCol = 1) {
+function createLocationsForInlines ([start, end = start], offset) {
   const mapping = {} // maps line numbers to location objects
   let localLine = 1
   if (locations) {
@@ -44,7 +43,7 @@ function createLocationsForInlines ([start, end = start], startCol = 1) {
   } else {
     for (let line = start.line, lastLine = end.line; line <= lastLine; line++) mapping[localLine++] = { line, col: 1 }
   }
-  if (startCol > 1) (mapping[1] = Object.assign({}, mapping[1])).col += startCol - 1
+  if (offset) (mapping[1] = Object.assign({}, mapping[1])).col += offset
   return mapping
 }
 }
@@ -88,7 +87,7 @@ header = attributeEntriesAbove:attribute_entry* title:doctitle attributeEntriesB
 
 doctitle = '=' space space* titleOffset:offset title:line
   {
-    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(getLocation(), titleOffset + 1 - offset()) })
+    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(getLocation(), titleOffset - offset()) })
     documentAttributes.doctitle = title
     return inlines
   }
@@ -165,7 +164,7 @@ literal_paragraph = lines:indented_line+
     if (metadata?.attributes.style === 'normal') {
       delete metadata.attributes.style
       const location_ = getLocation()
-      const inlines = parseInline(contents, { attributes: documentAttributes, locations: createLocationsForInlines(location_, outdent + 1) })
+      const inlines = parseInline(contents, { attributes: documentAttributes, locations: createLocationsForInlines(location_, outdent) })
       return { name: 'paragraph', type: 'block', inlines, location: toSourceLocation(location_) }
     } else {
       const sourceLocation = toSourceLocation(getLocation())
@@ -180,7 +179,7 @@ at_heading = '='+ space space* line
 heading = marker:'='+ space space* titleOffset:offset title:line
   {
     const location_ = getLocation()
-    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset + 1 - offset()) })
+    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - offset()) })
     // Q: store marker instead of or in addition to level?
     return { name: 'heading', type: 'block', title: inlines, level: marker.length - 1, location: toSourceLocation(location_) }
   }
@@ -250,7 +249,7 @@ list_item_principal = firstLine:line wrappedLines:(!(block_attribute_line / list
     const location_ = getLocation()
     const startCol = toSourceLocation(location_)[0].col
     const text = wrappedLines.length ? firstLine + '\n' + wrappedLines.join('\n') : firstLine
-    return parseInline(text, { attributes: documentAttributes, locations: createLocationsForInlines(location_, startCol) })
+    return parseInline(text, { attributes: documentAttributes, locations: createLocationsForInlines(location_, startCol - 1) })
   }
 
 list_continuation_line = '+' eol
