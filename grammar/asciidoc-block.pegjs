@@ -190,10 +190,10 @@ heading = marker:$('=' '='*) space space* titleOffset:offset title:line
     return { name: 'heading', type: 'block', title: inlines, level: marker.length - 1, location: toSourceLocation(location_) }
   }
 
-listing_delimiter = @$('-' '---' [-]*) eol
+listing_delimiter_line = @$('-' '---' [-]*) eol
 
 // FIXME pull lines out as separate rule to track location without having to hack location of parent
-listing = (openingDelim:listing_delimiter { enterBlock(context, openingDelim) }) lines:(!(delim:listing_delimiter &{ return isBlockEnd(context, delim) }) @line_or_empty_line)* closingDelim:(@listing_delimiter / eof)
+listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDelim) }) lines:(!(delim:listing_delimiter_line &{ return isBlockEnd(context, delim) }) @line_or_empty_line)* closingDelim:(@listing_delimiter_line / eof)
   {
     const delimiter = exitBlock(context)
     if (!closingDelim) console.log('unclosed listing block')
