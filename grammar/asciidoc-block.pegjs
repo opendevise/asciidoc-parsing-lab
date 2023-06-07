@@ -180,9 +180,9 @@ literal_paragraph = lines:indented_line+
     }
   }
 
-at_heading = '='+ space space* line
+at_heading = '=' '='* space space* line
 
-heading = marker:'='+ space space* titleOffset:offset title:line
+heading = marker:$('=' '='*) space space* titleOffset:offset title:line
   {
     const location_ = getLocation()
     const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - offset()) })
@@ -190,7 +190,7 @@ heading = marker:'='+ space space* titleOffset:offset title:line
     return { name: 'heading', type: 'block', title: inlines, level: marker.length - 1, location: toSourceLocation(location_) }
   }
 
-listing_delimiter = @$('----' [-]*) eol
+listing_delimiter = @$('-' '---' [-]*) eol
 
 // FIXME pull lines out as separate rule to track location without having to hack location of parent
 listing = (openingDelim:listing_delimiter { enterBlock(context, openingDelim) }) lines:(!(delim:listing_delimiter &{ return isBlockEnd(context, delim) }) @line_or_empty_line)* closingDelim:(@listing_delimiter / eof)
@@ -212,7 +212,7 @@ listing = (openingDelim:listing_delimiter { enterBlock(context, openingDelim) })
     return { name: 'listing', type: 'block', form: 'delimited', delimiter, inlines, location: toSourceLocation(location_) }
   }
 
-example_delimiter_line = @$('====' [=]*) eol
+example_delimiter_line = @$('=' '===' [=]*) eol
 
 example = (openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(heading / example / sidebar / list / paragraph))* closingDelim:(lf* @(example_delimiter_line / eof))
   {
@@ -221,7 +221,7 @@ example = (openingDelim:example_delimiter_line &{ return enterBlock(context, ope
     return { name: 'example', type: 'block', form: 'delimited', delimiter, blocks, location: toSourceLocation(getLocation()) }
   }
 
-sidebar_delimiter_line = @$('****' [*]*) eol
+sidebar_delimiter_line = @$('*' '***' [*]*) eol
 
 sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(heading / example / sidebar / list / paragraph))* closingDelim:(lf* @(sidebar_delimiter_line / eof))
   {
@@ -248,7 +248,7 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:(lf* @
     return { name: 'list', type: 'block', variant, marker, items: items, location: toSourceLocation(getLocation()) }
   }
 
-list_marker = @$('*'+ / '.'+ / '-' / [0-9]+ '.') space space* !lf
+list_marker = @$('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !lf
 
 list_item_principal = firstLine:line wrappedLines:(!(block_attribute_line / list_continuation_line / list_marker / any_compound_block_delimiter_line) @line)*
   {
