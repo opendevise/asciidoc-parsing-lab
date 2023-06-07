@@ -248,7 +248,7 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:(lf* @
     return { name: 'list', type: 'block', variant, marker, items: items, location: toSourceLocation(getLocation()) }
   }
 
-list_marker = @($'*'+ / $'.'+ / '-' / $([0-9]+ '.')) space space* !lf
+list_marker = @$('*'+ / '.'+ / '-' / [0-9]+ '.') space space* !lf
 
 list_item_principal = firstLine:line wrappedLines:(!(block_attribute_line / list_continuation_line / list_marker / any_compound_block_delimiter_line) @line)*
   {
