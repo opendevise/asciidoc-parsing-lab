@@ -244,7 +244,7 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:(lf* @
         expected += 1
       }
     }
-    const variant = marker[0] === '*' ? 'unordered' : 'ordered'
+    const variant = marker === '-' || marker[0] === '*' ? 'unordered' : 'ordered'
     return { name: 'list', type: 'block', variant, marker, items: items, location: toSourceLocation(getLocation()) }
   }
 
