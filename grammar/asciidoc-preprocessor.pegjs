@@ -8,7 +8,7 @@ if (!input) return { input }
 const documentAttributes = Object.assign({}, options.attributes)
 const locations = { lineOffset: 0 } // maps line numbers to location objects
 }
-document = body lf*
+document = lf* body .*
   {
     if (Object.keys(locations).length === 1) return { input }
     const lineOffset = locations.lineOffset
