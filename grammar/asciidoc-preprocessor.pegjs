@@ -28,7 +28,9 @@ document = lf* body .*
 
 body = block*
 
-block = (pp (lf / attribute_entry))* @(example / listing / list / paragraph)
+block = (pp (lf / attribute_entry))* @(heading / example / listing / list / paragraph)
+
+heading = '='+ space space* line
 
 example = '====\n' contents:paragraph pp '====' eol
   {
