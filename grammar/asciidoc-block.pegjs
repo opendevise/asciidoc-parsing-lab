@@ -105,7 +105,7 @@ body = block*
 
 block = lf* metadataStartOffset:offset metadata:(attrlists:(@block_attribute_line lf*)* metadataEndOffset:offset {
     // TODO move this logic to a helper function or grammar rule
-    if (!attrlists.length) return undefined
+    if (!attrlists.length) return
     const cacheKey = metadataEndOffset
     if (cacheKey in metadataCache) return metadataCache[cacheKey]
     while (input[metadataEndOffset - 1] === '\n' && input[metadataEndOffset - 2] === '\n') metadataEndOffset--
