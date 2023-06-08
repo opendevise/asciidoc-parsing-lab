@@ -1,0 +1,19 @@
+{
+  "name": "document",
+  "type": "block",
+  "attributes": {
+    "productname": "ACME Cloud"
+  },
+  "header": {
+    "title": [
+      {
+        "name": "text",
+        "type": "string",
+        "value": "ACME Cloud Guide",
+        "location": [{ "line": 2, "col": 3 }, { "line": 2, "col": 21 }]
+      }
+    ],
+    "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 21 }]
+  },
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 21 }]
+}

@@ -74,28 +74,35 @@ block_attribute_line = '[' @attrlist ']' eol
 
 header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doctitle attributeEntriesBelow:attribute_entry*)? &{ return doctitleAndAttributeEntries || attributeEntriesAbove.length } &eol
   {
-    const attributeEntryGroups = attributeEntriesAbove.length ? [attributeEntriesAbove] : []
-    let title
-    if (doctitleAndAttributeEntries) {
-      title = doctitleAndAttributeEntries[0]
-      attributeEntryGroups.push(doctitleAndAttributeEntries[1])
-    }
     const attributes = {}
-    for (const attributeEntries of attributeEntryGroups) {
-      if (!attributeEntries.length) continue
-      for (const [name, val] of attributeEntries) {
+    const sourceLocation = toSourceLocation(getLocation())
+    if (attributeEntriesAbove.length) {
+      for (const [name, val] of attributeEntriesAbove) {
         if (!(name in documentAttributes)) documentAttributes[name] = attributes[name] = val
       }
     }
-    const sourceLocation = toSourceLocation(getLocation())
-    return title ? { title, attributes, location: sourceLocation } : { attributes, location: sourceLocation }
+    let title
+    if (doctitleAndAttributeEntries) {
+      const [doctitle, locationsForDoctitleInlines] = doctitleAndAttributeEntries[0]
+      title = parseInline(doctitle, { attributes: documentAttributes, locations: locationsForDoctitleInlines })
+      // Q: set doctitle in header attributes too?
+      //documentAttributes.doctitle = attributes.doctitle = doctitle
+      documentAttributes.doctitle = doctitle
+      const attributeEntriesBelow = doctitleAndAttributeEntries[1]
+      if (attributeEntriesBelow.length) {
+        for (const [name, val] of attributeEntriesBelow) {
+          if (!(name in documentAttributes)) documentAttributes[name] = attributes[name] = val
+        }
+      }
+      return { title, attributes, location: sourceLocation }
+    }
+    return { attributes, location: sourceLocation }
   }
 
 doctitle = '=' space space* titleOffset:offset title:line
   {
-    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(getLocation(), titleOffset - offset()) })
-    documentAttributes.doctitle = title
-    return inlines
+    // Q: should this just return offset of title instead of locations for inlines?
+    return [title, createLocationsForInlines(getLocation(), titleOffset - offset())]
   }
 
 body = block*

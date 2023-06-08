@@ -1,0 +1,2 @@
+:productname: ACME Cloud
+= {productname} Guide
