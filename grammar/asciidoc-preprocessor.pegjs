@@ -62,9 +62,9 @@ list_item = list_marker principal:$(line (pp !('+\n' / list_marker / '====' eol)
 
 attached_block = pp '+\n' @(example / paragraph)
 
-attribute_entry = ':' name:attribute_name ':' value:attribute_value? eol
+attribute_entry = ':' negatedPrefix:'!'? name:attribute_name negatedSuffix:'!'? ':' value:attribute_value? eol
   {
-    documentAttributes[name] = value || ''
+    negatedPrefix || negatedSuffix ? delete documentAttributes[name] : (documentAttributes[name] = value || '')
   }
 
 conditional_lines = lines:(!('endif::[]' eol) @(pp_conditional_pair / line / lf))*
