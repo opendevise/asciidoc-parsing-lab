@@ -42,8 +42,8 @@ listing = '----\n' contents:$(pp !('----' eol) line / lf)* pp '----' eol
     return { name: 'listing', contents, location: location() }
   }
 
-// NOTE could possibly use contents:line|.., pp !('====' eol / list_start)| but peggy doesn't want to allow it
-paragraph = contents0:line contents1:(pp !('====' eol / list_start) @line)*
+// NOTE could possibly use contents:line|.., pp !('====' eol / list_marker)| but peggy doesn't want to allow it
+paragraph = contents0:line contents1:(pp !('====' eol / list_marker) @line)*
   {
     return { name: 'paragraph', contents: unshiftOntoCopy(contents1, contents0), location: location() }
   }
@@ -53,11 +53,9 @@ list = item0:list_item items:(pp @list_item)*
     return { name: 'list', items: unshiftOntoCopy(items, item0), location: location() }
   }
 
-list_start = list_marker !eol
+list_marker = ('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !eol
 
-list_marker = '* '
-
-list_item = list_start principal:$(line (pp !('+\n' / list_start / '====' eol) line)*) blocks:attached_block*
+list_item = list_marker principal:$(line (pp !('+\n' / list_marker / '====' eol) line)*) blocks:attached_block*
   {
     return { name: 'listItem', principal, blocks, location: location() }
   }
