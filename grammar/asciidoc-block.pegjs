@@ -138,7 +138,7 @@ block = lf* metadataStartOffset:offset metadata:(attrlists:(@block_attribute_lin
             attributes[name] = value
           }
         } else {
-          attributes[++positionalIndex] = it
+          attributes[`$${++positionalIndex}`] = it
           if (positionalIndex === 1) attributes.style = it
         }
       })
