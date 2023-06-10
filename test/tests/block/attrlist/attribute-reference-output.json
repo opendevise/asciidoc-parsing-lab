@@ -1,0 +1,56 @@
+{
+  "name": "document",
+  "type": "block",
+  "attributes": { "attrs": "title='*Exhibit A*'" },
+  "header": {
+    "title": [
+      {
+        "name": "text",
+        "type": "string",
+        "value": "Example",
+        "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 9 }]
+      }
+    ],
+    "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 27 }]
+  },
+  "blocks": [
+    {
+      "name": "listing",
+      "type": "block",
+      "form": "delimited",
+      "delimiter": "----",
+      "id": "e1",
+      "title": [
+        {
+          "name": "span",
+          "type": "inline",
+          "variant": "strong",
+          "form": "constrained",
+          "inlines": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Exhibit A",
+              "location": [{ "line": 4, "col": 6 }, { "line": 4, "col": 12 }]
+            }
+          ],
+          "location": [{ "line": 4, "col": 6 }, { "line": 4, "col": 12 }]
+        }
+      ],
+      "inlines": [
+        {
+          "type": "string",
+          "name": "text",
+          "value": "Behold the exhibit.",
+          "location": [{ "line": 6, "col": 1 }, { "line": 6, "col": 19 }]
+        }
+      ],
+      "location": [{ "line": 5, "col": 1 }, { "line": 7, "col": 4 }],
+      "metadata": {
+        "attributes": { "$1": "#e1", "id": "e1", "title": "*Exhibit A*" },
+        "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 13 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 7, "col": 4 }]
+}

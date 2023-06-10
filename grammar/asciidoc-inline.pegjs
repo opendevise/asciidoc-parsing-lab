@@ -6,17 +6,29 @@ const { splitLines, unshiftOntoCopy } = require('#util')
 {
 if (!input) return []
 const { attributes: documentAttributes = {}, locations, preprocessorMode } = options
-let preprocessedInput, sourceMapping
+let inputCorrection, preprocessedInput, sourceMapping
 if (preprocessorMode !== 'none') {
-  ;({ input: preprocessedInput, sourceMapping } = inlinePreprocessor(input, { attributes: documentAttributes }))
+  if ((sourceMapping = options.sourceMapping)) {
+    let startOffset, endOffset
+    if (Array.isArray((startOffset = sourceMapping[0].offset))) startOffset = startOffset[0]
+    if (Array.isArray((endOffset = sourceMapping[sourceMapping.length - 1].offset))) endOffset = endOffset[1]
+    if (startOffset || endOffset > startOffset + (input.length - 1)) {
+      inputCorrection = { padStart: startOffset, padEnd: endOffset - (startOffset + (input.length - 1)) }
+    }
+  }
+  ;({ input: preprocessedInput, sourceMapping } = inlinePreprocessor(input, { attributes: documentAttributes, mode: preprocessorMode, sourceMapping }))
   if (!preprocessedInput) return []
 }
 const offsetToSourceLocation = splitLines(input)
-  .reduce((accum, lineVal, lineIdx) => {
+  .reduce((accum, lineVal, lineIdx, lines) => {
     const line = lineIdx + 1
     const location = locations ? locations[line] : { line, col: 1 }
     let col = location.col
     let stopCol = col + lineVal.length
+    if (inputCorrection) {
+      if (line === lines.length) stopCol += inputCorrection.padEnd
+      if (!lineIdx) stopCol += inputCorrection.padStart
+    }
     for (; col < stopCol; col++) accum.push(Object.assign({}, location, { col }))
     return accum
   }, [])

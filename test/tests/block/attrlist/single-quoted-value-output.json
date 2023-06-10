@@ -1,0 +1,43 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "listing",
+      "type": "block",
+      "form": "delimited",
+      "delimiter": "----",
+      "title": [
+        {
+          "name": "span",
+          "type": "inline",
+          "variant": "strong",
+          "form": "constrained",
+          "inlines": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Exhibit A",
+              "location": [{ "line": 1, "col": 10 }, { "line": 1, "col": 18 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 9 }, { "line": 1, "col": 19 }]
+        }
+      ],
+      "inlines": [
+        {
+          "type": "string",
+          "name": "text",
+          "value": "Behold the exhibit.",
+          "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 19 }]
+        }
+      ],
+      "location": [{ "line": 2, "col": 1 }, { "line": 4, "col": 4 }],
+      "metadata": {
+        "attributes": { "title": "*Exhibit A*" },
+        "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 21 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 4, "col": 4 }]
+}

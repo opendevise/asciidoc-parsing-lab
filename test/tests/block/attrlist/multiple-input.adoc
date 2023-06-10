@@ -1,0 +1,2 @@
+[, opts="option1,option2", role=rolename, second]
+Paragraph with block attributes.

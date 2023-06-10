@@ -11,7 +11,8 @@
     "build": "npm run gen && npm run test",
     "lint": "eslint \"{lib,test}/**/*.js\"",
     "test": "_mocha",
-    "gen": "npm run gen:block-parser && npm run gen:inline-parser && npm run gen:preprocessor-parser",
+    "gen": "npm run gen:attrlist-parser && npm run gen:block-parser && npm run gen:inline-parser && npm run gen:preprocessor-parser",
+    "gen:attrlist-parser": "peggy -c grammar/asciidoc-attrlist-config.js -t '' > /dev/null",
     "gen:block-parser": "peggy -c grammar/asciidoc-block-config.js -t '' > /dev/null",
     "gen:inline-parser": "peggy -c grammar/asciidoc-inline-config.js -t '' > /dev/null",
     "gen:preprocessor-parser": "peggy -c grammar/asciidoc-preprocessor-config.js -t '' > /dev/null"
@@ -25,6 +26,7 @@
     "./package.json": "./package.json"
   },
   "imports": {
+    "#attrlist-parser": "./lib/asciidoc-attrlist-parser.js",
     "#block-default-inline-parser": "./lib/asciidoc-block-parser/default-inline-parser.js",
     "#block-helpers": "./lib/asciidoc-block-parser/helpers.js",
     "#inline-helpers": "./lib/asciidoc-inline-parser/helpers.js",

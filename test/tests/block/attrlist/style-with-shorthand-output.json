@@ -1,0 +1,35 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "id": "list-1",
+      "variant": "unordered",
+      "marker": "*",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "*",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "a square list",
+              "location": [{ "line": 2, "col": 3 }, { "line": 2, "col": 15 }]
+            }
+          ],
+          "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 15 }]
+        }
+      ],
+      "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 15 }],
+      "metadata": {
+        "attributes": { "$1": "square#list-1", "id": "list-1", "style": "square" },
+        "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 15 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 15 }]
+}

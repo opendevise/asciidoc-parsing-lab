@@ -1,0 +1,26 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "Paragraph with block attributes.",
+          "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 32 }]
+        }
+      ],
+      "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 32 }],
+      "metadata": {
+        "attributes": { "$2": "second", "opts": "option1,option2", "role": "rolename" },
+        "options": ["option1", "option2"],
+        "roles": ["rolename"],
+        "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 49 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 32 }]
+}

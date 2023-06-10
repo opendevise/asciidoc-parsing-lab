@@ -1,0 +1,25 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "Paragraph with option.",
+          "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 22 }]
+        }
+      ],
+      "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 22 }],
+      "metadata": {
+        "attributes": { "$1": "%hardbreaks", "opts": "hardbreaks" },
+        "options": ["hardbreaks"],
+        "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 13 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 22 }]
+}

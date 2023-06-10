@@ -1,0 +1,25 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "Paragraph with role.",
+          "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 20 }]
+        }
+      ],
+      "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 20 }],
+      "metadata": {
+        "attributes": { "$1": ".rolename", "role": "rolename" },
+        "roles": ["rolename"],
+        "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 11 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 20 }]
+}
