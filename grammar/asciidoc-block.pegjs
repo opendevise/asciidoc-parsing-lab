@@ -59,10 +59,15 @@ function parseMetadata (attrlists, metadataStartOffset, metadataEndOffset) {
   while (input[metadataEndOffset - 1] === '\n' && input[metadataEndOffset - 2] === '\n') metadataEndOffset--
   const attributes = {}
   const metadata = { attributes, options: [], roles: [] }
-  for (const [attrlistOffset, attrlist] of attrlists) {
+  for (const [marker, attrlistOffset, attrlist] of attrlists) {
     if (!attrlist) continue
-    const attrlistLocation = toSourceLocation(getLocation({ start: attrlistOffset, end: attrlistOffset + attrlist.length - 1 }))
-    parseAttrlist(attrlist, { attributes: documentAttributes, inlineParser: { parse: parseInline }, locations: { 1: attrlistLocation[0] }, initial: attributes })
+    const location_ = getLocation({ start: attrlistOffset, end: attrlistOffset + attrlist.length - 1 })
+    if (marker === '.') {
+      // NOTE this is slightly faked since location_ will already account for column offset, but it still works
+      attributes.title = { value: attrlist, inlines: parseInline(attrlist, { attributes: documentAttributes, locations: createLocationsForInlines(location_, 1) }) }
+    } else {
+      parseAttrlist(attrlist, { attributes: documentAttributes, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(location_)[0] }, initial: attributes })
+    }
   }
   if ('opts' in attributes) attributes.opts = (metadata.options = [...attributes.opts]).join(',')
   if ('role' in attributes) attributes.role = (metadata.roles = [...attributes.role]).join(' ')
@@ -93,7 +98,10 @@ attribute_name = !'-' @$[a-zA-Z0-9_-]+
 
 attribute_value = space @$(!'\n' .)+
 
-block_attribute_line = '[' @attrlist ']' eol
+block_attribute_line = @'[' @offset @attrlist ']' eol
+
+// don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
+block_title = @'.' @offset @$('.'? (!'\n' !' ' !'.' .) (!'\n' .)*) eol
 
 header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doctitle attributeEntriesBelow:attribute_entry*)? &{ return doctitleAndAttributeEntries || attributeEntriesAbove.length } &eol
   {
@@ -133,7 +141,7 @@ body = block*
 // blocks = // does not include check for section; paragraph can just be paragraph
 // blocks_in_section_body = // includes check for section; should start with !at_heading
 
-block = lf* metadataStartOffset:offset metadata:(attrlists:(@block_attribute_line lf*)* metadataEndOffset:offset { return parseMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) block:(!at_heading @(listing / example / sidebar / list / literal_paragraph / image / paragraph) / section_or_discrete_heading)
+block = lf* metadataStartOffset:offset metadata:(attrlists:(@(block_title / block_attribute_line) lf*)* metadataEndOffset:offset { return parseMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) block:(!at_heading @(listing / example / sidebar / list / literal_paragraph / image / paragraph) / section_or_discrete_heading)
   {
     if (!metadata) return block
     const attributes = metadata.attributes
@@ -274,7 +282,7 @@ list_item = marker:list_marker &{ return isCurrentList(context, marker) } princi
 
 image = 'image::' !space target:$(!'\n' !'[' .)+ '[' attrlist ']' eol
   {
-    // TODO run parseAttrlist on attrlist[1]
+    // TODO run parseAttrlist on attrlist
     return { name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()) }
   }
 
@@ -291,7 +299,7 @@ line_or_empty_line = line / lf @''
 
 indented_line = @$(space (!'\n' .)+) eol
 
-attrlist = !space @offset @$(!(lf / space? ']' eol) .)*
+attrlist = !space @$(!(lf / space? ']' eol) .)*
 
 space = ' '
 
