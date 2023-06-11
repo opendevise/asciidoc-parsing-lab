@@ -268,8 +268,16 @@ example_delimiter_line = @$('=' '===' [=]*) eol
 example = (openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(heading / example / sidebar / list / paragraph))* closingDelim:(lf* @(example_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
-    if (!closingDelim) console.log('unclosed example block')
-    return { name: 'example', type: 'block', form: 'delimited', delimiter, blocks, location: toSourceLocation(getLocation()) }
+    let name = 'example'
+    let style, admonitionVariant
+    if ((style = metadataCache[offset()]?.attributes.style) &&
+      (admonitionVariant = ({ CAUTION: 'caution', IMPORTANT: 'important', NOTE: 'note', TIP: 'tip', WARNING: 'warning' })[style])) {
+      name = 'admonition'
+    }
+    if (!closingDelim) console.log(`unclosed ${name} block`)
+    const node = { name, type: 'block', form: 'delimited', delimiter, variant: admonitionVariant, blocks, location: toSourceLocation(getLocation()) }
+    if (!admonitionVariant) delete node.variant
+    return node
   }
 
 sidebar_delimiter_line = @$('*' '***' [*]*) eol
