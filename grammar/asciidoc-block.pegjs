@@ -88,9 +88,9 @@ document = lf* header:header? blocks:body .*
     return Object.assign(node, { blocks, location: toSourceLocation(getLocation(true)) })
   }
 
-attribute_entry = ':' name:attribute_name ':' value:attribute_value? eol
+attribute_entry = ':' negatedPrefix:'!'? name:attribute_name negatedSuffix:'!'? ':' value:attribute_value? eol
   {
-    return [name, value || '']
+    return [name, negatedPrefix || negatedSuffix ? false : value || '']
   }
 
 // TODO permit non-ASCII letters in attribute name
@@ -111,13 +111,13 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doc
     if (attributeEntriesAbove.length) {
       for (const [name, val] of attributeEntriesAbove) {
         if (name in documentAttributes && !(name in attributes)) continue
-        documentAttributes[name] = attributes[name] = val
+        ;(attributes[name] = val) === false ? delete documentAttributes[name] : (documentAttributes[name] = val)
       }
     }
     if (doctitleAndAttributeEntries) {
       const [[doctitle, locationsForDoctitleInlines], authors, attributeEntriesBelow] = doctitleAndAttributeEntries
       header.title = parseInline(doctitle, { attributes: documentAttributes, locations: locationsForDoctitleInlines })
-      // Q: set doctitle in header attributes too?
+      // Q: set doctitle in header attributes too? set even if locked??
       //documentAttributes.doctitle = attributes.doctitle = doctitle
       documentAttributes.doctitle = doctitle
       if (authors) {
@@ -130,7 +130,7 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doc
       if (attributeEntriesBelow.length) {
         for (const [name, val] of attributeEntriesBelow) {
           if (name in documentAttributes && !(name in attributes)) continue
-          documentAttributes[name] = attributes[name] = val
+          ;(attributes[name] = val) === false ? delete documentAttributes[name] : (documentAttributes[name] = val)
         }
       }
     }

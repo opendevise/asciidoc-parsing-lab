@@ -1,0 +1,5 @@
+= Document Title
+:foo: bar
+:foo: baz
+
+The value of foo is now {foo}.
