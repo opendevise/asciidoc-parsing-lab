@@ -110,7 +110,8 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doc
     const sourceLocation = toSourceLocation(getLocation())
     if (attributeEntriesAbove.length) {
       for (const [name, val] of attributeEntriesAbove) {
-        if (!(name in documentAttributes)) documentAttributes[name] = attributes[name] = val
+        if (name in documentAttributes && !(name in attributes)) continue
+        documentAttributes[name] = attributes[name] = val
       }
     }
     if (doctitleAndAttributeEntries) {
@@ -128,7 +129,8 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doc
       }
       if (attributeEntriesBelow.length) {
         for (const [name, val] of attributeEntriesBelow) {
-          if (!(name in documentAttributes)) documentAttributes[name] = attributes[name] = val
+          if (name in documentAttributes && !(name in attributes)) continue
+          documentAttributes[name] = attributes[name] = val
         }
       }
     }
