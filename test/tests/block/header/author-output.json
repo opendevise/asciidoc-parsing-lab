@@ -1,0 +1,25 @@
+{
+  "name": "document",
+  "type": "block",
+  "attributes": { "author": "Doc Writer", "authors": "Doc Writer" },
+  "header": {
+    "title": [
+      {
+        "name": "text",
+        "type": "string",
+        "value": "Document Title",
+        "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 16 }]
+      }
+    ],
+    "authors": [
+      {
+        "fullname": "Doc Writer",
+        "initials": "DW",
+        "firstname": "Doc",
+        "lastname": "Writer"
+      }
+    ],
+    "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 10 }]
+  },
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 10 }]
+}

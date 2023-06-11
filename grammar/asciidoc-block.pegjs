@@ -103,31 +103,36 @@ block_attribute_line = @'[' @offset @attrlist ']' eol
 // don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
 block_title = @'.' @offset @$('.'? (!'\n' !' ' !'.' .) (!'\n' .)*) eol
 
-header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doctitle attributeEntriesBelow:attribute_entry*)? &{ return doctitleAndAttributeEntries || attributeEntriesAbove.length } &eol
+header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doctitle author_info_line? attributeEntriesBelow:attribute_entry*)? &{ return doctitleAndAttributeEntries || attributeEntriesAbove.length } &eol
   {
     const attributes = {}
+    const header = {}
     const sourceLocation = toSourceLocation(getLocation())
     if (attributeEntriesAbove.length) {
       for (const [name, val] of attributeEntriesAbove) {
         if (!(name in documentAttributes)) documentAttributes[name] = attributes[name] = val
       }
     }
-    let title
     if (doctitleAndAttributeEntries) {
-      const [doctitle, locationsForDoctitleInlines] = doctitleAndAttributeEntries[0]
-      title = parseInline(doctitle, { attributes: documentAttributes, locations: locationsForDoctitleInlines })
+      const [[doctitle, locationsForDoctitleInlines], authors, attributeEntriesBelow] = doctitleAndAttributeEntries
+      header.title = parseInline(doctitle, { attributes: documentAttributes, locations: locationsForDoctitleInlines })
       // Q: set doctitle in header attributes too?
       //documentAttributes.doctitle = attributes.doctitle = doctitle
       documentAttributes.doctitle = doctitle
-      const attributeEntriesBelow = doctitleAndAttributeEntries[1]
+      if (authors) {
+        documentAttributes.author = attributes.author = authors[0].fullname
+        const address = authors[0].address
+        if (address) documentAttributes.email = attributes.email = address
+        documentAttributes.authors = attributes.authors = authors.map(({ fullname }) => fullname).join(', ')
+        header.authors = authors
+      }
       if (attributeEntriesBelow.length) {
         for (const [name, val] of attributeEntriesBelow) {
           if (!(name in documentAttributes)) documentAttributes[name] = attributes[name] = val
         }
       }
-      return { title, attributes, location: sourceLocation }
     }
-    return { attributes, location: sourceLocation }
+    return Object.assign(header, { attributes, location: sourceLocation })
   }
 
 doctitle = '=' space space* titleOffset:offset title:line
@@ -135,6 +140,36 @@ doctitle = '=' space space* titleOffset:offset title:line
     // Q: should this just return offset of title instead of locations for inlines?
     return [title, createLocationsForInlines(getLocation(), titleOffset - offset())]
   }
+
+author_info_line = @author_info_item|1.., '; '| eol
+
+// Q: are attribute references permitted? if so, how do they work?
+author_info_item = names:author_name|1..3, space| address:(' <' @$(!'>' !'\n' .)+ '>')?
+  {
+    const info = {}
+    names = names.filter((name) => name).map((name) => ~name.indexOf('_') ? name.replace(/_/g, ' ') : name)
+    const numNames = names.length
+    let fullname, firstname, middlename, lastname
+    if (numNames > 2) {
+      ;([firstname, middlename, lastname] = names)
+      fullname = firstname + ' ' + middlename + ' ' + lastname
+      const initials = firstname[0] + middlename[0] + lastname[0]
+      Object.assign(info, { fullname, initials, firstname, middlename, lastname })
+    } else if (numNames > 1) {
+      ;([firstname, lastname] = names)
+      fullname = firstname + ' ' + lastname
+      const initials = firstname[0] + lastname[0]
+      Object.assign(info, { fullname, initials, firstname, lastname })
+    } else {
+      fullname = firstname = names[0]
+      const initials = firstname[0]
+      Object.assign(info, { fullname, initials, firstname })
+    }
+    if (address) info.address = address
+    return info
+  }
+
+author_name = $([a-zA-Z0-9] ('.' / [a-zA-Z0-9_'-]*))
 
 body = block*
 

@@ -1,0 +1,2 @@
+= Document Title
+Doc Writer <doc.writer@example.org>; J. R. Wordsmith <https://example.org/jr>
