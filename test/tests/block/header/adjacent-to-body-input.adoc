@@ -1,0 +1,3 @@
+= Document Title
+:toc:
+first paragraph

@@ -103,7 +103,7 @@ block_attribute_line = @'[' @offset @attrlist ']' eol
 // don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
 block_title = @'.' @offset @$('.'? (!'\n' !' ' !'.' .) (!'\n' .)*) eol
 
-header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doctitle author_info_line? attributeEntriesBelow:attribute_entry*)? &{ return doctitleAndAttributeEntries || attributeEntriesAbove.length } &eol
+header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doctitle author_info_line? attributeEntriesBelow:attribute_entry*)? &{ return doctitleAndAttributeEntries || attributeEntriesAbove.length }
   {
     const attributes = {}
     const header = {}
