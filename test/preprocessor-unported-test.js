@@ -67,7 +67,7 @@ describe('preprocessor', () => {
 
   it('should process input with false single-line preprocessor conditional', () => {
     const input = 'ifdef::foo[foo is set]'
-    const expected = { input: '' }
+    const expected = { input: '', locations: {} }
     expect(parse(input)).to.eql(expected)
   })
 

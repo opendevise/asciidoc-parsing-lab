@@ -6,13 +6,14 @@ const { splitLines, unshiftOntoCopy } = require('#util')
 {
 if (!input) return { input }
 const documentAttributes = Object.assign({}, options.attributes)
-const locations = { lineOffset: 0 } // maps line numbers to location objects
+const locations = {} // maps line numbers to location objects
 }
 document = lf* body .*
   {
-    if (Object.keys(locations).length === 1) return { input }
     const lineOffset = locations.lineOffset
+    if (lineOffset == null) return { input }
     delete locations.lineOffset
+    if (!input) return { input, locations: {} }
     const end = location().end
     let lastLine = end.offset && end.line
     for (let n = lastLine; n > 0; n--) {
@@ -89,7 +90,7 @@ pp_directive = &('if' / 'inc') @(pp_conditional_short / pp_conditional / pp_incl
 pp_include = 'include::' !space target:$((!'\n' !'[' !' ' .) / space !'[')+ '[]' eol:eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
-    const lineOffset = locations.lineOffset
+    const lineOffset = (locations.lineOffset ??= 0)
     if (!locations[startLine - 1]) {
       for (let n = startLine - 1; n > 0; n--) {
         if (n in locations) break
@@ -132,7 +133,7 @@ pp_include = 'include::' !space target:$((!'\n' !'[' !' ' .) / space !'[')+ '[]'
 pp_conditional_short = negated:('if' @'n'? 'def') '::' attributeName:attribute_name '[' contentsOffset:offset contents:$((!'\n' '!]' .)+ &(']' eol) / ((!'\n' !']' .) / ']' !eol)+) ']' eol:eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
-    const lineOffset = locations.lineOffset
+    const lineOffset = (locations.lineOffset ??= 0)
     for (let n = startLine; n > 0; n--) {
       if (n in locations) break
       locations[n] = { line: n + lineOffset, col: 1, lineOffset }
@@ -164,7 +165,7 @@ pp_conditional = negated:('if' @'n'? 'def') '::' attributeName:attribute_name '[
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
     const newEndLine = endLine - 2
-    const lineOffset = locations.lineOffset
+    const lineOffset = (locations.lineOffset ??= 0)
     // Q: better to do this in the document action?
     if (!locations[startLine - 1]) {
       for (let n = startLine - 1; n > 0; n--) {
