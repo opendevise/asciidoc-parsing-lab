@@ -301,7 +301,7 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:list_i
         if (item.marker !== expected + '.') {
           console.log('list item index: expected ' + expected + ', got ' + item.marker.slice(0, -1))
         }
-        expected += 1
+        expected++
       }
     }
     const variant = marker === '-' || marker[0] === '*' ? 'unordered' : 'ordered'

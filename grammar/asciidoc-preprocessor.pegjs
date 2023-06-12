@@ -143,7 +143,7 @@ pp_conditional_short = negated:('if' @'n'? 'def') '::' attributeName:attribute_n
         let n = endLine
         if (!locations[n]) locations[n] = { line: n + lineOffset, col: 1, lineOffset }
         while (n in locations) {
-          locations[n].lineOffset += 1
+          locations[n].lineOffset++
           locations[n - 1] = locations[n]
           delete locations[n++]
         }
@@ -196,7 +196,7 @@ pp_conditional = negated:('if' @'n'? 'def') '::' attributeName:attribute_name '[
       while (l in locations) {
         // FIXME only move lineOffset if in same file
         if (l > startLine && locations[l].file === currentInclude) {
-          l > closingLine ? (newLineOffset = locations[l].lineOffset += 2) : (locations[l].lineOffset += 1)
+          l > closingLine ? (newLineOffset = locations[l].lineOffset += 2) : locations[l].lineOffset++
         }
         if (l !== startLine && l !== closingLine) locations[l - (l > closingLine ? 2 : 1)] = locations[l]
         delete locations[l++]
