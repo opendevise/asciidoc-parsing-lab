@@ -2,6 +2,16 @@
 const fs = require('node:fs')
 const ospath = require('node:path')
 const { splitLines, unshiftOntoCopy } = require('#util')
+
+function evaluateIf (operands, catalog) {
+  const logicOperatorAndNames = operands[1]
+  if (logicOperatorAndNames) {
+    const names = unshiftOntoCopy(logicOperatorAndNames[1], operands[0])
+    const logicMethod = logicOperatorAndNames[0] === ',' ? 'some' : 'every'
+    return names[logicMethod]((name) => name in catalog)
+  }
+  return operands[0] in catalog
+}
 }}
 {
 if (!input) return { input }
@@ -72,7 +82,7 @@ conditional_lines = lines:(!('endif::[]' eol) @(pp_conditional_pair / line / lf)
     return lines.flat()
   }
 
-pp_conditional_pair = opening:$('if' 'n'? 'def::' attribute_name '[]\n') contents:conditional_lines closing:$('endif::[]' eol)?
+pp_conditional_pair = opening:$('if' 'n'? 'def::' attribute_names '[]\n') contents:conditional_lines closing:$('endif::[]' eol)?
   {
     if (closing) contents.push(closing)
     return unshiftOntoCopy(contents, opening)
@@ -129,7 +139,7 @@ pp_include = 'include::' !space target:$((!'\n' !'[' !' ' .) / space !'[')+ '[]'
     return true
   }
 
-pp_conditional_short = negated:('if' @'n'? 'def') '::' attributeName:attribute_name '[' contentsOffset:offset contents:$((!'\n' '!]' .)+ &(']' eol) / ((!'\n' !']' .) / ']' !eol)+) ']' eol:eol
+pp_conditional_short = negated:('if' @'n'? 'def') '::' attributeNames:attribute_names '[' contentsOffset:offset contents:$((!'\n' '!]' .)+ &(']' eol) / ((!'\n' !']' .) / ']' !eol)+) ']' eol:eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
     const lineOffset = (locations.lineOffset ??= 0)
@@ -137,7 +147,8 @@ pp_conditional_short = negated:('if' @'n'? 'def') '::' attributeName:attribute_n
       if (n in locations) break
       locations[n] = { line: n + lineOffset, col: 1, lineOffset }
     }
-    const keep = negated ? !(attributeName in documentAttributes) : (attributeName in documentAttributes)
+    const evaluationResult = evaluateIf(attributeNames, documentAttributes)
+    const keep = negated ? !evaluationResult : evaluationResult
     if (keep) {
       locations[startLine].col = contentsOffset - startOffset + 1
     } else if (eol) {
@@ -159,7 +170,7 @@ pp_conditional_short = negated:('if' @'n'? 'def') '::' attributeName:attribute_n
 
 // TODO always succeed even if endif::[] is missing
 // Q could the positive case only process the opening directive and process the closing directive separately? the negative case would still have to consume lines, so this might require the use of a semantic predicate
-pp_conditional = negated:('if' @'n'? 'def') '::' attributeName:attribute_name '[]\n' contents:conditional_lines 'endif::[]' eol:eol
+pp_conditional = negated:('if' @'n'? 'def') '::' attributeNames:attribute_names '[]\n' contents:conditional_lines 'endif::[]' eol:eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
     const newEndLine = endLine - 2
@@ -171,7 +182,8 @@ pp_conditional = negated:('if' @'n'? 'def') '::' attributeName:attribute_name '[
         locations[n] = { line: n + lineOffset, col: 1, lineOffset }
       }
     }
-    const keep = negated ? !(attributeName in documentAttributes) : (attributeName in documentAttributes)
+    const evaluationResult = evaluateIf(attributeNames, documentAttributes)
+    const keep = negated ? !evaluationResult : evaluationResult
     if (keep) {
       if (!locations[startLine]) {
         for (let l = startLine; l < endLine; l++) locations[l] = { line: l + lineOffset, col: 1, lineOffset }
@@ -210,6 +222,8 @@ pp_conditional = negated:('if' @'n'? 'def') '::' attributeName:attribute_name '[
 
 // TODO permit non-ASCII letters in attribute name
 attribute_name = !'-' @$[a-zA-Z0-9_-]+
+
+attribute_names = @attribute_name @(',' attribute_name|1.., ','| / '+' attribute_name|1.., '+'|)?
 
 attribute_value = space @$(!'\n' .)+
 

@@ -239,6 +239,106 @@ describe('preprocessor', () => {
     expect(parse(input)).to.eql(expected)
   })
 
+  it('should process negated preprocessor conditional with attribute alternatives that evaluates to false', () => {
+    const input = heredoc`
+    début
+    ifdef::foo,bar[foo or bar is set]
+    fin
+    `
+    const expected = {
+      input: heredoc`
+      début
+      fin
+      `,
+      locations: { 1: loc('1:1:0'), 2: loc('3:1:1') },
+    }
+    expect(parse(input)).to.eql(expected)
+  })
+
+  it('should process negated preprocessor conditional with attribute combination that evaluates to false', () => {
+    const input = heredoc`
+    début
+    ifdef::foo+bar[foo and bar are set]
+    fin
+    `
+    const expected = {
+      input: heredoc`
+      début
+      fin
+      `,
+      locations: { 1: loc('1:1:0'), 2: loc('3:1:1') },
+    }
+    expect(parse(input, { attributes: { foo: '' } })).to.eql(expected)
+  })
+
+  it('should process preprocessor conditional with attribute alternatives that evaluates to true', () => {
+    const input = heredoc`
+    début
+    ifdef::foo,bar[foo or bar is set]
+    fin
+    `
+    const expected = {
+      input: heredoc`
+      début
+      foo or bar is set
+      fin
+      `,
+      locations: { 1: loc('1:1:0'), 2: loc('2:16:0'), 3: loc('3:1:0') },
+    }
+    expect(parse(input, { attributes: { foo: '' } })).to.eql(expected)
+  })
+
+  it('should process negated preprocessor conditional with attribute alternatives that evaluates to true', () => {
+    const input = heredoc`
+    début
+    ifndef::foo,bar[foo and bar are not set]
+    fin
+    `
+    const expected = {
+      input: heredoc`
+      début
+      foo and bar are not set
+      fin
+      `,
+      locations: { 1: loc('1:1:0'), 2: loc('2:17:0'), 3: loc('3:1:0') },
+    }
+    expect(parse(input)).to.eql(expected)
+  })
+
+  it('should process preprocessor conditional with attribute combination that evaluates to true', () => {
+    const input = heredoc`
+    début
+    ifdef::foo+bar[foo and bar are set]
+    fin
+    `
+    const expected = {
+      input: heredoc`
+      début
+      foo and bar are set
+      fin
+      `,
+      locations: { 1: loc('1:1:0'), 2: loc('2:16:0'), 3: loc('3:1:0') },
+    }
+    expect(parse(input, { attributes: { foo: '', bar: '' } })).to.eql(expected)
+  })
+
+  it('should process negated preprocessor conditional with attribute combination that evaluates to true', () => {
+    const input = heredoc`
+    début
+    ifndef::foo+bar[foo or bar is not set]
+    fin
+    `
+    const expected = {
+      input: heredoc`
+      début
+      foo or bar is not set
+      fin
+      `,
+      locations: { 1: loc('1:1:0'), 2: loc('2:17:0'), 3: loc('3:1:0') },
+    }
+    expect(parse(input, { attributes: { foo: '' } })).to.eql(expected)
+  })
+
   it('should process and retain attribute entry above preprocessor conditional', () => {
     const input = heredoc`
     :foo:
