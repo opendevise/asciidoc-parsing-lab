@@ -43,15 +43,14 @@ listing = '----\n' contents:$(pp !('----' eol) line / lf)* pp '----' eol
     return { name: 'listing', contents, location: location() }
   }
 
-// NOTE could possibly use contents:line|.., pp !('====' eol / list_marker)| but peggy doesn't want to allow it
-paragraph = contents0:line contents1:(pp !('====' eol / list_marker) @line)*
+paragraph = contents:line|1.., pp !('====' eol / list_marker)|
   {
-    return { name: 'paragraph', contents: unshiftOntoCopy(contents1, contents0), location: location() }
+    return { name: 'paragraph', contents, location: location() }
   }
 
-list = item0:list_item items:(pp @list_item)*
+list = items:list_item|1.., pp|
   {
-    return { name: 'list', items: unshiftOntoCopy(items, item0), location: location() }
+    return { name: 'list', items, location: location() }
   }
 
 list_marker = ('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !eol
