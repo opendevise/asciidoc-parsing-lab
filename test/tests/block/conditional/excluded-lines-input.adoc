@@ -3,3 +3,6 @@ conditional
 lines
 endif::[]
 unconditional line
+
+ifdef::not-set[conditional line]
+unconditional line

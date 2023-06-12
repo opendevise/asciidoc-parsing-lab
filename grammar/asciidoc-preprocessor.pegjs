@@ -147,6 +147,7 @@ pp_conditional_short = negated:('if' @'n'? 'def') '::' attributeName:attribute_n
           locations[n - 1] = locations[n]
           delete locations[n++]
         }
+        locations.lineOffset++
       } else {
         delete locations[startLine]
       }

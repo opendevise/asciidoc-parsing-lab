@@ -98,6 +98,19 @@ describe('preprocessor', () => {
     expect(parse(input)).to.eql(expected)
   })
 
+  it('should process input with false single-line preprocessor conditional followed by empty line', () => {
+    const input = heredoc`
+    ifdef::foo[foo is set]
+
+    fin
+    `
+    const expected = {
+      input: '\nfin',
+      locations: { 1: loc('2:1:1'), 2: loc('3:1:1') },
+    }
+    expect(parse(input)).to.eql(expected)
+  })
+
   it('should process input with true single-line preprocessor conditional preceded by other lines', () => {
     const input = heredoc`
     début
@@ -114,7 +127,7 @@ describe('preprocessor', () => {
   })
 
   // FIXME maybe don't keep trailing newline in this case?
-  it('should process input with true single-line preprocessor conditional preceded by other lines', () => {
+  it('should process input with false single-line preprocessor conditional preceded by other lines', () => {
     const input = heredoc`
     début
     ifdef::foo[foo is set]
