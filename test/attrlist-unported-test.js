@@ -194,17 +194,17 @@ describe('attrlist (unported)', () => {
       expect(parse('name=\'value\'')).to.eql(expected)
     })
 
-    it('should allow unquoted value to be backslash', () => {
+    it('should allow unquoted value to be escaped', () => {
       const expected = { name: '\\' }
       expect(parse('name=\\')).to.eql(expected)
     })
 
-    it('should allow double-quoted value to be backslash', () => {
+    it('should allow double-quoted value to be escaped', () => {
       const expected = { name: '\\' }
       expect(parse('name="\\\\"')).to.eql(expected)
     })
 
-    it('should allow single-quoted value to be backslash', () => {
+    it('should allow single-quoted value to be escaped', () => {
       const expected = { name: '\\' }
       expect(parse('name=\'\\\\\'')).to.eql(expected)
     })
@@ -358,6 +358,32 @@ describe('attrlist (unported)', () => {
       }
       const locations = { 1: { line: 1, col: 2 } }
       expect(parse('title="using \\" effectively"', { locations })).to.eql(expected)
+    })
+
+    it('should set start location for value that starts with escaped backslash to location of escape', () => {
+      const expectedLocation = [{ line: 1, col: 11 }, { line: 1, col: 25 }]
+      const expected = {
+        reftext: {
+          value: '\\\' is rs + sq',
+          inlines: [{ name: 'text', type: 'string', value: '\\\' is rs + sq', location: expectedLocation }],
+        },
+      }
+      const locations = { 1: { line: 1, col: 2 } }
+      // read as: reftext='\\\' is rs + sq'
+      expect(parse('reftext=\'\\\\\\\' is rs + sq\'', { locations, inlineParser })).to.eql(expected)
+    })
+
+    it('should set end location for value that ends with escaped backslash to location of escaped backslash', () => {
+      const expectedLocation = [{ line: 1, col: 11 }, { line: 1, col: 17 }]
+      const expected = {
+        reftext: {
+          value: 'using \\',
+          inlines: [{ name: 'text', type: 'string', value: 'using \\', location: expectedLocation }],
+        },
+      }
+      const locations = { 1: { line: 1, col: 2 } }
+      // read as: reftext='using \\'
+      expect(parse('reftext=\'using \\\\\'', { locations, inlineParser })).to.eql(expected)
     })
   })
 
