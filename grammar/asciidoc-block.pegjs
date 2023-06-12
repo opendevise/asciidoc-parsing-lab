@@ -203,6 +203,8 @@ section_or_discrete_heading = headingStartOffset:offset heading:heading blocks:(
     return heading
   }
 
+// TODO in order to enable list matching shorthand, must ensure this rule is only called when all other syntax has been exhausted
+//paragraph = lines:line|1.., !(block_attribute_line / any_compound_block_delimiter_line)|
 paragraph = lines:(!(block_attribute_line / any_compound_block_delimiter_line) @line)+
   {
     const location_ = getLocation()
@@ -289,8 +291,7 @@ sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, ope
     return { name: 'sidebar', type: 'block', form: 'delimited', delimiter, blocks, location: toSourceLocation(getLocation()) }
   }
 
-// NOTE: use items:(@list_item @(lf* @list_item)*) to avoid having to check lf and list_marker on first item
-list = &(marker:list_marker &{ return isNewList(context, marker) }) items:(lf* @list_item)+
+list = &(marker:list_marker &{ return isNewList(context, marker) }) items:list_item|1.., lf*|
   {
     const marker = context.listStack.pop()
     if (marker === '1.') {
@@ -309,12 +310,11 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:(lf* @
 
 list_marker = @$('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !eol
 
-list_item_principal = firstLine:line wrappedLines:(!(block_attribute_line / list_continuation_line / list_marker / any_compound_block_delimiter_line) @line)*
+list_item_principal = lines:line|1.., !(block_attribute_line / list_continuation_line / list_marker / any_compound_block_delimiter_line)|
   {
     const location_ = getLocation()
     const startCol = toSourceLocation(location_)[0].col
-    const text = wrappedLines.length ? firstLine + '\n' + wrappedLines.join('\n') : firstLine
-    return parseInline(text, { attributes: documentAttributes, locations: createLocationsForInlines(location_, startCol - 1) })
+    return parseInline(lines.join('\n'), { attributes: documentAttributes, locations: createLocationsForInlines(location_, startCol - 1) })
   }
 
 list_continuation_line = '+' eol
