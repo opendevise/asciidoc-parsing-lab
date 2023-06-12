@@ -137,24 +137,22 @@ pp_conditional_short = negated:('if' @'n'? 'def') '::' attributeName:attribute_n
       if (n in locations) break
       locations[n] = { line: n + lineOffset, col: 1, lineOffset }
     }
-    const drop = negated ? (attributeName in documentAttributes) : !(attributeName in documentAttributes)
-    if (drop) {
-      if (eol) {
-        let n = endLine
-        if (!locations[n]) locations[n] = { line: n + lineOffset, col: 1, lineOffset }
-        while (n in locations) {
-          locations[n].lineOffset++
-          locations[n - 1] = locations[n]
-          delete locations[n++]
-        }
-        locations.lineOffset++
-      } else {
-        delete locations[startLine]
-      }
-    } else {
+    const keep = negated ? !(attributeName in documentAttributes) : (attributeName in documentAttributes)
+    if (keep) {
       locations[startLine].col = contentsOffset - startOffset + 1
+    } else if (eol) {
+      let n = endLine
+      if (!locations[n]) locations[n] = { line: n + lineOffset, col: 1, lineOffset }
+      while (n in locations) {
+        locations[n].lineOffset++
+        locations[n - 1] = locations[n]
+        delete locations[n++]
+      }
+      locations.lineOffset++
+    } else {
+      delete locations[startLine]
     }
-    input = input.slice(0, (peg$currPos = startOffset)) + (drop ? '' : contents + (eol || '')) + input.slice(endOffset)
+    input = input.slice(0, (peg$currPos = startOffset)) + (keep ? contents + (eol || '') : '') + input.slice(endOffset)
     peg$posDetailsCache = [{ line: 1, col: 1 }]
     return true
   }
@@ -173,20 +171,8 @@ pp_conditional = negated:('if' @'n'? 'def') '::' attributeName:attribute_name '[
         locations[n] = { line: n + lineOffset, col: 1, lineOffset }
       }
     }
-    const drop = negated ? (attributeName in documentAttributes) : !(attributeName in documentAttributes)
-    if (drop) {
-      const numDropped = contents.length + 2
-      let l = endLine
-      if (!locations[l]) locations[l] = { line: l + lineOffset, col: 1, lineOffset }
-      while (l in locations) locations[l++].lineOffset += numDropped
-      for (let n = startLine; n < endLine; n++) delete locations[n]
-      let n = endLine
-      while (n in locations) {
-        locations[n - numDropped] = locations[n]
-        delete locations[n++]
-      }
-      locations.lineOffset = locations[n - 1 - numDropped].lineOffset
-    } else {
+    const keep = negated ? !(attributeName in documentAttributes) : (attributeName in documentAttributes)
+    if (keep) {
       if (!locations[startLine]) {
         for (let l = startLine; l < endLine; l++) locations[l] = { line: l + lineOffset, col: 1, lineOffset }
       }
@@ -204,8 +190,20 @@ pp_conditional = negated:('if' @'n'? 'def') '::' attributeName:attribute_name '[
       }
       // NOTE if included lines are reduced then root lineOffset increases
       currentInclude ? (locations.lineOffset += 2) : (locations.lineOffset = newLineOffset)
+    } else {
+      const numDropped = contents.length + 2
+      let l = endLine
+      if (!locations[l]) locations[l] = { line: l + lineOffset, col: 1, lineOffset }
+      while (l in locations) locations[l++].lineOffset += numDropped
+      for (let n = startLine; n < endLine; n++) delete locations[n]
+      let n = endLine
+      while (n in locations) {
+        locations[n - numDropped] = locations[n]
+        delete locations[n++]
+      }
+      locations.lineOffset = locations[n - 1 - numDropped].lineOffset
     }
-    input = input.slice(0, (peg$currPos = startOffset)) + (drop ? '' : contents.join('')) + input.slice(endOffset)
+    input = input.slice(0, (peg$currPos = startOffset)) + (keep ? contents.join('') : '') + input.slice(endOffset)
     peg$posDetailsCache = [{ line: 1, col: 1 }]
     return true
   }
