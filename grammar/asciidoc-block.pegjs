@@ -221,7 +221,6 @@ literal_paragraph = lines:indented_line+
     const contents = lines.reduce((accum, l) => accum + '\n' + l.slice(outdent), '').slice(1)
     const metadata = metadataCache[offset()]
     if (metadata?.attributes.style === 'normal') {
-      delete metadata.attributes.style
       const location_ = getLocation()
       const inlines = parseInline(contents, { attributes: documentAttributes, locations: createLocationsForInlines(location_, outdent) })
       return { name: 'paragraph', type: 'block', inlines, location: toSourceLocation(location_) }
