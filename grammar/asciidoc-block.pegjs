@@ -58,7 +58,6 @@ function parseMetadata (attrlists, metadataStartOffset, metadataEndOffset) {
   if (cacheKey in metadataCache) return metadataCache[cacheKey]
   while (input[metadataEndOffset - 1] === '\n' && input[metadataEndOffset - 2] === '\n') metadataEndOffset--
   const attributes = {}
-  const metadata = { attributes, options: [], roles: [] }
   for (const [marker, attrlistOffset, attrlist] of attrlists) {
     if (!attrlist) continue
     const location_ = getLocation({ start: attrlistOffset, end: attrlistOffset + attrlist.length - 1 })
@@ -69,10 +68,12 @@ function parseMetadata (attrlists, metadataStartOffset, metadataEndOffset) {
       parseAttrlist(attrlist, { attributes: documentAttributes, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(location_)[0] }, initial: attributes })
     }
   }
-  if ('opts' in attributes) attributes.opts = (metadata.options = [...attributes.opts]).join(',')
-  if ('role' in attributes) attributes.role = (metadata.roles = [...attributes.role]).join(' ')
-  metadata.location = toSourceLocation(getLocation({ start: metadataStartOffset, end: metadataEndOffset }))
-  return (metadataCache[cacheKey] = metadata)
+  return (metadataCache[cacheKey] = {
+    attributes,
+    options: [],
+    roles: [],
+    location: toSourceLocation(getLocation({ start: metadataStartOffset, end: metadataEndOffset })),
+  })
 }
 }
 // TODO if surrounding lf are not part of document, group inner two rules as a new rule
@@ -183,6 +184,8 @@ block = lf* metadataStartOffset:offset metadata:(attrlists:(@(block_title / bloc
     if (!metadata) return block
     const attributes = metadata.attributes
     if ('id' in attributes) block.id = attributes.id
+    attributes.opts &&= (metadata.options = [...attributes.opts]).join(',')
+    attributes.role &&= (metadata.roles = [...attributes.role]).join(' ')
     contentAttributeNames.forEach((name) => {
       let val
       if (name in attributes && (val = attributes[name]).constructor === Object) {
