@@ -286,7 +286,7 @@ describe('attrlist (unported)', () => {
       expect(parse('name=\'value\\\'')).to.eql(expected)
     })
 
-    it('should normalize value of role and opts attributs', () => {
+    it('should normalize value of role and opts attributes', () => {
       const expected = { role: new Set(['incremental', 'key']), opts: new Set(['this', 'that', 'theother']) }
       expect(parse('role="  incremental   key  ",opts=" this, that theother "')).to.eql(expected)
     })
