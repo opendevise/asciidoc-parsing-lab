@@ -68,8 +68,8 @@ block_attrlist = anchor:block_anchor? attrsOffset:offset attrs:(!. / block_attr|
     return attrs.reduce((accum, [name, value], idx) => {
       if (name == null) {
         const posKey = `$${++posIdx}`
-        if (!value || (idx && (accum[posKey] = value))) return accum
-        // NOTE shorthands only parsed if first positional attribute is in first position in attrlist
+        if (!value || ((idx || ~value.indexOf(' ')) && (accum[posKey] = value))) return accum
+        // NOTE shorthands only parsed if first positional attribute is in first position in attrlist and value has no spaces
         accum[posKey] = anchor ? accum[posKey] + value : value
         const m = value.split(/([.#%])/)
         if (m.length > 1) {

@@ -109,6 +109,18 @@ describe('attrlist (unported)', () => {
       expect(parse(shorthand)).to.eql(expected)
     })
 
+    it('should not recognize shorthand if contains space', () => {
+      const shorthand = '.foo bar'
+      const expected = { $1: shorthand }
+      expect(parse(shorthand)).to.eql(expected)
+    })
+
+    it('should not set style if it contains a space', () => {
+      const shorthand = 'not a style'
+      const expected = { $1: shorthand }
+      expect(parse(shorthand)).to.eql(expected)
+    })
+
     it('should parse all shorthands in first positional attribute', () => {
       const shorthand = '#idname.role1%opt1.role2%opt2'
       const expected = {
