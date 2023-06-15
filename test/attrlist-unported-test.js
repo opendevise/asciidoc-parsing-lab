@@ -286,6 +286,16 @@ describe('attrlist (unported)', () => {
       expect(parse('name=\'value\\\'')).to.eql(expected)
     })
 
+    it('should allow use of space as attribute separator when value is double quoted', () => {
+      const expected = { foo: 'bar', yin: 'yang' }
+      expect(parse('foo="bar" yin="yang"')).to.eql(expected)
+    })
+
+    it('should allow use of space as attribute separator when value is single quoted', () => {
+      const expected = { foo: 'bar', yin: 'yang' }
+      expect(parse('foo=\'bar\' yin=\'yang\'')).to.eql(expected)
+    })
+
     it('should normalize value of role and opts attributes', () => {
       const expected = { role: new Set(['incremental', 'key']), opts: new Set(['this', 'that', 'theother']) }
       expect(parse('role="  incremental   key  ",opts=" this, that theother "')).to.eql(expected)

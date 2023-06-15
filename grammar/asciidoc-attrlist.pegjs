@@ -56,7 +56,7 @@ function valueToInlines (value, valueOffset, parse, escapedChar, startLocation) 
 }
 }
 // Q: is there a simpler way to handle attrsOffset here?
-block_attrlist = anchor:block_anchor? attrsOffset:offset attrs:(!. / block_attr|.., ' '* ',' ' '*|)
+block_attrlist = anchor:block_anchor? attrsOffset:offset attrs:(!. / block_attr|.., ',' ' '* / ' '+ (',' ' '*)?|)
   {
     if (anchor) {
       initial['$1'] = input.slice(offset(), attrsOffset)
