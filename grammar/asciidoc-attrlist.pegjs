@@ -126,9 +126,9 @@ block_attr_val = valueRecord:(double_quoted_attr_val / single_quoted_attr_val / 
       : value
   }
 
-double_quoted_attr_val = @'"' @offset @$('\\' ('\\' / '"') / (!'"' .))* '"'
+double_quoted_attr_val = @'"' @offset @$('\\' ('\\' / '"') / (!'"' .))* '"' &(!. / ',' / ' ')
 
-single_quoted_attr_val = @'\'' @offset @$('\\' ('\\' / '\'') / (!'\'' .))* '\''
+single_quoted_attr_val = @'\'' @offset @$('\\' ('\\' / '\'') / (!'\'' .))* '\'' &(!. / ',' / ' ')
 
 unquoted_attr_val = '' offset $(!(',' / ' ') . / ' '+ !',' &.)*
 

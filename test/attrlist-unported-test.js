@@ -201,6 +201,16 @@ describe('attrlist (unported)', () => {
       expect(parse('name="value"')).to.eql(expected)
     })
 
+    it('should not allow double-quoted value to be followed by a character other than space or comma', () => {
+      const expected = { foo: 'bar', yin: '"yang"yang' }
+      expect(parse('foo="bar",yin="yang"yang')).to.eql(expected)
+    })
+
+    it('should not allow single-quoted value to be followed by a character other than space or comma', () => {
+      const expected = { foo: 'bar', yin: '\'yang\'yang' }
+      expect(parse('foo=\'bar\',yin=\'yang\'yang')).to.eql(expected)
+    })
+
     it('should allow value to be enclosed in single quotes', () => {
       const expected = { name: 'value' }
       expect(parse('name=\'value\'')).to.eql(expected)
