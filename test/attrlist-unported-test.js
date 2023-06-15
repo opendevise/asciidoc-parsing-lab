@@ -158,6 +158,15 @@ describe('attrlist (unported)', () => {
       const expected = { $1: shorthand, style: 'sidebar', id: 's1' }
       expect(parse(shorthand)).to.eql(expected)
     })
+
+    it('should not parse shorthands or extract style in first positional attribute if not in first position', () => {
+      const shorthand = 'sidebar#idname.role1%opt1.role2%opt2'
+      const expected = {
+        $1: shorthand,
+        lang: 'fr',
+      }
+      expect(parse('lang=fr,' + shorthand)).to.eql(expected)
+    })
   })
 
   describe('named attributes', () => {
