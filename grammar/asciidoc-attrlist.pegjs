@@ -1,5 +1,6 @@
 {{
 const inlinePreprocessor = require('#inline-preprocessor')
+const { addAllToSet } = require('#util')
 }}
 {
 if (!input) return {}
@@ -89,11 +90,9 @@ block_attrlist = anchor:block_anchor? attrsOffset:offset attrs:(!. / block_attr|
           accum.style = value
         }
       } else if (name === 'role' || name === 'roles') {
-        value && (value = value.split(' ').filter((it) => it !== '')).length &&
-          value.reduce((names, name) => names.add(name), (accum.role ??= new Set()))
+        value && (value = value.split(' ').filter((it) => it !== '')).length && addAllToSet((accum.role ??= new Set()), value)
       } else if (name === 'opts' || name === 'options') {
-        value && (value = value.split(/,| /).filter((it) => it !== '')).length &&
-          value.reduce((names, name) => names.add(name), (accum.opts ??= new Set()))
+        value && (value = value.split(/,| /).filter((it) => it !== '')).length && addAllToSet((accum.opts ??= new Set()), value)
       } else {
         accum[name] = value
       }
