@@ -43,22 +43,30 @@ block = (pp (lf / attribute_entry))* @(heading / listing / example / sidebar / l
 
 heading = '='+ space space* line
 
-listing = '-' '---\n' contents:$(pp !('-' '---' eol) line / lf)* pp '-' '---' eol
+listing = listing_delimiter_line contents:$(pp !listing_delimiter_line line / lf)* pp listing_delimiter_line
   {
     return { name: 'listing', contents, location: location() }
   }
 
-example = '=' '===\n' contents:paragraph pp '=' '===' eol
+listing_delimiter_line = '-' '---' eol
+
+example = example_delimiter_line contents:paragraph pp example_delimiter_line
   {
     return { name: 'example', contents, location: location() }
   }
 
-sidebar = '*' '***\n' contents:paragraph pp '*' '***' eol
+example_delimiter_line = '=' '===' eol
+
+sidebar = sidebar_delimiter_line contents:paragraph pp sidebar_delimiter_line
   {
     return { name: 'sidebar', contents, location: location() }
   }
 
-paragraph = contents:line|1.., pp !('-' '---' eol / '=' '===' eol / '*' '***' eol / list_marker)|
+sidebar_delimiter_line = '*' '***' eol
+
+any_block_delimiter_line = listing_delimiter_line / example_delimiter_line / sidebar_delimiter_line
+
+paragraph = contents:line|1.., pp !(any_block_delimiter_line / list_marker)|
   {
     return { name: 'paragraph', contents, location: location() }
   }
@@ -70,7 +78,7 @@ list = items:list_item|1.., pp|
 
 list_marker = ('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !eol
 
-list_item = list_marker principal:$(line (pp !('+\n' / list_marker / '-' '---' eol / '=' '===' eol / '*' '***' eol) line)*) blocks:attached_block*
+list_item = list_marker principal:$(line (pp !('+\n' / list_marker / any_block_delimiter_line) line)*) blocks:attached_block*
   {
     return { name: 'listItem', principal, blocks, location: location() }
   }
