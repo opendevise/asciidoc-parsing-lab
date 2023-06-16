@@ -207,8 +207,8 @@ section_or_discrete_heading = headingStartOffset:offset heading:heading blocks:(
   }
 
 // TODO in order to enable list matching shorthand, must ensure this rule is only called when all other syntax has been exhausted
-//paragraph = lines:line|1.., !(block_attribute_line / any_compound_block_delimiter_line)|
-paragraph = lines:(!(block_attribute_line / any_compound_block_delimiter_line) @line)+
+//paragraph = lines:line|1.., !(block_attribute_line / any_block_delimiter_line)|
+paragraph = lines:(!(block_attribute_line / any_block_delimiter_line) @line)+
   {
     const location_ = getLocation()
     const contents = lines.join('\n')
@@ -312,7 +312,7 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:list_i
 
 list_marker = @$('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !eol
 
-list_item_principal = lines:line|1.., !(block_attribute_line / list_continuation_line / list_marker / any_compound_block_delimiter_line)|
+list_item_principal = lines:line|1.., !(block_attribute_line / list_continuation_line / list_marker / any_block_delimiter_line)|
   {
     const location_ = getLocation()
     const startCol = toSourceLocation(location_)[0].col
@@ -333,7 +333,7 @@ image = 'image::' !space target:$(!'\n' !'[' .)+ '[' attrlist ']' eol
     return { name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()) }
   }
 
-any_compound_block_delimiter_line = example_delimiter_line / sidebar_delimiter_line
+any_block_delimiter_line = example_delimiter_line / sidebar_delimiter_line
 
 offset = ''
   {
