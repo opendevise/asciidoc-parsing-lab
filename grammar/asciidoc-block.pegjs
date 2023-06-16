@@ -333,7 +333,7 @@ image = 'image::' !space target:$(!'\n' !'[' .)+ '[' attrlist ']' eol
     return { name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()) }
   }
 
-any_block_delimiter_line = example_delimiter_line / sidebar_delimiter_line
+any_block_delimiter_line = listing_delimiter_line / example_delimiter_line / sidebar_delimiter_line
 
 offset = ''
   {
