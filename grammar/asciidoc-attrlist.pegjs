@@ -15,8 +15,8 @@ if (sourceMapping) input = preprocessedInput
 const parseInline = (options.inlineParser ?? require('#block-default-inline-parser')).parse
 
 function valueToInlines (value, valueOffset, parse, escapedChar, startLocation) {
-  if (!value) return { value, inlines: [] }
-  let inlines
+  let inlines = []
+  if (!value) return { value, inlines }
   if (parse) {
     let sourceMapping_ = sourceMapping && sourceMapping.slice(valueOffset, valueOffset + value.length)
     if (escapedChar && ~value.indexOf('\\')) {
