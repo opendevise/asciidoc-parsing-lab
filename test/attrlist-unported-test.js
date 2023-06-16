@@ -47,7 +47,7 @@ describe('attrlist (unported)', () => {
     })
 
     it('should parse shorthand options in first positional attribute', () => {
-      const shorthand = '%opt1.%opt2'
+      const shorthand = '%opt1%opt2'
       const expected = { $1: shorthand, opts: new Set(['opt1', 'opt2']) }
       expect(parse(shorthand)).to.eql(expected)
     })
