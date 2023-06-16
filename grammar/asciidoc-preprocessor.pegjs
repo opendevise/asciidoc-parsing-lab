@@ -43,17 +43,17 @@ block = (pp (lf / attribute_entry))* @(heading / example / listing / list / para
 
 heading = '='+ space space* line
 
-example = '====\n' contents:paragraph pp '====' eol
+example = '=' '===\n' contents:paragraph pp '=' '===' eol
   {
     return { name: 'example', contents, location: location() }
   }
 
-listing = '----\n' contents:$(pp !('----' eol) line / lf)* pp '----' eol
+listing = '-' '---\n' contents:$(pp !('-' '---' eol) line / lf)* pp '-' '---' eol
   {
     return { name: 'listing', contents, location: location() }
   }
 
-paragraph = contents:line|1.., pp !('====' eol / list_marker)|
+paragraph = contents:line|1.., pp !('=' '===' eol / list_marker)|
   {
     return { name: 'paragraph', contents, location: location() }
   }
@@ -65,7 +65,7 @@ list = items:list_item|1.., pp|
 
 list_marker = ('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !eol
 
-list_item = list_marker principal:$(line (pp !('+\n' / list_marker / '====' eol) line)*) blocks:attached_block*
+list_item = list_marker principal:$(line (pp !('+\n' / list_marker / '=' '===' eol) line)*) blocks:attached_block*
   {
     return { name: 'listItem', principal, blocks, location: location() }
   }
