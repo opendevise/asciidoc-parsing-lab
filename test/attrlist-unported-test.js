@@ -19,7 +19,7 @@ describe('attrlist (unported)', () => {
 
     it('should not set positional attribute if value is empty', () => {
       const expected = { $3: 'c' }
-      expect(parse(',,c')).to.eql(expected)
+      expect(parse(', ,c')).to.eql(expected)
     })
 
     it('should allow spaces around delimiter separating positional attributes', () => {
