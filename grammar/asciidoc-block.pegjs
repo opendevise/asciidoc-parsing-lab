@@ -97,12 +97,12 @@ attribute_entry = ':' negatedPrefix:'!'? name:attribute_name negatedSuffix:'!'? 
 // TODO permit non-ASCII letters in attribute name
 attribute_name = !'-' @$[a-zA-Z0-9_-]+
 
-attribute_value = space @$(!'\n' .)+
+attribute_value = space @$(!lf .)+
 
 block_attribute_line = @'[' @offset @attrlist ']' eol
 
 // don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
-block_title = @'.' @offset @$('.'? (!'\n' !' ' !'.' .) (!'\n' .)*) eol
+block_title = @'.' @offset @$('.'? (!lf !' ' !'.' .) (!lf .)*) eol
 
 header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doctitle author_info_line? attributeEntriesBelow:attribute_entry*)? &{ return doctitleAndAttributeEntries || attributeEntriesAbove.length }
   {
@@ -147,7 +147,7 @@ doctitle = '=' space space* titleOffset:offset title:line
 author_info_line = @author_info_item|1.., '; '| eol
 
 // Q: are attribute references permitted? if so, how do they work?
-author_info_item = names:author_name|1..3, space| address:(' <' @$(!'>' !'\n' .)+ '>')?
+author_info_item = names:author_name|1..3, space| address:(' <' @$(!'>' !lf .)+ '>')?
   {
     const info = {}
     names = names.filter((name) => name).map((name) => ~name.indexOf('_') ? name.replace(/_/g, ' ') : name)
@@ -327,7 +327,7 @@ list_item = marker:list_marker &{ return isCurrentList(context, marker) } princi
     return { name: 'listItem', type: 'block', marker, principal, blocks, location: toSourceLocation(getLocation()) }
   }
 
-image = 'image::' !space target:$(!'\n' !'[' .)+ '[' attrlist ']' eol
+image = 'image::' !space target:$(!lf !'[' .)+ '[' attrlist ']' eol
   {
     // TODO run parseAttrlist on attrlist
     return { name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()) }
@@ -340,11 +340,11 @@ offset = ''
     return peg$currPos
   }
 
-line = @$(!'\n' .)+ eol
+line = @$(!lf .)+ eol
 
 line_or_empty_line = line / lf @''
 
-indented_line = @$(space (!'\n' .)+) eol
+indented_line = @$(space (!lf .)+) eol
 
 attrlist = !space @$(!(lf / space? ']' eol) .)*
 

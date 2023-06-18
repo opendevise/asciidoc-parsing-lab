@@ -78,12 +78,12 @@ list = items:list_item|1.., pp|
 
 list_marker = ('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !eol
 
-list_item = list_marker principal:$(line (pp !('+\n' / list_marker / any_block_delimiter_line) line)*) blocks:attached_block*
+list_item = list_marker principal:$(line (pp !('+' lf / list_marker / any_block_delimiter_line) line)*) blocks:attached_block*
   {
     return { name: 'listItem', principal, blocks, location: location() }
   }
 
-attached_block = pp '+\n' @(listing / example / sidebar / paragraph)
+attached_block = pp '+' lf @(listing / example / sidebar / paragraph)
 
 attribute_entry = ':' negatedPrefix:'!'? name:attribute_name negatedSuffix:'!'? ':' value:attribute_value? eol
   {
@@ -95,7 +95,7 @@ conditional_lines = lines:(!('endif::[]' eol) @(pp_conditional_pair / line / lf)
     return lines.flat()
   }
 
-pp_conditional_pair = opening:$('if' 'n'? 'def::' attribute_names '[]\n') contents:conditional_lines closing:$('endif::[]' eol)?
+pp_conditional_pair = opening:$('if' 'n'? 'def::' attribute_names '[]' lf) contents:conditional_lines closing:$('endif::[]' eol)?
   {
     if (closing) contents.push(closing)
     return unshiftOntoCopy(contents, opening)
@@ -108,8 +108,8 @@ pp = (pp_directive* !. &.)?
 
 pp_directive = &('if' / 'inc') @(pp_conditional_short / pp_conditional / pp_include)
 
-//pp_include = 'include::' target:$((!'\n' !'[' !' ' .) ((!'\n' !'[' !' ' .) / space !'[')*) '[]' eol:eol
-pp_include = 'include::' !space target:$((!'\n' !'[' !' ' .) / space !'[')+ '[]' eol:eol
+//pp_include = 'include::' target:$((!lf !'[' !' ' .) ((!lf !'[' !' ' .) / space !'[')*) '[]' eol:eol
+pp_include = 'include::' !space target:$((!lf !'[' !' ' .) / space !'[')+ '[]' eol:eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
     const lineOffset = (locations.lineOffset ??= 0)
@@ -152,7 +152,7 @@ pp_include = 'include::' !space target:$((!'\n' !'[' !' ' .) / space !'[')+ '[]'
     return true
   }
 
-pp_conditional_short = negated:('if' @'n'? 'def') '::' attributeNames:attribute_names '[' contentsOffset:offset contents:$((!'\n' '!]' .)+ &(']' eol) / ((!'\n' !']' .) / ']' !eol)+) ']' eol:eol
+pp_conditional_short = negated:('if' @'n'? 'def') '::' attributeNames:attribute_names '[' contentsOffset:offset contents:$((!lf '!]' .)+ &(']' eol) / ((!lf !']' .) / ']' !eol)+) ']' eol:eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
     const lineOffset = (locations.lineOffset ??= 0)
@@ -183,7 +183,7 @@ pp_conditional_short = negated:('if' @'n'? 'def') '::' attributeNames:attribute_
 
 // TODO always succeed even if endif::[] is missing
 // Q could the positive case only process the opening directive and process the closing directive separately? the negative case would still have to consume lines, so this might require the use of a semantic predicate
-pp_conditional = negated:('if' @'n'? 'def') '::' attributeNames:attribute_names '[]\n' contents:conditional_lines 'endif::[]' eol:eol
+pp_conditional = negated:('if' @'n'? 'def') '::' attributeNames:attribute_names '[]' lf contents:conditional_lines 'endif::[]' eol:eol
   {
     const { start: { offset: startOffset, line: startLine }, end: { offset: endOffset, line: endLine } } = location()
     const newEndLine = endLine - 2
@@ -238,14 +238,14 @@ attribute_name = !'-' @$[a-zA-Z0-9_-]+
 
 attribute_names = @attribute_name @(',' attribute_name|1.., ','| / '+' attribute_name|1.., '+'|)?
 
-attribute_value = space @$(!'\n' .)+
+attribute_value = space @$(!lf .)+
 
 offset = ''
   {
     return peg$currPos
   }
 
-line = $((!'\n' .)+ eol)
+line = $((!lf .)+ eol)
 
 space = ' '
 
