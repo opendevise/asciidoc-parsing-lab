@@ -14,7 +14,7 @@ const metadataCache = {}
 
 function getLocation (range_) {
   let eof
-  let { start, end } = range_ === true ? (eof = true) && range() : range_ || range()
+  let { start, end = start + Math.min(0, range_.text.length - 1) } = range_ === true ? (eof = true) && range() : range_ || range()
   const { line: startLine, column: startCol } = peg$computePosDetails(start)
   const startDetails = { line: startLine, col: startCol }
   if (end === start) return [startDetails, startDetails]
@@ -60,7 +60,7 @@ function parseMetadata (attrlists, metadataStartOffset, metadataEndOffset) {
   const attributes = {}
   for (const [marker, attrlistOffset, attrlist] of attrlists) {
     if (!attrlist) continue
-    const location_ = getLocation({ start: attrlistOffset, end: attrlistOffset + attrlist.length - 1 })
+    const location_ = getLocation({ start: attrlistOffset, text: attrlist })
     if (marker === '.') {
       // NOTE this is slightly faked since location_ will already account for column offset, but it still works
       attributes.title = { value: attrlist, inlines: parseInline(attrlist, { attributes: documentAttributes, locations: createLocationsForInlines(location_, 1) }) }
