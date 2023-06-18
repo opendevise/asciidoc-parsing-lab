@@ -14,7 +14,7 @@ const metadataCache = {}
 
 function getLocation (range_) {
   let eof
-  let { start, end = start + Math.min(0, range_.text.length - 1) } = range_ === true ? (eof = true) && range() : range_ || range()
+  let { start, end = start + (range_.text || '.').length - 1 } = range_ === true ? (eof = true) && range() : range_ || range()
   const { line: startLine, column: startCol } = peg$computePosDetails(start)
   const startDetails = { line: startLine, col: startCol }
   if (end === start) return [startDetails, startDetails]
