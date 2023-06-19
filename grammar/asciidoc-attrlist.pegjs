@@ -56,7 +56,7 @@ function valueToInlines (value, valueOffset, parse, escapedChar, startLocation) 
   return { value, inlines }
 }
 }
-block_attrlist = shorthandAttrs:block_shorthand_attrs? attrs:(!. / block_attr|.., ',' ' '* / ' '+ (',' ' '*)?|)
+block_attrlist = shorthandAttrs:block_shorthand_attrs? attrEntries:(!. / block_attr|.., ',' ' '* / ' '+ (',' ' '*)?|)
   {
     let posIdx = 0
     if (shorthandAttrs) {
@@ -67,8 +67,8 @@ block_attrlist = shorthandAttrs:block_shorthand_attrs? attrs:(!. / block_attr|..
       }
       posIdx = 1
     }
-    if (!attrs) return initial
-    return attrs.reduce((accum, [name, value]) => {
+    if (!attrEntries) return initial
+    return attrEntries.reduce((accum, [name, value]) => {
       if (name == null) {
         const posKey = `$${++posIdx}`
         if (value) accum[posKey] = value
