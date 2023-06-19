@@ -15,9 +15,26 @@ if (!preprocessedInput) return {}
 if (sourceMapping) input = preprocessedInput
 const parseInline = (options.inlineParser ?? require('#block-default-inline-parser')).parse
 
+function updateAttributes (accum, entries, posIdx = 0) {
+  if (!entries) return accum
+  for (let [name, value] of entries) {
+    if (name == null) {
+      const posKey = `$${++posIdx}`
+      if (value) accum[posKey] = value
+    } else if (name === 'role' || name === 'roles') {
+      value && (value = value.split(' ').filter((it) => it !== '')).length && addAllToSet((accum.role ??= new Set()), value)
+    } else if (name === 'opts' || name === 'options') {
+      value && (value = value.split(/,| /).filter((it) => it !== '')).length && addAllToSet((accum.opts ??= new Set()), value)
+    } else {
+      accum[name] = value
+    }
+  }
+  return accum
+}
+
 function valueToInlines (value, valueOffset, parse, escapedChar, startLocation) {
-  let inlines = []
-  if (!value) return { value, inlines }
+  if (!value) return { value, inlines: [] }
+  let inlines
   if (parse) {
     let sourceMapping_ = sourceMapping && sourceMapping.slice(valueOffset, valueOffset + value.length)
     if (escapedChar && ~value.indexOf('\\')) {
@@ -32,9 +49,7 @@ function valueToInlines (value, valueOffset, parse, escapedChar, startLocation) 
       })
       if (Object.keys(escapes).length) sourceMapping_ = sourceMapping_.filter((it, idx) => !escapes[idx])
     }
-    const locationsForInlines = {
-      1: Object.assign({}, startLocation, { col: startLocation.col + (sourceMapping_ ? 0 : valueOffset) }),
-    }
+    const locationsForInlines = { 1: Object.assign({}, startLocation, { col: startLocation.col + (sourceMapping_ ? 0 : valueOffset) }) }
     inlines = parseInline(value, { locations: locationsForInlines, preprocessorMode: 'passthroughs', sourceMapping: sourceMapping_ })
   } else {
     let valueStartOffset, valueEndOffset
@@ -56,32 +71,20 @@ function valueToInlines (value, valueOffset, parse, escapedChar, startLocation) 
   return { value, inlines }
 }
 }
-block_attrlist = shorthandAttrs:block_shorthand_attrs? attrEntries:(!. / block_attr|.., ',' ' '* / ' '+ (',' ' '*)?|)
+block_attrlist = attrEntries:block_attrs
   {
-    let posIdx = 0
-    if (shorthandAttrs) {
-      if ('$1' in shorthandAttrs) {
-        shorthandAttrs.role &&= addAllToSet((initial.role ??= new Set()), shorthandAttrs.role)
-        shorthandAttrs.opts &&= addAllToSet((initial.opts ??= new Set()), shorthandAttrs.opts)
-        Object.assign(initial, shorthandAttrs)
-      }
-      posIdx = 1
+    return updateAttributes(initial, attrEntries)
+  }
+
+block_attrlist_with_shorthands = shorthandAttrs:block_shorthand_attrs? attrEntries:(!. / block_attrs)
+  {
+    let posIdx
+    if ((posIdx = shorthandAttrs ? 1 : 0) && '$1' in shorthandAttrs) {
+      shorthandAttrs.role &&= addAllToSet((initial.role ??= new Set()), shorthandAttrs.role)
+      shorthandAttrs.opts &&= addAllToSet((initial.opts ??= new Set()), shorthandAttrs.opts)
+      Object.assign(initial, shorthandAttrs)
     }
-    if (!attrEntries) return initial
-    return attrEntries.reduce((accum, [name, value]) => {
-      if (name == null) {
-        const posKey = `$${++posIdx}`
-        if (value) accum[posKey] = value
-        return accum
-      } else if (name === 'role' || name === 'roles') {
-        value && (value = value.split(' ').filter((it) => it !== '')).length && addAllToSet((accum.role ??= new Set()), value)
-      } else if (name === 'opts' || name === 'options') {
-        value && (value = value.split(/,| /).filter((it) => it !== '')).length && addAllToSet((accum.opts ??= new Set()), value)
-      } else {
-        accum[name] = value
-      }
-      return accum
-    }, initial)
+    return updateAttributes(initial, attrEntries, posIdx)
   }
 
 block_shorthand_attrs = anchor:block_anchor? style:block_style? shorthands:block_shorthand_attr* separator:$(!. / ' '* ',' ' '*)
@@ -115,6 +118,8 @@ block_anchor = '[' @idname @(',' ' '* @(valueOffset:offset value:$('\\' ('\\' / 
 block_style = $([a-zA-Z_] [a-zA-Z0-9_-]*)
 
 block_shorthand_attr = ('.' / '#' / '%') $(!'.' !'#' !'%' !',' !' ' .)+
+
+block_attrs = block_attr|.., ',' ' '* / ' '+ (',' ' '*)?|
 
 block_attr = @name:(@block_attr_name ('=' !' ' / ' '* '=' ' '*))? @(&{ return name && ~contentAttributeNames.indexOf(name) } @block_content_attr_val / block_attr_val)
 

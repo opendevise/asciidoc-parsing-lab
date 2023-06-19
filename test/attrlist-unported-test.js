@@ -6,14 +6,18 @@ const { parse } = require('#attrlist-parser')
 const inlineParser = require('#inline-parser')
 
 describe('attrlist (unported)', () => {
+  const parseWithShorthands = (source, opts = {}) => {
+    return parse(source, Object.assign(opts, { startRule: 'block_attrlist_with_shorthands' }))
+  }
+
   describe('positional attributes', () => {
     it('should parse single positional attribute', () => {
-      const expected = { $1: 'value', style: 'value' }
+      const expected = { $1: 'value' }
       expect(parse('value')).to.eql(expected)
     })
 
     it('should parse multiple positional attributes', () => {
-      const expected = { $1: 'a', $2: 'b', style: 'a' }
+      const expected = { $1: 'a', $2: 'b' }
       expect(parse('a,b')).to.eql(expected)
     })
 
@@ -23,39 +27,44 @@ describe('attrlist (unported)', () => {
     })
 
     it('should allow spaces around delimiter separating positional attributes', () => {
-      const expected = { $1: 'a', $2: 'b', $3: 'c', style: 'a' }
+      const expected = { $1: 'a', $2: 'b', $3: 'c' }
       expect(parse('a, b ,c')).to.eql(expected)
     })
 
     it('should number positional attributes intermingled with named attributes', () => {
-      const expected = { $1: 'a', $2: 'b', name: 'value', style: 'a' }
+      const expected = { $1: 'a', $2: 'b', name: 'value' }
       expect(parse('a,name=value,b')).to.eql(expected)
     })
   })
 
   describe('shorthand attributes', () => {
+    it('should assign first positional attribute as style if it contains valid characters', () => {
+      const expected = { $1: 'normal', $2: 'b', style: 'normal' }
+      expect(parseWithShorthands('normal,b')).to.eql(expected)
+    })
+
     it('should parse shorthand id in first positional attribute', () => {
       const shorthand = '#idname'
       const expected = { $1: shorthand, id: 'idname' }
-      expect(parse(shorthand)).to.eql(expected)
+      expect(parseWithShorthands(shorthand)).to.eql(expected)
     })
 
     it('should parse shorthand roles in first positional attribute', () => {
       const shorthand = '.role1.role2'
       const expected = { $1: shorthand, role: new Set(['role1', 'role2']) }
-      expect(parse(shorthand)).to.eql(expected)
+      expect(parseWithShorthands(shorthand)).to.eql(expected)
     })
 
     it('should parse shorthand options in first positional attribute', () => {
       const shorthand = '%opt1%opt2'
       const expected = { $1: shorthand, opts: new Set(['opt1', 'opt2']) }
-      expect(parse(shorthand)).to.eql(expected)
+      expect(parseWithShorthands(shorthand)).to.eql(expected)
     })
 
     it('should parse block anchor in first positional attribute', () => {
       const shorthand = '[idname]'
       const expected = { $1: shorthand, id: 'idname' }
-      expect(parse(shorthand)).to.eql(expected)
+      expect(parseWithShorthands(shorthand)).to.eql(expected)
     })
 
     it('should parse block anchor with reftext in first positional attribute', () => {
@@ -74,7 +83,7 @@ describe('attrlist (unported)', () => {
         },
       }
       const locations = { 1: { line: 1, col: 2 } }
-      expect(parse(shorthand, { locations, inlineParser })).to.eql(expected)
+      expect(parseWithShorthands(shorthand, { locations, inlineParser })).to.eql(expected)
     })
 
     it('should process escaped closing square bracket in reftext of block anchor', () => {
@@ -93,7 +102,7 @@ describe('attrlist (unported)', () => {
         },
       }
       const locations = { 1: { line: 1, col: 2 } }
-      expect(parse(shorthand, { locations, inlineParser })).to.eql(expected)
+      expect(parseWithShorthands(shorthand, { locations, inlineParser })).to.eql(expected)
     })
 
     it('should set reftext to empty if value of reftext in block anchor is empty', () => {
@@ -106,31 +115,31 @@ describe('attrlist (unported)', () => {
           inlines: [],
         },
       }
-      expect(parse(shorthand)).to.eql(expected)
+      expect(parseWithShorthands(shorthand)).to.eql(expected)
     })
 
     it('should not recognize shorthand if contains space', () => {
       const shorthand = '.foo bar'
       const expected = { $1: shorthand }
-      expect(parse(shorthand)).to.eql(expected)
+      expect(parseWithShorthands(shorthand)).to.eql(expected)
     })
 
     it('should not set style if it contains a space', () => {
       const shorthand = 'not a style'
       const expected = { $1: shorthand }
-      expect(parse(shorthand)).to.eql(expected)
+      expect(parseWithShorthands(shorthand)).to.eql(expected)
     })
 
     it('should not recognize shorthands if style contains a space', () => {
       const shorthand = 'not a style.unparsed'
       const expected = { $1: shorthand }
-      expect(parse(shorthand)).to.eql(expected)
+      expect(parseWithShorthands(shorthand)).to.eql(expected)
     })
 
     it('should not recognize shorthand if value is empty', () => {
       const shorthand = '.%opt1'
       const expected = { $1: shorthand }
-      expect(parse(shorthand)).to.eql(expected)
+      expect(parseWithShorthands(shorthand)).to.eql(expected)
     })
 
     it('should parse all shorthands in first positional attribute', () => {
@@ -141,7 +150,19 @@ describe('attrlist (unported)', () => {
         role: new Set(['role1', 'role2']),
         opts: new Set(['opt1', 'opt2']),
       }
-      expect(parse(shorthand)).to.eql(expected)
+      expect(parseWithShorthands(shorthand)).to.eql(expected)
+    })
+
+    it('should parse all shorthands in first positional attribute followed by other attributes', () => {
+      const shorthand = '#idname.role1%opt1.role2%opt2,indent=0'
+      const expected = {
+        $1: shorthand.split(',')[0],
+        id: 'idname',
+        role: new Set(['role1', 'role2']),
+        opts: new Set(['opt1', 'opt2']),
+        indent: '0',
+      }
+      expect(parseWithShorthands(shorthand)).to.eql(expected)
     })
 
     it('should parse shorthands following block anchor in first positional attribute', () => {
@@ -162,13 +183,13 @@ describe('attrlist (unported)', () => {
         opts: new Set(['opt1', 'opt2']),
       }
       const locations = { 1: { line: 1, col: 2 } }
-      expect(parse(shorthand, { locations })).to.eql(expected)
+      expect(parseWithShorthands(shorthand, { locations })).to.eql(expected)
     })
 
     it('should extract style from first positional attribute that contains shorthands', () => {
       const shorthand = 'sidebar#s1'
       const expected = { $1: shorthand, style: 'sidebar', id: 's1' }
-      expect(parse(shorthand)).to.eql(expected)
+      expect(parseWithShorthands(shorthand)).to.eql(expected)
     })
 
     it('should not parse shorthands or extract style in first positional attribute if not in first position', () => {
@@ -177,7 +198,7 @@ describe('attrlist (unported)', () => {
         $1: shorthand,
         lang: 'fr',
       }
-      expect(parse('lang=fr,' + shorthand)).to.eql(expected)
+      expect(parseWithShorthands('lang=fr,' + shorthand)).to.eql(expected)
     })
   })
 
