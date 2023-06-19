@@ -56,39 +56,23 @@ function valueToInlines (value, valueOffset, parse, escapedChar, startLocation) 
   return { value, inlines }
 }
 }
-block_attrlist = anchor:block_anchor? attrsOffset:offset attrs:(!. / block_attr|.., ',' ' '* / ' '+ (',' ' '*)?|)
+block_attrlist = shorthandAttrs:block_shorthand_attrs? attrs:(!. / block_attr|.., ',' ' '* / ' '+ (',' ' '*)?|)
   {
-    if (anchor) {
-      initial['$1'] = input.slice(offset(), attrsOffset)
-      initial.id = anchor[0]
-      if (anchor[1]) initial.reftext = anchor[1]
+    let posIdx = 0
+    if (shorthandAttrs) {
+      if ('$1' in shorthandAttrs) {
+        shorthandAttrs.role &&= addAllToSet((initial.role ??= new Set()), shorthandAttrs.role)
+        shorthandAttrs.opts &&= addAllToSet((initial.opts ??= new Set()), shorthandAttrs.opts)
+        Object.assign(initial, shorthandAttrs)
+      }
+      posIdx = 1
     }
     if (!attrs) return initial
-    let posIdx = 0
-    return attrs.reduce((accum, [name, value], idx) => {
+    return attrs.reduce((accum, [name, value]) => {
       if (name == null) {
         const posKey = `$${++posIdx}`
-        if (!value || ((idx || ~value.indexOf(' ')) && (accum[posKey] = value))) return accum
-        // NOTE shorthands only parsed if first positional attribute is in first position in attrlist and value has no spaces
-        accum[posKey] = anchor ? accum[posKey] + value : value
-        const m = value.split(/([.#%])/)
-        if (m.length > 1) {
-          let style
-          for (let i = 0, len = m.length, val, chr0; i < len; i += 2) {
-            if ((val = m[i]) && ((chr0 = m[i - 1]) || !(style = val))) {
-              if (chr0 === '#') {
-                accum.id = val
-              } else if (chr0 === '.') {
-                ;(accum.role ??= new Set()).add(val)
-              } else {
-                ;(accum.opts ??= new Set()).add(val)
-              }
-            }
-          }
-          if (style) accum.style = style
-        } else {
-          accum.style = value
-        }
+        if (value) accum[posKey] = value
+        return accum
       } else if (name === 'role' || name === 'roles') {
         value && (value = value.split(' ').filter((it) => it !== '')).length && addAllToSet((accum.role ??= new Set()), value)
       } else if (name === 'opts' || name === 'options') {
@@ -100,7 +84,37 @@ block_attrlist = anchor:block_anchor? attrsOffset:offset attrs:(!. / block_attr|
     }, initial)
   }
 
+block_shorthand_attrs = anchor:block_anchor? style:block_style? shorthands:block_shorthand_attr* separator:$(!. / ' '* ',' ' '*)
+  {
+    const attrs = {}
+    const value = separator ? text().slice(0, -separator.length) : text()
+    if (!value) return attrs
+    attrs['$1'] = value
+    if (anchor) {
+      attrs.id = anchor[0]
+      if (anchor[1]) attrs.reftext = anchor[1]
+    }
+    if (style) attrs.style = style
+    if (shorthands.length) {
+      for (const [marker, val] of shorthands) {
+        if (marker === '#') {
+          attrs.id = val
+        } else if (marker === '.') {
+          ;(attrs.role ??= []).push(val)
+        } else { // marker === '%'
+          ;(attrs.opts ??= []).push(val)
+        }
+      }
+    }
+    return attrs
+  }
+
 block_anchor = '[' @idname @(',' ' '* @(valueOffset:offset value:$('\\' ('\\' / ']') / (!']' .))* { return valueToInlines(value, valueOffset, true, ']', locations['1']) }))? ']'
+
+// Q what characters are allowed in a block style?
+block_style = $([a-zA-Z_] [a-zA-Z0-9_-]*)
+
+block_shorthand_attr = ('.' / '#' / '%') $(!'.' !'#' !'%' !',' !' ' .)+
 
 block_attr = @name:(@block_attr_name ('=' !' ' / ' '* '=' ' '*))? @(&{ return name && ~contentAttributeNames.indexOf(name) } @block_content_attr_val / block_attr_val)
 
