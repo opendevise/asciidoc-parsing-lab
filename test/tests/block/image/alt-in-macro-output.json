@@ -1,0 +1,17 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "image",
+      "type": "block",
+      "form": "macro",
+      "target": "player-status.png",
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 50 }],
+      "metadata": {
+        "attributes": { "alt": "Player Status Window" }
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 50 }]
+}

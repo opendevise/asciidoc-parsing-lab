@@ -1,0 +1,1 @@
+image::functions-screen.png[title='The *Functions* Screen']

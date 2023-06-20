@@ -1,0 +1,46 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "image",
+      "type": "block",
+      "form": "macro",
+      "target": "functions-screen.png",
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 59 }],
+      "metadata": {
+        "attributes": { "title": "The *Functions* Screen" }
+      },
+      "title": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "The ",
+          "location": [{ "line": 1, "col": 36 }, { "line": 1, "col": 39 }]
+        },
+        {
+          "name": "span",
+          "type": "inline",
+          "variant": "strong",
+          "form": "constrained",
+          "inlines": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Functions",
+              "location": [{ "line": 1, "col": 41 }, { "line": 1, "col": 49 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 40 }, { "line": 1, "col": 50 }]
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "value": " Screen",
+          "location": [{ "line": 1, "col": 51 }, { "line": 1, "col": 57 }]
+        }
+      ]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 59 }]
+}

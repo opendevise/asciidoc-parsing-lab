@@ -181,6 +181,7 @@ body = block*
 
 block = lf* metadataStartOffset:offset metadata:(attrlists:(@(block_title / block_attribute_line) lf*)* metadataEndOffset:offset { return parseMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) block:(!at_heading @(listing / example / sidebar / list / literal_paragraph / image / paragraph) / section_or_discrete_heading)
   {
+    metadata ??= block.metadata
     if (!metadata) return block
     const attributes = metadata.attributes
     if ('id' in attributes) block.id = attributes.id
@@ -327,10 +328,16 @@ list_item = marker:list_marker &{ return isCurrentList(context, marker) } princi
     return { name: 'listItem', type: 'block', marker, principal, blocks, location: toSourceLocation(getLocation()) }
   }
 
-image = 'image::' !space target:$(!lf !'[' .)+ '[' attrlist ']' eol
+image = 'image::' !space target:$(!lf !'[' .)+ '[' attrlistOffset:offset attrlist:attrlist ']' eol
   {
-    // TODO run parseAttrlist on attrlist
-    return { name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()) }
+    let metadata
+    if (attrlist) {
+      const initial = (metadataCache[offset()] ||= (metadata = { attributes: {}, options: [], roles: [] })).attributes
+      parseAttrlist(attrlist, { attributes: documentAttributes, contentAttributeNames, initial, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(getLocation({ start: attrlistOffset, text: attrlist }))[0] } })
+    }
+    const node = { name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()) }
+    if (metadata) node.metadata = metadata
+    return node
   }
 
 any_block_delimiter_line = listing_delimiter_line / example_delimiter_line / sidebar_delimiter_line
