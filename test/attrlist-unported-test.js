@@ -364,27 +364,17 @@ describe('attrlist (unported)', () => {
         },
       }
       const locations = { 1: { line: 1, col: 2 } }
-      expect(parse('title=titleme', { locations })).to.eql(expected)
+      expect(parse('title=titleme', { contentAttributeNames: ['title'], locations })).to.eql(expected)
     })
 
     it('should convert unquoted empty value of reserved content attribute to empty inline array', () => {
-      const expected = {
-        title: {
-          value: '',
-          inlines: [],
-        },
-      }
-      expect(parse('title=')).to.eql(expected)
+      const expected = { title: { value: '', inlines: [] } }
+      expect(parse('title=', { contentAttributeNames: ['title'] })).to.eql(expected)
     })
 
     it('should convert single-quoted empty value of reserved content attribute to empty inline array', () => {
-      const expected = {
-        title: {
-          value: '',
-          inlines: [],
-        },
-      }
-      expect(parse('title=\'\'')).to.eql(expected)
+      const expected = { title: { value: '', inlines: [] } }
+      expect(parse('title=\'\'', { contentAttributeNames: ['title'] })).to.eql(expected)
     })
 
     it('should convert double-quoted value of reserved content attribute to inline array', () => {
@@ -396,7 +386,7 @@ describe('attrlist (unported)', () => {
         },
       }
       const locations = { 1: { line: 1, col: 2 } }
-      expect(parse('title="titleme"', { locations })).to.eql(expected)
+      expect(parse('title="titleme"', { contentAttributeNames: ['title'], locations })).to.eql(expected)
     })
 
     it('should parse double-quoted value of reserved content attribute to inline array', () => {
@@ -419,7 +409,8 @@ describe('attrlist (unported)', () => {
         },
       }
       const locations = { 1: { line: 1, col: 2 } }
-      expect(parse('title=\'*titleme*\'', { locations, inlineParser })).to.eql(expected)
+      const parseOpts = { contentAttributeNames: ['title'], locations, inlineParser }
+      expect(parse('title=\'*titleme*\'', parseOpts)).to.eql(expected)
     })
 
     it('should convert quoted value of reserved content attribute with escaped quote to inline array', () => {
@@ -431,7 +422,7 @@ describe('attrlist (unported)', () => {
         },
       }
       const locations = { 1: { line: 1, col: 2 } }
-      expect(parse('title="using \\" effectively"', { locations })).to.eql(expected)
+      expect(parse('title="using \\" effectively"', { contentAttributeNames: ['title'], locations })).to.eql(expected)
     })
 
     it('should set start location for value that starts with escaped backslash to location of escape', () => {
@@ -443,8 +434,9 @@ describe('attrlist (unported)', () => {
         },
       }
       const locations = { 1: { line: 1, col: 2 } }
+      const parseOpts = { contentAttributeNames: ['reftext'], locations, inlineParser }
       // read as: reftext='\\\' is rs + sq'
-      expect(parse('reftext=\'\\\\\\\' is rs + sq\'', { locations, inlineParser })).to.eql(expected)
+      expect(parse('reftext=\'\\\\\\\' is rs + sq\'', parseOpts)).to.eql(expected)
     })
 
     it('should set end location for value that ends with escaped backslash to location of escaped backslash', () => {
@@ -456,8 +448,9 @@ describe('attrlist (unported)', () => {
         },
       }
       const locations = { 1: { line: 1, col: 2 } }
+      const parseOpts = { contentAttributeNames: ['reftext'], locations, inlineParser }
       // read as: reftext='using \\'
-      expect(parse('reftext=\'using \\\\\'', { locations, inlineParser })).to.eql(expected)
+      expect(parse('reftext=\'using \\\\\'', parseOpts)).to.eql(expected)
     })
   })
 
@@ -501,7 +494,7 @@ describe('attrlist (unported)', () => {
         },
       }
       const locations = { 1: { line: 2, col: 2 } }
-      expect(parse('title={title}', { attributes, locations })).to.eql(expected)
+      expect(parse('title={title}', { attributes, contentAttributeNames: ['title'], locations })).to.eql(expected)
     })
 
     it('should parse single-quoted content attribute added by attribute reference', () => {
@@ -535,7 +528,8 @@ describe('attrlist (unported)', () => {
         },
       }
       const locations = { 1: { line: 1, col: 2 } }
-      expect(parse(',{titleattr}', { attributes, locations, inlineParser })).to.eql(expected)
+      const parseOpts = { attributes, contentAttributeNames: ['title'], locations, inlineParser }
+      expect(parse(',{titleattr}', parseOpts)).to.eql(expected)
     })
 
     it('should honor passthrough in single-quoted content attribute added by attribute reference', () => {
@@ -554,7 +548,8 @@ describe('attrlist (unported)', () => {
         },
       }
       const locations = { 1: { line: 1, col: 2 } }
-      expect(parse('{titleattr}', { attributes, locations, inlineParser })).to.eql(expected)
+      const parseOpts = { attributes, contentAttributeNames: ['title'], locations, inlineParser }
+      expect(parse('{titleattr}', parseOpts)).to.eql(expected)
     })
 
     it('should map location of parsed content attribute added by longer attribute reference', () => {
@@ -572,7 +567,8 @@ describe('attrlist (unported)', () => {
         },
       }
       const locations = { 1: { line: 1, col: 2 } }
-      expect(parse('{name-of-attribute}', { attributes, locations, inlineParser })).to.eql(expected)
+      const parseOpts = { attributes, contentAttributeNames: ['title'], locations, inlineParser }
+      expect(parse('{name-of-attribute}', parseOpts)).to.eql(expected)
     })
 
     it('should not process attribute references when parsing inlines in single-quoted value', () => {
@@ -591,7 +587,8 @@ describe('attrlist (unported)', () => {
         },
       }
       const locations = { 1: { line: 1, col: 2 } }
-      expect(parse('{titleattr}', { attributes, locations, inlineParser })).to.eql(expected)
+      const parseOpts = { attributes, contentAttributeNames: ['title'], locations, inlineParser }
+      expect(parse('{titleattr}', parseOpts)).to.eql(expected)
     })
   })
 })

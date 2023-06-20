@@ -65,7 +65,7 @@ function parseMetadata (attrlists, metadataStartOffset, metadataEndOffset) {
       // NOTE this is slightly faked since location_ will already account for column offset, but it still works
       attributes.title = { value: attrlist, inlines: parseInline(attrlist, { attributes: documentAttributes, locations: createLocationsForInlines(location_, 1) }) }
     } else {
-      parseAttrlist(attrlist, { attributes: documentAttributes, initial: attributes, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(location_)[0] }, startRule: 'block_attrlist_with_shorthands' })
+      parseAttrlist(attrlist, { attributes: documentAttributes, initial: attributes, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(location_)[0] }, startRule: 'block_attrlist_with_shorthands', contentAttributeNames })
     }
   }
   return (metadataCache[cacheKey] = {

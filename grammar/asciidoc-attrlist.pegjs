@@ -4,12 +4,7 @@ const { addAllToSet } = require('#util')
 }}
 {
 if (!input) return {}
-const {
-  attributes: documentAttributes = {},
-  contentAttributeNames = ['title', 'reftext', 'caption', 'citetitle', 'attribution'],
-  locations = { 1: { line: 1, col: 1 } },
-  initial = {},
-} = options
+const { attributes: documentAttributes = {}, contentAttributeNames = [], locations = { 1: { line: 1, col: 1 } }, initial = {} } = options
 const { input: preprocessedInput, sourceMapping } = inlinePreprocessor(input, { attributes: documentAttributes, mode: 'attributes' })
 if (!preprocessedInput) return {}
 if (sourceMapping) input = preprocessedInput
