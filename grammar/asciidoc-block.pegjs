@@ -181,9 +181,21 @@ body = block*
 
 block = lf* metadataStartOffset:offset metadata:(attrlists:(@(block_title / block_attribute_line) lf*)* metadataEndOffset:offset { return parseMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) block:(!at_heading @(listing / example / sidebar / list / literal_paragraph / image / paragraph) / section_or_discrete_heading)
   {
+    let posattrs
+    if ('posattrs' in block) {
+      posattrs = block.posattrs
+      delete block.posattrs
+    }
     metadata ??= block.metadata
     if (!metadata) return block
     const attributes = metadata.attributes
+    if (posattrs) {
+      for (let i = 0, num = posattrs.length; i < num; i++) {
+        const posKey = `$${i + 1}`
+        // Q: should existing named attribute take precedence?
+        if (posKey in attributes) attributes[posattrs[i]] = attributes[posKey]
+      }
+    }
     if ('id' in attributes) block.id = attributes.id
     attributes.opts &&= (metadata.options = [...attributes.opts]).join(',')
     attributes.role &&= (metadata.roles = [...attributes.role]).join(' ')
@@ -335,7 +347,7 @@ image = 'image::' !space target:$(!lf !'[' .)+ '[' attrlistOffset:offset attrlis
       const initial = (metadataCache[offset()] ||= (metadata = { attributes: {}, options: [], roles: [] })).attributes
       parseAttrlist(attrlist, { attributes: documentAttributes, contentAttributeNames, initial, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(getLocation({ start: attrlistOffset, text: attrlist }))[0] } })
     }
-    const node = { name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()) }
+    const node = { name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()), posattrs: ['alt', 'width', 'height' ] }
     if (metadata) node.metadata = metadata
     return node
   }

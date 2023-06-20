@@ -1,0 +1,24 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "image",
+      "type": "block",
+      "form": "macro",
+      "target": "player-status.png",
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 55 }],
+      "metadata": {
+        "attributes": {
+          "$1": "Player Status Windows",
+          "$2": "600",
+          "$3": "800",
+          "alt": "Player Status Windows",
+          "width": "600",
+          "height": "800"
+        }
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 55 }]
+}
