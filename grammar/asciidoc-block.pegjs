@@ -99,11 +99,6 @@ attribute_name = !'-' @$[a-zA-Z0-9_-]+
 
 attribute_value = space @$(!lf .)+
 
-block_attribute_line = @'[' @offset @attrlist ']' eol
-
-// don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
-block_title = @'.' @offset @$('.'? (!lf !' ' !'.' .) (!lf .)*) eol
-
 header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doctitle author_info_line? attributeEntriesBelow:attribute_entry*)? &{ return doctitleAndAttributeEntries || attributeEntriesAbove.length }
   {
     const attributes = {}
@@ -178,6 +173,11 @@ body = block*
 
 // blocks = // does not include check for section; paragraph can just be paragraph
 // blocks_in_section_body = // includes check for section; should start with !at_heading
+
+block_attribute_line = @'[' @offset @attrlist ']' eol
+
+// don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
+block_title = @'.' @offset @$('.'? (!lf !' ' !'.' .) (!lf .)*) eol
 
 block = lf* metadataStartOffset:offset metadata:(attrlists:(@(block_title / block_attribute_line) lf*)* metadataEndOffset:offset { return parseMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) block:(!at_heading @(listing / example / sidebar / list / literal_paragraph / image / paragraph) / section_or_discrete_heading)
   {
@@ -354,11 +354,6 @@ image = 'image::' !space target:$(!lf !'[' .)+ '[' attrlistOffset:offset attrlis
 
 any_block_delimiter_line = listing_delimiter_line / example_delimiter_line / sidebar_delimiter_line
 
-offset = ''
-  {
-    return peg$currPos
-  }
-
 line = @$(!lf .)+ eol
 
 line_or_empty_line = line / lf @''
@@ -374,3 +369,8 @@ lf = '\n'
 eof = !.
 
 eol = '\n' / !.
+
+offset = ''
+  {
+    return peg$currPos
+  }
