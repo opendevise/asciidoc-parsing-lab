@@ -1491,6 +1491,19 @@ describe('inline (unported)', () => {
       expect(inlinePreprocessor(input, { attributes, mode: 'attributes' })).to.eql(expected)
     })
 
+    it('should process backslashes in front of escaped attribute reference', () => {
+      const input = 'Use \\\\\\{name} to escape an attribute reference'
+      const attributes = { name: 'Not used' }
+      const expected = {
+        input: 'Use \\{name} to escape an attribute reference',
+        sourceMapping: makeSourceMapping([
+          { range: [0, 4], startOffset: 0 },
+          { range: [5, 43], startOffset: 7 },
+        ]),
+      }
+      expect(inlinePreprocessor(input, { attributes, mode: 'attributes' })).to.eql(expected)
+    })
+
     it('should only process passthroughs if mode is passthroughs', () => {
       const input = '{name} +{name}+'
       const attributes = { name: 'Chris' }
