@@ -1,5 +1,6 @@
 {{
 const { createContext, enterBlock, exitBlock, isBlockEnd, isCurrentList, isNestedSection, isNewList, toInlines } = require('#block-helpers')
+const inlinePreprocessor = require('#inline-preprocessor')
 const { parse: parseAttrlist } = require('#attrlist-parser')
 }}
 {
@@ -107,7 +108,11 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doc
     if (attributeEntriesAbove.length) {
       for (const [name, val] of attributeEntriesAbove) {
         if (name in documentAttributes && !(name in attributes)) continue
-        ;(attributes[name] = val) === false ? delete documentAttributes[name] : (documentAttributes[name] = val)
+        if (val === false && !(attributes[name] = val)) {
+          delete documentAttributes[name]
+        } else {
+          documentAttributes[name] = attributes[name] = val ? inlinePreprocessor(val, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input : val
+        }
       }
     }
     if (doctitleAndAttributeEntries) {
@@ -126,7 +131,11 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doc
       if (attributeEntriesBelow.length) {
         for (const [name, val] of attributeEntriesBelow) {
           if (name in documentAttributes && !(name in attributes)) continue
-          ;(attributes[name] = val) === false ? delete documentAttributes[name] : (documentAttributes[name] = val)
+          if (val === false && !(attributes[name] = val)) {
+            delete documentAttributes[name]
+          } else {
+            documentAttributes[name] = attributes[name] = val ? inlinePreprocessor(val, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input : val
+          }
         }
       }
     }

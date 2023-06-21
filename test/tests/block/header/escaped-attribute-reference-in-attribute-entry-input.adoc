@@ -1,0 +1,3 @@
+= API Guide
+:param-id: \{id}
+:url-request: https://endpoint.example.org/user/{param-id}

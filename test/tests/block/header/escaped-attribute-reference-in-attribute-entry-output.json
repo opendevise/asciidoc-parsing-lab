@@ -1,0 +1,17 @@
+{
+  "name": "document",
+  "type": "block",
+  "attributes": { "param-id": "{id}", "url-request": "https://endpoint.example.org/user/{id}" },
+  "header": {
+    "title": [
+      {
+        "name": "text",
+        "type": "string",
+        "value": "API Guide",
+        "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 11 }]
+      }
+    ],
+    "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 58 }]
+  },
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 58 }]
+}

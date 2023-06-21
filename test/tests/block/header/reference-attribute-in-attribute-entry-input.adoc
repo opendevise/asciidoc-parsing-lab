@@ -1,0 +1,3 @@
+= Project Name
+:url-project: https://git.example.org/org/project
+:url-repo: {url-project}.git

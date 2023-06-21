@@ -1,5 +1,6 @@
 {{
 const fs = require('node:fs')
+const inlinePreprocessor = require('#inline-preprocessor')
 const ospath = require('node:path')
 const { splitLines, unshiftOntoCopy } = require('#util')
 
@@ -87,7 +88,11 @@ attached_block = pp '+' lf @(listing / example / sidebar / paragraph)
 
 attribute_entry = ':' negatedPrefix:'!'? name:attribute_name negatedSuffix:'!'? ':' value:attribute_value? eol
   {
-    negatedPrefix || negatedSuffix ? delete documentAttributes[name] : (documentAttributes[name] = value || '')
+    if (negatedPrefix || negatedSuffix) {
+      delete documentAttributes[name]
+    } else {
+      documentAttributes[name] = value ? inlinePreprocessor(value, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input : ''
+    }
   }
 
 conditional_lines = lines:(!('endif::[]' eol) @(pp_conditional_pair / line / lf))*
