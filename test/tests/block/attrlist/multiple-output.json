@@ -15,10 +15,10 @@
       ],
       "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 32 }],
       "metadata": {
-        "attributes": { "$2": "second", "opts": "option1,option2", "role": "rolename" },
+        "attributes": { "$4": "last", "opts": "option1,option2", "role": "rolename" },
         "options": ["option1", "option2"],
         "roles": ["rolename"],
-        "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 49 }]
+        "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 47 }]
       }
     }
   ],

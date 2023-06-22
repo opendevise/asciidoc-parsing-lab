@@ -13,9 +13,9 @@ const parseInline = (options.inlineParser ?? require('#block-default-inline-pars
 function updateAttributes (accum, entries, posIdx = 0) {
   if (!entries) return accum
   for (let [name, value] of entries) {
+    posIdx++
     if (name == null) {
-      const posKey = `$${++posIdx}`
-      if (value) accum[posKey] = value
+      if (value) accum[`$${posIdx}`] = value
     } else if (name === 'role' || name === 'roles') {
       value && (value = value.split(' ').filter((it) => it !== '')).length && addAllToSet((accum.role ??= new Set()), value)
     } else if (name === 'opts' || name === 'options') {

@@ -31,8 +31,8 @@ describe('attrlist (unported)', () => {
       expect(parse('a, b ,c')).to.eql(expected)
     })
 
-    it('should number positional attributes intermingled with named attributes', () => {
-      const expected = { $1: 'a', $2: 'b', name: 'value' }
+    it('should index positional attributes by position even when mixed with named attributes', () => {
+      const expected = { $1: 'a', $3: 'b', name: 'value' }
       expect(parse('a,name=value,b')).to.eql(expected)
     })
   })
@@ -195,7 +195,7 @@ describe('attrlist (unported)', () => {
     it('should not parse shorthands or extract style in first positional attribute if not in first position', () => {
       const shorthand = 'sidebar#idname.role1%opt1.role2%opt2'
       const expected = {
-        $1: shorthand,
+        $2: shorthand,
         lang: 'fr',
       }
       expect(parseWithShorthands('lang=fr,' + shorthand)).to.eql(expected)
