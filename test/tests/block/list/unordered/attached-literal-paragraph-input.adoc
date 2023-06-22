@@ -1,0 +1,7 @@
+* Run this command on *nix
+
+ ./build.sh
+
+* Run this command on Windows
+
+ build

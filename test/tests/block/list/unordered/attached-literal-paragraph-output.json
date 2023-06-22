@@ -1,0 +1,74 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "unordered",
+      "marker": "*",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "*",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Run this command on *nix",
+              "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 26 }]
+            }
+          ],
+          "blocks": [
+            {
+              "name": "literal",
+              "type": "block",
+              "inlines": [
+                {
+                  "type": "string",
+                  "name": "text",
+                  "value": "./build.sh",
+                  "location": [{ "line": 3, "col": 2 }, { "line": 3, "col": 11 }]
+                }
+              ],
+              "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 11 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 11 }]
+        },
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "*",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Run this command on Windows",
+              "location": [{ "line": 5, "col": 3 }, { "line": 5, "col": 29 }]
+            }
+          ],
+          "blocks": [
+            {
+              "name": "literal",
+              "type": "block",
+              "inlines": [
+                {
+                  "type": "string",
+                  "name": "text",
+                  "value": "build",
+                  "location": [{ "line": 7, "col": 2 }, { "line": 7, "col": 6 }]
+                }
+              ],
+              "location": [{ "line": 7, "col": 1 }, { "line": 7, "col": 6 }]
+            }
+          ],
+          "location": [{ "line": 5, "col": 1 }, { "line": 7, "col": 6 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 7, "col": 6 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 7, "col": 6 }]
+}
