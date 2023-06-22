@@ -332,7 +332,7 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:list_i
     return { name: 'list', type: 'block', variant, marker, items: items, location: toSourceLocation(getLocation()) }
   }
 
-list_marker = @$('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !eol
+list_marker = space* @$('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !eol
 
 list_item_principal = lines:line|1.., !(block_attribute_line / list_continuation_line / list_marker / any_block_delimiter_line)|
   {

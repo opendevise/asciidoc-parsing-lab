@@ -77,7 +77,7 @@ list = items:list_item|1.., pp|
     return { name: 'list', items, location: location() }
   }
 
-list_marker = ('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !eol
+list_marker = space* ('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !eol
 
 list_item = list_marker principal:$(line (pp !('+' lf / list_marker / any_block_delimiter_line) line)*) blocks:attached_block*
   {
