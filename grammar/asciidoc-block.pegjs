@@ -1,5 +1,5 @@
 {{
-const { createContext, enterBlock, exitBlock, exitList, isBlockEnd, isCurrentList, isNestedSection, isNewList, toInlines } = require('#block-helpers')
+const { createContext, enterBlock, exitBlock, exitList, exitSection, isBlockEnd, isCurrentList, isNestedSection, isNewList, toInlines } = require('#block-helpers')
 const inlinePreprocessor = require('#inline-preprocessor')
 const { parse: parseAttrlist } = require('#attrlist-parser')
 }}
@@ -222,7 +222,7 @@ block = lf* metadataStartOffset:offset metadata:(attrlists:(@(block_title / bloc
 section_or_discrete_heading = headingStartOffset:offset heading:heading blocks:(&{ return metadataCache[headingStartOffset]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, heading) } @block*)
   {
     if (!blocks) return heading
-    context.sectionStack.pop()
+    exitSection(context)
     Object.assign(heading, { name: 'section', blocks })
     if (blocks.length) heading.location = toSourceLocation(getLocation())
     return heading
