@@ -1,5 +1,5 @@
 {{
-const { createContext, enterBlock, exitBlock, isBlockEnd, isCurrentList, isNestedSection, isNewList, toInlines } = require('#block-helpers')
+const { createContext, enterBlock, exitBlock, exitList, isBlockEnd, isCurrentList, isNestedSection, isNewList, toInlines } = require('#block-helpers')
 const inlinePreprocessor = require('#inline-preprocessor')
 const { parse: parseAttrlist } = require('#attrlist-parser')
 }}
@@ -317,7 +317,7 @@ sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, ope
 
 list = &(marker:list_marker &{ return isNewList(context, marker) }) items:list_item|1.., lf*|
   {
-    const marker = context.listStack.pop()
+    const marker = exitList(context)
     if (marker === '1.') {
       // TODO set this as start attribute
       let expected = parseInt(items[0].marker.slice(0, -1), 10)
