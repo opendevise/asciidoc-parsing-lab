@@ -7,18 +7,18 @@
       "type": "block",
       "form": "macro",
       "target": "player-status.png",
-      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 55 }],
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 54 }],
       "metadata": {
         "attributes": {
-          "$1": "Player Status Windows",
+          "$1": "Player Status Window",
           "$2": "600",
           "$3": "800",
-          "alt": "Player Status Windows",
+          "alt": "Player Status Window",
           "width": "600",
           "height": "800"
         }
       }
     }
   ],
-  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 55 }]
+  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 54 }]
 }

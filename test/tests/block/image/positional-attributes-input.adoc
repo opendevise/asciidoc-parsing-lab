@@ -1,1 +1,1 @@
-image::player-status.png[Player Status Windows,600,800]
+image::player-status.png[Player Status Window,600,800]
