@@ -356,6 +356,7 @@ image = 'image::' !space target:$(!lf !'[' .)+ '[' attrlistOffset:offset attrlis
       const initial = (metadataCache[offset()] ||= (metadata = { attributes: {}, options: [], roles: [] })).attributes
       parseAttrlist(attrlist, { attributes: documentAttributes, contentAttributeNames, initial, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(getLocation({ start: attrlistOffset, text: attrlist }))[0] } })
     }
+    target = inlinePreprocessor(target, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input
     const node = { name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()), posattrs: ['alt', 'width', 'height' ] }
     if (metadata) node.metadata = metadata
     return node
