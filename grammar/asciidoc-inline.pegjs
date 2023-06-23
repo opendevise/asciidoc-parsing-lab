@@ -151,6 +151,12 @@ xref_shorthand_other = match:$[^>]+
 // TODO implement attrlist following optional link text
 url_macro = protocol:('link:' @'' / @('https://' / 'http://')) target:$macro_target '[' contentsOffset:offset contents:(span / attrlist_other)* ']'
   {
+    // NOTE quick hack to support new window hint; if found, need to set window=_blank attribute on node
+    let lastInline = contents[contents.length - 1]
+    if (typeof lastInline === 'string' && lastInline[lastInline.length - 1] === '^') {
+      contents.pop()
+      if ((lastInline = lastInline.slice(0, -1))) contents.push(lastInline)
+    }
     return { name: 'ref', type: 'inline', variant: 'link', target: protocol + target, range: Object.assign(range(), { inlinesStart: contentsOffset }), inlines: contents }
   }
 
