@@ -1,0 +1,1 @@
+image::player-status.png[{alt},{dimensions}]
