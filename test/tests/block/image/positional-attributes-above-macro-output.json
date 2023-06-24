@@ -1,0 +1,25 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "image",
+      "type": "block",
+      "form": "macro",
+      "target": "player-status.png",
+      "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 26 }],
+      "metadata": {
+        "attributes": {
+          "$1": "Player Status Window",
+          "$2": "600",
+          "$3": "800",
+          "alt": "Player Status Window",
+          "width": "600",
+          "height": "800"
+        },
+        "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 32 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 26 }]
+}

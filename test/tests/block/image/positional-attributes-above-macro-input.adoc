@@ -1,0 +1,2 @@
+["Player Status Window",600,800]
+image::player-status.png[]
