@@ -61,7 +61,7 @@ function valueToInlines (value, valueOffset, parse, escapedChar, startLocation) 
       Object.assign({}, startLocation, { col: startLocation.col + valueStartOffset }),
       Object.assign({}, startLocation, { col: startLocation.col + valueEndOffset }),
     ]
-    inlines = [{ type: 'string', name: 'text', value: value, location: inlinesSourceLocation }]
+    inlines = [{ type: 'string', name: 'text', value, location: inlinesSourceLocation }]
   }
   return { value, inlines }
 }
