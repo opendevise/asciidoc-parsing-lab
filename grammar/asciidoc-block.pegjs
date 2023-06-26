@@ -308,7 +308,7 @@ example = (openingDelim:example_delimiter_line &{ return enterBlock(context, ope
 
 sidebar_delimiter_line = @$('*' '***' [*]*) eol
 
-sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(heading / example / sidebar / list / paragraph))* closingDelim:(lf* @(sidebar_delimiter_line / eof))
+sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(heading / listing / example / sidebar / list / literal_paragraph / image / paragraph))* closingDelim:(lf* @(sidebar_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
     if (!closingDelim) console.log('unclosed sidebar block')
