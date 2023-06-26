@@ -291,7 +291,7 @@ listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDeli
 
 example_delimiter_line = @$('=' '===' [=]*) eol
 
-example = (openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(heading / example / sidebar / list / paragraph))* closingDelim:(lf* @(example_delimiter_line / eof))
+example = (openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(heading / listing / example / sidebar / list / literal_paragraph / image / paragraph))* closingDelim:(lf* @(example_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
     let name = 'example'
