@@ -67,7 +67,7 @@ sidebar_delimiter_line = '*' '***' eol
 
 any_block_delimiter_line = listing_delimiter_line / example_delimiter_line / sidebar_delimiter_line
 
-paragraph = contents:line|1.., pp !(any_block_delimiter_line / list_marker)|
+paragraph = contents:line|1.., pp !any_block_delimiter_line|
   {
     return { name: 'paragraph', contents, location: location() }
   }
