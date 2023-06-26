@@ -13,12 +13,12 @@
           "type": "block",
           "marker": "*",
           "principal": [
-              {
-                "name": "text",
-                "type": "string",
-                "value": "principal text",
-                "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 16 }]
-              }
+            {
+              "name": "text",
+              "type": "string",
+              "value": "principal text",
+              "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 16 }]
+            }
           ],
           "blocks": [
             {
@@ -46,17 +46,17 @@
                   "type": "string",
                   "name": "text",
                   "value": "another\nattached\nblock",
-                  "location": [{ "line": 8, "col": 1 }, { "line": 10, "col": 5 }]
+                  "location": [{ "line": 9, "col": 1 }, { "line": 11, "col": 5 }]
                 }
               ],
-              "location": [{ "line": 7, "col": 1 }, { "line": 11, "col": 4 }]
+              "location": [{ "line": 8, "col": 1 }, { "line": 12, "col": 4 }]
             }
           ],
-          "location": [{ "line": 1, "col": 1 }, { "line": 11, "col": 4 }]
+          "location": [{ "line": 1, "col": 1 }, { "line": 12, "col": 4 }]
         }
       ],
-      "location": [{ "line": 1, "col": 1 }, { "line": 11, "col": 4 }]
+      "location": [{ "line": 1, "col": 1 }, { "line": 12, "col": 4 }]
     }
   ],
-  "location": [{ "line": 1, "col": 1 }, { "line": 11, "col": 4 }]
+  "location": [{ "line": 1, "col": 1 }, { "line": 12, "col": 4 }]
 }

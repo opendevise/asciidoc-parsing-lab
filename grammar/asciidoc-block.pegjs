@@ -345,7 +345,8 @@ list_continuation_line = '+' eol
 
 // TODO process block attribute lines above attached blocks
 // Q should block match after list continuation end with '?', or should last alternative be '!.'?
-list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line @(heading / listing / example / sidebar / list / literal_paragraph / image / paragraph)? / lf* @(list / literal_paragraph))*
+// lf* above block alternatives will get absurbed into attached_block rule
+list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line lf* @(heading / listing / example / sidebar / list / literal_paragraph / image / paragraph)? / lf* @(list / literal_paragraph))*
   {
     if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
     return { name: 'listItem', type: 'block', marker, principal, blocks, location: toSourceLocation(getLocation()) }
