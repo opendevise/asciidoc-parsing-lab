@@ -2,6 +2,7 @@
 const { createContext, enterBlock, exitBlock, exitList, exitSection, isBlockEnd, isCurrentList, isNestedSection, isNewList, toInlines } = require('#block-helpers')
 const inlinePreprocessor = require('#inline-preprocessor')
 const { parse: parseAttrlist } = require('#attrlist-parser')
+const ADMONITION_STYLES = { CAUTION: 'caution', IMPORTANT: 'important', NOTE: 'note', TIP: 'tip', WARNING: 'warning' }
 }}
 {
 const {
@@ -296,10 +297,7 @@ example = (openingDelim:example_delimiter_line &{ return enterBlock(context, ope
     const delimiter = exitBlock(context)
     let name = 'example'
     let style, admonitionVariant
-    if ((style = metadataCache[offset()]?.attributes.style) &&
-      (admonitionVariant = ({ CAUTION: 'caution', IMPORTANT: 'important', NOTE: 'note', TIP: 'tip', WARNING: 'warning' })[style])) {
-      name = 'admonition'
-    }
+    if ((style = metadataCache[offset()]?.attributes.style) && (admonitionVariant = ADMONITION_STYLES[style])) name = 'admonition'
     if (!closingDelim) console.log(`unclosed ${name} block`)
     const node = { name, type: 'block', form: 'delimited', delimiter, variant: admonitionVariant, blocks, location: toSourceLocation(getLocation()) }
     if (!admonitionVariant) delete node.variant
