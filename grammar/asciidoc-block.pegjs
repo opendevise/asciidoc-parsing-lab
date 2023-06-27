@@ -246,15 +246,16 @@ literal_paragraph = lines:indented_line+
     const outdent = Math.min.apply(null, indents)
     const contents = lines.reduce((accum, l) => accum + '\n' + l.slice(outdent), '').slice(1)
     const metadata = metadataCache[offset()]
+    const location_ = getLocation()
+    // Q should we allow "paragraph" as alternative to "normal"?
     if (metadata?.attributes.style === 'normal') {
-      const location_ = getLocation()
       const inlines = parseInline(contents, { attributes: documentAttributes, locations: createLocationsForInlines(location_, outdent) })
-      return { name: 'paragraph', type: 'block', inlines, location: toSourceLocation(location_) }
+      return { name: 'paragraph', type: 'block', form: 'indented', inlines, location: toSourceLocation(location_) }
     } else {
-      const sourceLocation = toSourceLocation(getLocation())
+      const sourceLocation = toSourceLocation(location_)
       const inlinesSourceLocation = [Object.assign({}, sourceLocation[0], { col: sourceLocation[0].col + outdent }), sourceLocation[1]]
       const inlines = toInlines('text', contents, inlinesSourceLocation)
-      return { name: 'literal', type: 'block', inlines, location: sourceLocation }
+      return { name: 'literal', type: 'block', form: 'indented', inlines, location: sourceLocation }
     }
   }
 

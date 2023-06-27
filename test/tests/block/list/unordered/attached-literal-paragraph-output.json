@@ -24,6 +24,7 @@
             {
               "name": "literal",
               "type": "block",
+              "form": "indented",
               "inlines": [
                 {
                   "type": "string",
@@ -53,6 +54,7 @@
             {
               "name": "literal",
               "type": "block",
+              "form": "indented",
               "inlines": [
                 {
                   "type": "string",

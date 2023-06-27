@@ -5,6 +5,7 @@
     {
       "name": "paragraph",
       "type": "block",
+      "form": "indented",
       "inlines": [
         {
           "name": "text",
