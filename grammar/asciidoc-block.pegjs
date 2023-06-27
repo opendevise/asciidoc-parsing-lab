@@ -189,7 +189,7 @@ block_attribute_line = @'[' @offset @attrlist ']' eol
 // don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
 block_title = @'.' @offset @$('.'? (!lf !' ' !'.' .) (!lf .)*) eol
 
-block = lf* metadataStartOffset:offset metadata:(attrlists:(@(block_title / block_attribute_line) lf*)* metadataEndOffset:offset { return parseMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) block:(!at_heading @(listing / example / sidebar / list / literal_paragraph / image / paragraph) / section_or_discrete_heading)
+block = lf* metadataStartOffset:offset metadata:(attrlists:(@(block_title / block_attribute_line) lf*)* metadataEndOffset:offset { return parseMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) block:(!at_heading @(listing / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
   {
     let posattrs
     if ('posattrs' in block) {
@@ -239,7 +239,7 @@ paragraph = lines:(!(block_attribute_line / any_block_delimiter_line) @line)+
     return { name: 'paragraph', type: 'block', inlines, location: toSourceLocation(location_) }
   }
 
-literal_paragraph = lines:indented_line+
+indented = lines:indented_line+
   {
     const indents = []
     for (const line of lines) indents.push(line.length - line.trimStart().length)
@@ -293,7 +293,7 @@ listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDeli
 
 example_delimiter_line = @$('=' '===' [=]*) eol
 
-example = (openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(heading / listing / example / sidebar / list / literal_paragraph / image / paragraph))* closingDelim:(lf* @(example_delimiter_line / eof))
+example = (openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(heading / listing / example / sidebar / list / indented / image / paragraph))* closingDelim:(lf* @(example_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
     let name = 'example'
@@ -307,7 +307,7 @@ example = (openingDelim:example_delimiter_line &{ return enterBlock(context, ope
 
 sidebar_delimiter_line = @$('*' '***' [*]*) eol
 
-sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(heading / listing / example / sidebar / list / literal_paragraph / image / paragraph))* closingDelim:(lf* @(sidebar_delimiter_line / eof))
+sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(heading / listing / example / sidebar / list / indented / image / paragraph))* closingDelim:(lf* @(sidebar_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
     if (!closingDelim) console.log('unclosed sidebar block')
@@ -345,7 +345,7 @@ list_continuation_line = '+' eol
 // TODO process block attribute lines above attached blocks
 // Q should block match after list continuation end with '?', or should last alternative be '!.'?
 // lf* above block alternatives will get absurbed into attached_block rule
-list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line lf* @(heading / listing / example / sidebar / list / literal_paragraph / image / paragraph)? / lf* @(list / literal_paragraph))*
+list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line lf* @(heading / listing / example / sidebar / list / indented / image / paragraph)? / lf* @(list / indented))*
   {
     if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
     return { name: 'listItem', type: 'block', marker, principal, blocks, location: toSourceLocation(getLocation()) }
