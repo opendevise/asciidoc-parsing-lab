@@ -2,12 +2,23 @@
 'use strict'
 
 const { expect } = require('#test-harness')
-const { parse } = require('#attrlist-parser')
+const { parse: parseAttrlist } = require('#attrlist-parser')
 const inlineParser = require('#inline-parser')
 
 describe('attrlist (unported)', () => {
+  const parse = (source, opts = {}) => {
+    const attributes = parseAttrlist(source, opts)
+    const { contentAttributeNames = [] } = opts
+    for (const name of Object.keys(attributes)) {
+      if (attributes[name].constructor !== Function) continue
+      attributes[name] = attributes[name](contentAttributeNames.includes(name))
+    }
+    return attributes
+  }
+
   const parseWithShorthands = (source, opts = {}) => {
-    return parse(source, Object.assign(opts, { startRule: 'block_attrlist_with_shorthands' }))
+    Object.assign(opts, { contentAttributeNames: ['reftext'], startRule: 'block_attrlist_with_shorthands' })
+    return parse(source, opts)
   }
 
   describe('positional attributes', () => {

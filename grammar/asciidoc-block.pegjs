@@ -54,7 +54,7 @@ function createLocationsForInlines ([start, end = start], offset) {
   return mapping
 }
 
-function parseMetadata (attrlists, metadataStartOffset, metadataEndOffset) {
+function parseBlockMetadata (attrlists, metadataStartOffset, metadataEndOffset) {
   if (!attrlists.length) return
   const cacheKey = metadataEndOffset
   if (cacheKey in metadataCache) return metadataCache[cacheKey]
@@ -64,10 +64,14 @@ function parseMetadata (attrlists, metadataStartOffset, metadataEndOffset) {
     if (!attrlist) continue
     const location_ = getLocation({ start: attrlistOffset, text: attrlist })
     if (marker === '.') {
+      // NOTE attribute references will be resolved in this line after all block attribute lines
+      const resolveValue = function (value, parseInlineOpts, asInlines) {
+        return asInlines ? { value, inlines: parseInline(value, parseInlineOpts) } : value
+      }
       // NOTE this is slightly faked since location_ will already account for column offset, but it still works
-      attributes.title = { value: attrlist, inlines: parseInline(attrlist, { attributes: documentAttributes, locations: createLocationsForInlines(location_, 1) }) }
+      attributes.title = resolveValue.bind(null, attrlist, { attributes: documentAttributes, locations: createLocationsForInlines(location_, 1) })
     } else {
-      parseAttrlist(attrlist, { attributes: documentAttributes, contentAttributeNames, initial: attributes, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(location_)[0] }, startRule: 'block_attrlist_with_shorthands' })
+      parseAttrlist(attrlist, { attributes: documentAttributes, initial: attributes, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(location_)[0] }, startRule: 'block_attrlist_with_shorthands' })
     }
   }
   return (metadataCache[cacheKey] = {
@@ -76,6 +80,39 @@ function parseMetadata (attrlists, metadataStartOffset, metadataEndOffset) {
     roles: [],
     location: toSourceLocation(getLocation({ start: metadataStartOffset, end: metadataEndOffset })),
   })
+}
+
+function applyBlockMetadata (block, metadata = block.metadata, posattrs) {
+  if (!metadata) return block
+  const attributes = metadata.attributes
+  const names = Object.keys(attributes)
+  if (posattrs) {
+    let posIdx = 0
+    for (const name of posattrs) {
+      const posKey = `$${++posIdx}`
+      if (name == null) continue
+      if (!(posKey in attributes)) continue
+      // Q: should existing named attribute be allowed to take precedence? (this has never been the case)
+      if (name in attributes) names.splice(names.indexOf(name), 1)
+      names.splice(names.indexOf(posKey), 0, name)
+      const valueObject = attributes[name] = attributes[posKey]
+      // NOTE remap value as deferred function to avoid having to resolve again for positional attribute
+      if (valueObject.constructor === Function) attributes[posKey] = () => attributes[name]
+    }
+  }
+  if ('id' in attributes) block.id = attributes.id
+  attributes.opts &&= (metadata.options = [...attributes.opts]).join(',')
+  attributes.role &&= (metadata.roles = [...attributes.role]).join(' ')
+  for (const name of names) {
+    const valueObject = attributes[name]
+    if (valueObject.constructor !== Function) continue
+    if (contentAttributeNames.includes(name)) {
+      ;({ value: attributes[name], inlines: block[name] } = valueObject(true))
+    } else {
+      attributes[name] = valueObject()
+    }
+  }
+  return Object.assign(block, { metadata })
 }
 }
 // TODO if surrounding lf are not part of document, group inner two rules as a new rule
@@ -190,34 +227,11 @@ block_attribute_line = @'[' @offset @attrlist ']' eol
 block_title = @'.' @offset @$('.'? (!lf !' ' !'.' .) (!lf .)*) eol
 
 // NOTE !at_heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
-block = lf* metadataStartOffset:offset metadata:(attrlists:(@(block_title / block_attribute_line) lf*)* metadataEndOffset:offset { return parseMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) block:(!at_heading @(listing / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
+block = lf* metadataStartOffset:offset metadata:(attrlists:(@(block_title / block_attribute_line) lf*)* metadataEndOffset:offset { return parseBlockMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) block:(!at_heading @(listing / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
   {
-    let posattrs
-    if ('posattrs' in block) {
-      posattrs = block.posattrs
-      delete block.posattrs
-    }
-    metadata ??= block.metadata
-    if (!metadata) return block
-    const attributes = metadata.attributes
-    if (posattrs) {
-      for (let i = 0, num = posattrs.length; i < num; i++) {
-        const posKey = `$${i + 1}`
-        // Q: should existing named attribute take precedence?
-        if (posKey in attributes) attributes[posattrs[i]] = attributes[posKey]
-      }
-    }
-    if ('id' in attributes) block.id = attributes.id
-    attributes.opts &&= (metadata.options = [...attributes.opts]).join(',')
-    attributes.role &&= (metadata.roles = [...attributes.role]).join(' ')
-    contentAttributeNames.forEach((name) => {
-      let val
-      if (name in attributes && (val = attributes[name]).constructor === Object) {
-        block[name] = val.inlines
-        attributes[name] = val.value
-      }
-    })
-    return Object.assign(block, { metadata })
+    const posattrs = block.posattrs
+    if (posattrs) delete block.posattrs
+    return applyBlockMetadata(block, metadata, posattrs)
   }
 
 // FIXME inlines in heading are being parsed multiple times when encountering sibling or parent section
@@ -357,7 +371,7 @@ image = 'image::' !space target:$(!lf !'[' .)+ '[' attrlistOffset:offset attrlis
     let metadata
     if (attrlist) {
       const initial = (metadataCache[offset()] ||= (metadata = { attributes: {}, options: [], roles: [] })).attributes
-      parseAttrlist(attrlist, { attributes: documentAttributes, contentAttributeNames, initial, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(getLocation({ start: attrlistOffset, text: attrlist }))[0] } })
+      parseAttrlist(attrlist, { attributes: documentAttributes, initial, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(getLocation({ start: attrlistOffset, text: attrlist }))[0] } })
     }
     target = inlinePreprocessor(target, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input
     const node = { name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()), posattrs: ['alt', 'width', 'height' ] }
