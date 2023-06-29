@@ -189,6 +189,7 @@ block_attribute_line = @'[' @offset @attrlist ']' eol
 // don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
 block_title = @'.' @offset @$('.'? (!lf !' ' !'.' .) (!lf .)*) eol
 
+// NOTE !at_heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
 block = lf* metadataStartOffset:offset metadata:(attrlists:(@(block_title / block_attribute_line) lf*)* metadataEndOffset:offset { return parseMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) block:(!at_heading @(listing / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
   {
     let posattrs
