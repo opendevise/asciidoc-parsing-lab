@@ -227,7 +227,7 @@ block_attribute_line = @'[' @offset @attrlist ']' eol
 block_title = @'.' @offset @$('.'? (!lf !' ' !'.' .) (!lf .)*) eol
 
 // NOTE !at_heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
-block = lf* metadataStartOffset:offset metadata:(attrlists:(@(block_title / block_attribute_line) lf*)* metadataEndOffset:offset { return parseBlockMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) block:(!at_heading @(listing / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
+block = lf* metadata:(metadataStartOffset:offset attrlists:(@(block_title / block_attribute_line) lf*)* metadataEndOffset:offset { return parseBlockMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) block:(!at_heading @(listing / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
   {
     const posattrs = block.posattrs
     if (posattrs) delete block.posattrs
