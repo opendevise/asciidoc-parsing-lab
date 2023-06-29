@@ -235,13 +235,12 @@ block = lf* metadata:(metadataStartOffset:offset attrlists:(@(block_title / bloc
   }
 
 // FIXME inlines in heading are being parsed multiple times when encountering sibling or parent section
-section_or_discrete_heading = headingStartOffset:offset heading:heading blocks:(&{ return metadataCache[headingStartOffset]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, heading) } @block*)
+section_or_discrete_heading = headingStartOffset:offset node:heading blocks:(&{ return metadataCache[headingStartOffset]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, node) } @block*)
   {
-    if (!blocks) return heading
+    if (!blocks) return node
     exitSection(context)
-    Object.assign(heading, { name: 'section', blocks })
-    if (blocks.length) heading.location = toSourceLocation(getLocation())
-    return heading
+    Object.assign(node, { name: 'section', blocks })
+    return blocks.length ? Object.assign(node, { location: toSourceLocation(getLocation()) }) : node
   }
 
 // TODO in order to enable list matching shorthand, must ensure this rule is only called when all other syntax has been exhausted
