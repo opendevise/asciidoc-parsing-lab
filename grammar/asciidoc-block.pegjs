@@ -219,15 +219,15 @@ author_name = $([a-zA-Z0-9] ('.' / [a-zA-Z0-9_'-]*))
 body = block*
 
 // blocks = // does not include check for section; paragraph can just be paragraph
-// blocks_in_section_body = // includes check for section; should start with !at_heading
+// blocks_in_section_body = // includes check for section; should start with !heading
 
 block_attribute_line = @'[' @offset @attrlist ']' eol
 
 // don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
 block_title = @'.' @offset @$('.'? (!lf !' ' !'.' .) (!lf .)*) eol
 
-// NOTE !at_heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
-block = lf* metadata:(metadataStartOffset:offset attrlists:(@(block_title / block_attribute_line) lf*)* metadataEndOffset:offset { return parseBlockMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) block:(!at_heading @(listing / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
+// NOTE !heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
+block = lf* metadata:(metadataStartOffset:offset attrlists:(@(block_title / block_attribute_line) lf*)* metadataEndOffset:offset { return parseBlockMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) block:(!heading @(listing / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
   {
     const posattrs = block.posattrs
     if (posattrs) delete block.posattrs
@@ -235,12 +235,27 @@ block = lf* metadata:(metadataStartOffset:offset attrlists:(@(block_title / bloc
   }
 
 // FIXME inlines in heading are being parsed multiple times when encountering sibling or parent section
-section_or_discrete_heading = headingStartOffset:offset node:heading blocks:(&{ return metadataCache[headingStartOffset]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, node) } @block*)
+section_or_discrete_heading = headingStartOffset:offset headingRecord:heading blocks:(&{ return metadataCache[headingStartOffset]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, headingRecord[0].length - 1) } @block*)
   {
-    if (!blocks) return node
-    exitSection(context)
-    Object.assign(node, { name: 'section', blocks })
-    return blocks.length ? Object.assign(node, { location: toSourceLocation(getLocation()) }) : node
+    const [marker, titleOffset, title] = headingRecord
+    const location_ = getLocation()
+    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - offset()) })
+    // Q: store marker instead of or in addition to level?
+    const node = { name: 'heading', type: 'block', title: inlines, level: marker.length - 1, location: toSourceLocation(location_) }
+    if (blocks) {
+      exitSection(context)
+      Object.assign(node, { name: 'section', blocks })
+    }
+    return node
+  }
+
+discrete_heading = headingRecord:heading
+  {
+    const [marker, titleOffset, title] = headingRecord
+    const location_ = getLocation()
+    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - offset()) })
+    // Q: store marker instead of or in addition to level?
+    return { name: 'heading', type: 'block', title: inlines, level: marker.length - 1, location: toSourceLocation(location_) }
   }
 
 // TODO in order to enable list matching shorthand, must ensure this rule is only called when all other syntax has been exhausted
@@ -273,15 +288,7 @@ indented = lines:indented_line+
     }
   }
 
-at_heading = '=' '='* space space* line
-
-heading = marker:$('=' '='*) space space* titleOffset:offset title:line
-  {
-    const location_ = getLocation()
-    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - offset()) })
-    // Q: store marker instead of or in addition to level?
-    return { name: 'heading', type: 'block', title: inlines, level: marker.length - 1, location: toSourceLocation(location_) }
-  }
+heading = @$('=' '='*) space space* @offset @line
 
 listing_delimiter_line = @$('-' '---' [-]*) eol
 
@@ -307,7 +314,7 @@ listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDeli
 
 example_delimiter_line = @$('=' '===' [=]*) eol
 
-example = (openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(heading / listing / example / sidebar / list / indented / image / paragraph))* closingDelim:(lf* @(example_delimiter_line / eof))
+example = (openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(discrete_heading / listing / example / sidebar / list / indented / image / paragraph))* closingDelim:(lf* @(example_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
     let name = 'example'
@@ -321,7 +328,7 @@ example = (openingDelim:example_delimiter_line &{ return enterBlock(context, ope
 
 sidebar_delimiter_line = @$('*' '***' [*]*) eol
 
-sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(heading / listing / example / sidebar / list / indented / image / paragraph))* closingDelim:(lf* @(sidebar_delimiter_line / eof))
+sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(discrete_heading / listing / example / sidebar / list / indented / image / paragraph))* closingDelim:(lf* @(sidebar_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
     if (!closingDelim) console.log('unclosed sidebar block')
@@ -359,7 +366,7 @@ list_continuation_line = '+' eol
 // TODO process block attribute lines above attached blocks
 // Q should block match after list continuation end with '?', or should last alternative be '!.'?
 // lf* above block alternatives will get absurbed into attached_block rule
-list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line lf* @(heading / listing / example / sidebar / list / indented / image / paragraph)? / lf* @(list / indented))*
+list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line lf* @(discrete_heading / listing / example / sidebar / list / indented / image / paragraph)? / lf* @(list / indented))*
   {
     if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
     return { name: 'listItem', type: 'block', marker, principal, blocks, location: toSourceLocation(getLocation()) }
