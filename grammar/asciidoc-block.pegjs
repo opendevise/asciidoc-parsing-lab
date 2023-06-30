@@ -261,8 +261,7 @@ heading = @$('=' '='*) space space* @offset @line
 paragraph = lines:(!(block_attribute_line / any_block_delimiter_line) @line)+
   {
     const location_ = getLocation()
-    const contents = lines.join('\n')
-    const inlines = parseInline(contents, { attributes: documentAttributes, locations: createLocationsForInlines(location_) })
+    const inlines = parseInline(lines.join('\n'), { attributes: documentAttributes, locations: createLocationsForInlines(location_) })
     return { name: 'paragraph', type: 'block', inlines, location: toSourceLocation(location_) }
   }
 
