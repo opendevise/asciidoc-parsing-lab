@@ -223,35 +223,33 @@ block_attribute_line = @'[' @offset @attrlist ']' eol
 block_title = @'.' @offset @$('.'? (!lf !' ' !'.' .) (!lf .)*) eol
 
 // NOTE !heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
-block = lf* metadata:(metadataStartOffset:offset attrlists:(@(block_title / block_attribute_line) lf*)* metadataEndOffset:offset { return parseBlockMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) block:(!heading @(listing / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
-  {
-    const posattrs = block.posattrs
-    if (posattrs) delete block.posattrs
-    return applyBlockMetadata(block, metadata, posattrs)
-  }
+block = lf* (metadataStartOffset:offset attrlists:(@(block_title / block_attribute_line) lf*)* metadataEndOffset:offset { return parseBlockMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) @(!heading @(listing / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
 
 // FIXME inlines in heading are being parsed multiple times when encountering sibling or parent section
 section_or_discrete_heading = headingStartOffset:offset headingRecord:heading blocks:(&{ return metadataCache[headingStartOffset]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, headingRecord[0].length - 1) } @block*)
   {
     const [marker, titleOffset, title] = headingRecord
     const location_ = getLocation()
-    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - offset()) })
+    const offset_ = offset()
+    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - offset_) })
     // Q: store marker instead of or in addition to level?
     const node = { name: 'heading', type: 'block', title: inlines, level: marker.length - 1, location: toSourceLocation(location_) }
     if (blocks) {
       exitSection(context)
       Object.assign(node, { name: 'section', blocks })
     }
-    return node
+    return applyBlockMetadata(node, metadataCache[offset_])
   }
 
 discrete_heading = headingRecord:heading
   {
     const [marker, titleOffset, title] = headingRecord
     const location_ = getLocation()
-    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - offset()) })
+    const offset_ = offset()
+    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - offset_) })
     // Q: store marker instead of or in addition to level?
-    return { name: 'heading', type: 'block', title: inlines, level: marker.length - 1, location: toSourceLocation(location_) }
+    const node = { name: 'heading', type: 'block', title: inlines, level: marker.length - 1, location: toSourceLocation(location_) }
+    return applyBlockMetadata(node, metadataCache[offset_])
   }
 
 heading = @$('=' '='*) space space* @offset @line
@@ -262,7 +260,8 @@ paragraph = lines:(!(block_attribute_line / any_block_delimiter_line) @line)+
   {
     const location_ = getLocation()
     const inlines = parseInline(lines.join('\n'), { attributes: documentAttributes, locations: createLocationsForInlines(location_) })
-    return { name: 'paragraph', type: 'block', inlines, location: toSourceLocation(location_) }
+    const node = { name: 'paragraph', type: 'block', inlines, location: toSourceLocation(location_) }
+    return applyBlockMetadata(node, metadataCache[offset()])
   }
 
 indented = lines:indented_line+
@@ -273,16 +272,18 @@ indented = lines:indented_line+
     const contents = lines.reduce((accum, l) => accum + '\n' + l.slice(outdent), '').slice(1)
     const metadata = metadataCache[offset()]
     const location_ = getLocation()
+    let node
     // Q should we allow "paragraph" as alternative to "normal"?
     if (metadata?.attributes.style === 'normal') {
       const inlines = parseInline(contents, { attributes: documentAttributes, locations: createLocationsForInlines(location_, outdent) })
-      return { name: 'paragraph', type: 'block', form: 'indented', inlines, location: toSourceLocation(location_) }
+      node = { name: 'paragraph', type: 'block', form: 'indented', inlines, location: toSourceLocation(location_) }
     } else {
       const sourceLocation = toSourceLocation(location_)
       const inlinesSourceLocation = [Object.assign({}, sourceLocation[0], { col: sourceLocation[0].col + outdent }), sourceLocation[1]]
       const inlines = toInlines('text', contents, inlinesSourceLocation)
-      return { name: 'literal', type: 'block', form: 'indented', inlines, location: sourceLocation }
+      node = { name: 'literal', type: 'block', form: 'indented', inlines, location: sourceLocation }
     }
+    return applyBlockMetadata(node, metadata)
   }
 
 listing_delimiter_line = @$('-' '---' [-]*) eol
@@ -304,7 +305,8 @@ listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDeli
       const value = lines.length > 1 ? lines.join('\n') : (firstLine || '\n')
       inlines.push(toInlines('text', value, toSourceLocation(contentsLocation))[0])
     }
-    return { name: 'listing', type: 'block', form: 'delimited', delimiter, inlines, location: toSourceLocation(location_) }
+    const node = { name: 'listing', type: 'block', form: 'delimited', delimiter, inlines, location: toSourceLocation(location_) }
+    return applyBlockMetadata(node, metadataCache[offset()])
   }
 
 example_delimiter_line = @$('=' '===' [=]*) eol
@@ -314,11 +316,12 @@ example = (openingDelim:example_delimiter_line &{ return enterBlock(context, ope
     const delimiter = exitBlock(context)
     let name = 'example'
     let style, admonitionVariant
-    if ((style = metadataCache[offset()]?.attributes.style) && (admonitionVariant = ADMONITION_STYLES[style])) name = 'admonition'
+    const metadata = metadataCache[offset()]
+    if ((style = metadata?.attributes.style) && (admonitionVariant = ADMONITION_STYLES[style])) name = 'admonition'
     if (!closingDelim) console.log(`unclosed ${name} block`)
     const node = { name, type: 'block', form: 'delimited', delimiter, variant: admonitionVariant, blocks, location: toSourceLocation(getLocation()) }
     if (!admonitionVariant) delete node.variant
-    return node
+    return applyBlockMetadata(node, metadata)
   }
 
 sidebar_delimiter_line = @$('*' '***' [*]*) eol
@@ -327,7 +330,8 @@ sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, ope
   {
     const delimiter = exitBlock(context)
     if (!closingDelim) console.log('unclosed sidebar block')
-    return { name: 'sidebar', type: 'block', form: 'delimited', delimiter, blocks, location: toSourceLocation(getLocation()) }
+    const node = { name: 'sidebar', type: 'block', form: 'delimited', delimiter, blocks, location: toSourceLocation(getLocation()) }
+    return applyBlockMetadata(node, metadataCache[offset()])
   }
 
 list = &(marker:list_marker &{ return isNewList(context, marker) }) items:list_item|1.., lf*|
@@ -344,7 +348,8 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:list_i
       }
     }
     const variant = marker === '-' || marker[0] === '*' ? 'unordered' : 'ordered'
-    return { name: 'list', type: 'block', variant, marker, items: items, location: toSourceLocation(getLocation()) }
+    const node = { name: 'list', type: 'block', variant, marker, items: items, location: toSourceLocation(getLocation()) }
+    return applyBlockMetadata(node, metadataCache[offset()])
   }
 
 list_marker = space* @$('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !eol
@@ -369,15 +374,14 @@ list_item = marker:list_marker &{ return isCurrentList(context, marker) } princi
 
 image = 'image::' !space target:$(!lf !'[' .)+ '[' attrlistOffset:offset attrlist:attrlist ']' eol
   {
-    let metadata
+    let metadata = metadataCache[offset()]
     if (attrlist) {
-      const initial = (metadataCache[offset()] ||= (metadata = { attributes: {}, options: [], roles: [] })).attributes
+      const initial = (metadata ??= { attributes: {}, options: [], roles: [] }).attributes
       parseAttrlist(attrlist, { attributes: documentAttributes, initial, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(getLocation({ start: attrlistOffset, text: attrlist }))[0] } })
     }
     target = inlinePreprocessor(target, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input
-    const node = { name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()), posattrs: ['alt', 'width', 'height' ] }
-    if (metadata) node.metadata = metadata
-    return node
+    const node = { name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()) }
+    return applyBlockMetadata(node, metadata, ['alt', 'width', 'height'])
   }
 
 any_block_delimiter_line = listing_delimiter_line / example_delimiter_line / sidebar_delimiter_line
