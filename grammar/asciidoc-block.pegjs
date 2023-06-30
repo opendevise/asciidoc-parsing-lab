@@ -78,7 +78,7 @@ function parseBlockMetadata (attrlists, metadataStartOffset, metadataEndOffset) 
   return (metadataCache[cacheKey] = { attributes, options: [], roles: [], location: metadataLocation })
 }
 
-function applyBlockMetadata (block, metadata = block.metadata, posattrs) {
+function applyBlockMetadata (block, metadata, posattrs) {
   if (!metadata) return block
   const attributes = metadata.attributes
   const names = Object.keys(attributes)
