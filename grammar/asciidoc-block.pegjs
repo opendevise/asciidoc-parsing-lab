@@ -258,6 +258,8 @@ discrete_heading = headingRecord:heading
     return { name: 'heading', type: 'block', title: inlines, level: marker.length - 1, location: toSourceLocation(location_) }
   }
 
+heading = @$('=' '='*) space space* @offset @line
+
 // TODO in order to enable list matching shorthand, must ensure this rule is only called when all other syntax has been exhausted
 //paragraph = lines:line|1.., !(block_attribute_line / any_block_delimiter_line)|
 paragraph = lines:(!(block_attribute_line / any_block_delimiter_line) @line)+
@@ -287,8 +289,6 @@ indented = lines:indented_line+
       return { name: 'literal', type: 'block', form: 'indented', inlines, location: sourceLocation }
     }
   }
-
-heading = @$('=' '='*) space space* @offset @line
 
 listing_delimiter_line = @$('-' '---' [-]*) eol
 
