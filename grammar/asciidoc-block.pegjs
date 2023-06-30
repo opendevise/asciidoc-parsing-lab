@@ -74,12 +74,8 @@ function parseBlockMetadata (attrlists, metadataStartOffset, metadataEndOffset) 
       parseAttrlist(attrlist, { attributes: documentAttributes, initial: attributes, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(location_)[0] }, startRule: 'block_attrlist_with_shorthands' })
     }
   }
-  return (metadataCache[cacheKey] = {
-    attributes,
-    options: [],
-    roles: [],
-    location: toSourceLocation(getLocation({ start: metadataStartOffset, end: metadataEndOffset })),
-  })
+  const metadataLocation = toSourceLocation(getLocation({ start: metadataStartOffset, end: metadataEndOffset }))
+  return (metadataCache[cacheKey] = { attributes, options: [], roles: [], location: metadataLocation })
 }
 
 function applyBlockMetadata (block, metadata = block.metadata, posattrs) {
