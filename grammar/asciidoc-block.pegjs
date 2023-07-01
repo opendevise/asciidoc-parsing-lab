@@ -315,7 +315,7 @@ listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDeli
   {
     const delimiter = exitBlock(context)
     if (!closingDelim) console.log('unclosed listing block')
-    const location_ = getLocation()
+    const location_ = getLocation(closingDelim ? undefined : true)
     const inlines = []
     if (lines.length) {
       const firstLine = lines[0]
@@ -340,7 +340,7 @@ example = (openingDelim:example_delimiter_line &{ return enterBlock(context, ope
     const metadata = metadataCache[offset()]
     if ((style = metadata?.attributes.style) && (admonitionVariant = ADMONITION_STYLES[style])) name = 'admonition'
     if (!closingDelim) console.log(`unclosed ${name} block`)
-    const node = { name, type: 'block', form: 'delimited', delimiter, variant: admonitionVariant, blocks, location: toSourceLocation(getLocation()) }
+    const node = { name, type: 'block', form: 'delimited', delimiter, variant: admonitionVariant, blocks, location: toSourceLocation(getLocation(closingDelim ? undefined : true)) }
     if (!admonitionVariant) delete node.variant
     return applyBlockMetadata(node, metadata)
   }
@@ -351,7 +351,7 @@ sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, ope
   {
     const delimiter = exitBlock(context)
     if (!closingDelim) console.log('unclosed sidebar block')
-    const node = { name: 'sidebar', type: 'block', form: 'delimited', delimiter, blocks, location: toSourceLocation(getLocation()) }
+    const node = { name: 'sidebar', type: 'block', form: 'delimited', delimiter, blocks, location: toSourceLocation(getLocation(closingDelim ? undefined : true)) }
     return applyBlockMetadata(node, metadataCache[offset()])
   }
 
