@@ -218,13 +218,19 @@ body = block*
 // blocks = // does not include check for section; paragraph can just be paragraph
 // blocks_in_section_body = // includes check for section; should start with !heading
 
+// Q: should empty lines be permitted in metadata on block attached to list item?
+block_metadata = lf* metadataStartOffset:offset attrlists:(@(block_attribute_line / block_title_line) lf*)* metadataEndOffset:offset
+  {
+    return parseBlockMetadata(attrlists, metadataStartOffset, metadataEndOffset)
+  }
+
 block_attribute_line = @'[' @offset @attrlist ']' eol
 
 // don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
-block_title = @'.' @offset @$('.'? (!lf !' ' !'.' .) (!lf .)*) eol
+block_title_line = @'.' @offset @$('.'? (!lf !' ' !'.' .) (!lf .)*) eol
 
 // NOTE !heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
-block = lf* (metadataStartOffset:offset attrlists:(@(block_title / block_attribute_line) lf*)* metadataEndOffset:offset { return parseBlockMetadata(attrlists, metadataStartOffset, metadataEndOffset) }) @(!heading @(listing / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
+block = block_metadata @(!heading @(listing / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
 
 // FIXME inlines in heading are being parsed multiple times when encountering sibling or parent section
 section_or_discrete_heading = headingStartOffset:offset headingRecord:heading blocks:(&{ return metadataCache[headingStartOffset]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, headingRecord[0].length - 1) } @block*)
