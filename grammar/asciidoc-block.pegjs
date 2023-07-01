@@ -3,6 +3,7 @@ const { createContext, enterBlock, exitBlock, exitList, exitSection, isBlockEnd,
 const inlinePreprocessor = require('#inline-preprocessor')
 const { parse: parseAttrlist } = require('#attrlist-parser')
 const ADMONITION_STYLES = { CAUTION: 'caution', IMPORTANT: 'important', NOTE: 'note', TIP: 'tip', WARNING: 'warning' }
+const MAX_ADMONITION_STYLE_LENGTH = Object.keys(ADMONITION_STYLES).reduce((max, it) => it.length > max ? it.length : max, 0)
 }}
 {
 const {
@@ -259,9 +260,25 @@ heading = @$('=' '='*) space space* @offset @line
 paragraph = lines:(!(block_attribute_line / any_block_delimiter_line) @line)+
   {
     const location_ = getLocation()
-    const inlines = parseInline(lines.join('\n'), { attributes: documentAttributes, locations: createLocationsForInlines(location_) })
-    const node = { name: 'paragraph', type: 'block', inlines, location: toSourceLocation(location_) }
-    return applyBlockMetadata(node, metadataCache[offset()])
+    const metadata = metadataCache[offset()]
+    const firstLine = lines[0]
+    let style, admonitionVariant, inlinesOffset
+    if ((style = metadata?.attributes.style)) {
+      admonitionVariant = ADMONITION_STYLES[style]
+    } else if (firstLine.length > MAX_ADMONITION_STYLE_LENGTH + 2 && ~(inlinesOffset = firstLine.indexOf(': ')) &&
+        inlinesOffset <= MAX_ADMONITION_STYLE_LENGTH && (admonitionVariant = ADMONITION_STYLES[firstLine.slice(0, inlinesOffset)])) {
+      lines[0] = firstLine.slice((inlinesOffset += 2))
+    } else {
+      inlinesOffset = 0
+    }
+    const inlines = parseInline(lines.join('\n'), { attributes: documentAttributes, locations: createLocationsForInlines(location_, inlinesOffset) })
+    const sourceLocation = toSourceLocation(location_)
+    let node = { name: 'paragraph', type: 'block', inlines, location: sourceLocation }
+    if (admonitionVariant) {
+      // Q: should location for paragraph start after admonition label?
+      node = { name: 'admonition', type: 'block', form: 'paragraph', variant: admonitionVariant, blocks: [node], location: sourceLocation }
+    }
+    return applyBlockMetadata(node, metadata)
   }
 
 indented = lines:indented_line+
