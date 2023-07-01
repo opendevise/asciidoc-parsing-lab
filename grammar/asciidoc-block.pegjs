@@ -231,7 +231,6 @@ section_block = block_metadata @(!heading @(listing / example / sidebar / list /
 
 block = block_metadata @(discrete_heading / listing / example / sidebar / list / indented / image / paragraph)
 
-// FIXME inlines in heading are being parsed multiple times when encountering sibling or parent section
 section_or_discrete_heading = headingStartOffset:offset headingRecord:heading blocks:(&{ return metadataCache[headingStartOffset]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, headingRecord[0].length - 1) } @section_block*)
   {
     const [marker, titleOffset, title] = headingRecord
