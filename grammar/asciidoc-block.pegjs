@@ -315,7 +315,6 @@ listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDeli
   {
     const delimiter = exitBlock(context)
     if (!closingDelim) console.log('unclosed listing block')
-    // Q should start location include all block attribute lines? or should that information be on the attributedefs?
     const location_ = getLocation()
     const inlines = []
     if (lines.length) {
