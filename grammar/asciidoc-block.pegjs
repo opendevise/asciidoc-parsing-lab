@@ -223,7 +223,7 @@ block_metadata = lf* metadataStartOffset:offset attrlists:(@(block_attribute_lin
 
 block_attribute_line = @'[' @offset @attrlist ']' eol
 
-// don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
+// NOTE don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
 block_title_line = @'.' @offset @$('.'? (!lf !' ' !'.' .) (!lf .)*) eol
 
 // NOTE !heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
