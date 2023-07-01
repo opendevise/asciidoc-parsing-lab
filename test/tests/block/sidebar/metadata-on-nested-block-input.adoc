@@ -1,0 +1,10 @@
+****
+Before heading out:
+
+[.procedure]
+* Buckle up
+* Depress break
+* Turn on engine
+* Check fuel
+* Drive away!
+****

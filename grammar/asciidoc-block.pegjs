@@ -213,10 +213,7 @@ author_info_item = names:author_name|1..3, space| address:(' <' @$(!'>' !lf .)+ 
 
 author_name = $([a-zA-Z0-9] ('.' / [a-zA-Z0-9_'-]*))
 
-body = block*
-
-// blocks = // does not include check for section; paragraph can just be paragraph
-// blocks_in_section_body = // includes check for section; should start with !heading
+body = section_block*
 
 // Q: should empty lines be permitted in metadata on block attached to list item?
 block_metadata = lf* metadataStartOffset:offset attrlists:(@(block_attribute_line / block_title_line) lf*)* metadataEndOffset:offset
@@ -230,10 +227,12 @@ block_attribute_line = @'[' @offset @attrlist ']' eol
 block_title_line = @'.' @offset @$('.'? (!lf !' ' !'.' .) (!lf .)*) eol
 
 // NOTE !heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
-block = block_metadata @(!heading @(listing / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
+section_block = block_metadata @(!heading @(listing / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
+
+block = block_metadata @(discrete_heading / listing / example / sidebar / list / indented / image / paragraph)
 
 // FIXME inlines in heading are being parsed multiple times when encountering sibling or parent section
-section_or_discrete_heading = headingStartOffset:offset headingRecord:heading blocks:(&{ return metadataCache[headingStartOffset]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, headingRecord[0].length - 1) } @block*)
+section_or_discrete_heading = headingStartOffset:offset headingRecord:heading blocks:(&{ return metadataCache[headingStartOffset]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, headingRecord[0].length - 1) } @section_block*)
   {
     const [marker, titleOffset, title] = headingRecord
     const location_ = getLocation()
@@ -334,7 +333,7 @@ listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDeli
 
 example_delimiter_line = @$('=' '===' [=]*) eol
 
-example = (openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(discrete_heading / listing / example / sidebar / list / indented / image / paragraph))* closingDelim:(lf* @(example_delimiter_line / eof))
+example = (openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:block* closingDelim:(lf* @(example_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
     let name = 'example'
@@ -349,7 +348,7 @@ example = (openingDelim:example_delimiter_line &{ return enterBlock(context, ope
 
 sidebar_delimiter_line = @$('*' '***' [*]*) eol
 
-sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:(lf* @(discrete_heading / listing / example / sidebar / list / indented / image / paragraph))* closingDelim:(lf* @(sidebar_delimiter_line / eof))
+sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:block* closingDelim:(lf* @(sidebar_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
     if (!closingDelim) console.log('unclosed sidebar block')
@@ -388,8 +387,8 @@ list_continuation_line = '+' eol
 
 // TODO process block attribute lines above attached blocks
 // Q should block match after list continuation end with '?', or should last alternative be '!.'?
-// lf* above block alternatives will get absurbed into attached_block rule
-list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line lf* @(discrete_heading / listing / example / sidebar / list / indented / image / paragraph)? / lf* @(list / indented))*
+// lf* above block rule will get absorbed into attached_block rule
+list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line lf* @block? / lf* @(list / indented))*
   {
     if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
     return { name: 'listItem', type: 'block', marker, principal, blocks, location: toSourceLocation(getLocation()) }

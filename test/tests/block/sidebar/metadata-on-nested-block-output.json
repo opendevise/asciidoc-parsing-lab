@@ -1,0 +1,113 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "sidebar",
+      "type": "block",
+      "form": "delimited",
+      "delimiter": "****",
+      "blocks": [
+        {
+          "name": "paragraph",
+          "type": "block",
+          "inlines": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Before heading out:",
+              "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 19 }]
+            }
+          ],
+          "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 19 }]
+        },
+        {
+          "name": "list",
+          "type": "block",
+          "variant": "unordered",
+          "marker": "*",
+          "items": [
+            {
+              "name": "listItem",
+              "type": "block",
+              "marker": "*",
+              "principal": [
+                {
+                  "name": "text",
+                  "type": "string",
+                  "value": "Buckle up",
+                  "location": [{ "line": 5, "col": 3 }, { "line": 5, "col": 11 }]
+                }
+              ],
+              "location": [{ "line": 5, "col": 1 }, { "line": 5, "col": 11 }]
+            },
+            {
+              "name": "listItem",
+              "type": "block",
+              "marker": "*",
+              "principal": [
+                {
+                  "name": "text",
+                  "type": "string",
+                  "value": "Depress break",
+                  "location": [{ "line": 6, "col": 3 }, { "line": 6, "col": 15 }]
+                }
+              ],
+              "location": [{ "line": 6, "col": 1 }, { "line": 6, "col": 15 }]
+            },
+            {
+              "name": "listItem",
+              "type": "block",
+              "marker": "*",
+              "principal": [
+                {
+                  "name": "text",
+                  "type": "string",
+                  "value": "Turn on engine",
+                  "location": [{ "line": 7, "col": 3 }, { "line": 7, "col": 16 }]
+                }
+              ],
+              "location": [{ "line": 7, "col": 1 }, { "line": 7, "col": 16 }]
+            },
+            {
+              "name": "listItem",
+              "type": "block",
+              "marker": "*",
+              "principal": [
+                {
+                  "name": "text",
+                  "type": "string",
+                  "value": "Check fuel",
+                  "location": [{ "line": 8, "col": 3 }, { "line": 8, "col": 12 }]
+                }
+              ],
+              "location": [{ "line": 8, "col": 1 }, { "line": 8, "col": 12 }]
+            },
+            {
+              "name": "listItem",
+              "type": "block",
+              "marker": "*",
+              "principal": [
+                {
+                  "name": "text",
+                  "type": "string",
+                  "value": "Drive away!",
+                  "location": [{ "line": 9, "col": 3 }, { "line": 9, "col": 13 }]
+                }
+              ],
+              "location": [{ "line": 9, "col": 1 }, { "line": 9, "col": 13 }]
+            }
+          ],
+          "location": [{ "line": 5, "col": 1 }, { "line": 9, "col": 13 }],
+          "metadata": {
+            "attributes": { "role": "procedure", "$1": ".procedure" },
+            "roles": ["procedure"],
+            "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 12 }]
+          }
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 10, "col": 4 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 10, "col": 4 }]
+}
