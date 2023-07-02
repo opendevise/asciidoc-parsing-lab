@@ -1,0 +1,14 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "literal",
+      "type": "block",
+      "form": "delimited",
+      "delimiter": "....",
+      "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 4 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 4 }]
+}

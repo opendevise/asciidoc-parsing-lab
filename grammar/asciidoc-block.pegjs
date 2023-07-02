@@ -227,9 +227,9 @@ block_attribute_line = @'[' @offset @attrlist ']' eol
 block_title_line = @'.' @offset @$('.'? (!lf !' ' !'.' .) (!lf .)*) eol
 
 // NOTE !heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
-section_block = block_metadata @(!heading @(listing / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
+section_block = block_metadata @(!heading @(listing / literal / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
 
-block = block_metadata @(discrete_heading / listing / example / sidebar / list / indented / image / paragraph)
+block = block_metadata @(discrete_heading / listing / literal / example / sidebar / list / indented / image / paragraph)
 
 section_or_discrete_heading = headingStartOffset:offset headingRecord:heading blocks:(&{ return metadataCache[headingStartOffset]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, headingRecord[0].length - 1) } @section_block*)
   {
@@ -328,6 +328,30 @@ listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDeli
     if (!closingDelim && options.showWarnings) console.warn('unclosed listing block')
     const inlines = contents ? toInlines('text', contents[0], toSourceLocation(contents[1])) : []
     const node = { name: 'listing', type: 'block', form: 'delimited', delimiter, inlines, location: toSourceLocation(getLocation(closingDelim ? undefined : true)) }
+    return applyBlockMetadata(node, metadataCache[offset()])
+  }
+
+literal_delimiter_line = @$('.' '.'|3..|) eol
+
+literal_contents = (!(delim:literal_delimiter_line &{ return isBlockEnd(context, delim) }) line_or_empty_line)*
+  {
+    let { start, end } = range()
+    if (end === start) return
+    const value = input.substring(start, (end === input.length ? end : --end) + (input[end] === '\n' ? 0 : 1))
+    const location_ = getLocation({ start, end: value ? end : start })
+    if (value && value[value.length - 1] === '\n') {
+      location_[1].line++
+      location_[1].col = 0
+    }
+    return [value || '\n', location_]
+  }
+
+literal = (openingDelim:literal_delimiter_line { enterBlock(context, openingDelim) }) contents:literal_contents closingDelim:(@literal_delimiter_line / eof)
+  {
+    const delimiter = exitBlock(context)
+    if (!closingDelim && options.showWarnings) console.warn('unclosed literal block')
+    const inlines = contents ? toInlines('text', contents[0], toSourceLocation(contents[1])) : []
+    const node = { name: 'literal', type: 'block', form: 'delimited', delimiter, inlines, location: toSourceLocation(getLocation(closingDelim ? undefined : true)) }
     return applyBlockMetadata(node, metadataCache[offset()])
   }
 
