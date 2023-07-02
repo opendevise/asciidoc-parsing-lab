@@ -1,0 +1,14 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "listing",
+      "type": "block",
+      "form": "delimited",
+      "delimiter": "----",
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 4 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 4 }]
+}

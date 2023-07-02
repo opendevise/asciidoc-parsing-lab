@@ -318,11 +318,11 @@ listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDeli
     const inlines = []
     if (lines.length) {
       const firstLine = lines[0]
+      const value = lines.length > 1 ? lines.join('\n') : (firstLine || '\n')
       const contentsLocation = [
         { line: location_[0].line + 1, col: (firstLine ? 1 : 0) },
-        { line: location_[1].line - (closingDelim ? 1 : 0), col: lines[lines.length - 1].length },
+        { line: location_[1].line - (closingDelim || value === '\n' ? 1 : 0), col: lines[lines.length - 1].length },
       ]
-      const value = lines.length > 1 ? lines.join('\n') : (firstLine || '\n')
       inlines.push(toInlines('text', value, toSourceLocation(contentsLocation))[0])
     }
     const node = { name: 'listing', type: 'block', form: 'delimited', delimiter, inlines, location: toSourceLocation(location_) }
