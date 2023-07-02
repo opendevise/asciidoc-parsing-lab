@@ -1,0 +1,5 @@
+{
+  "name": "document",
+  "type": "block",
+  "location": [{ "line": 1, "col": 0 }, { "line": 2, "col": 0 }]
+}

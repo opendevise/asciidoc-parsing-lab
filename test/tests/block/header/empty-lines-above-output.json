@@ -13,5 +13,5 @@
     ],
     "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 16 }]
   },
-  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 16 }]
+  "location": [{ "line": 1, "col": 0 }, { "line": 3, "col": 16 }]
 }

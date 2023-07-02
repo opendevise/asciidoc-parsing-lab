@@ -16,5 +16,5 @@
       "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 9 }]
     }
   ],
-  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 9 }]
+  "location": [{ "line": 1, "col": 0 }, { "line": 2, "col": 9 }]
 }

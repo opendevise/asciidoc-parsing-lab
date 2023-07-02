@@ -19,7 +19,7 @@ function getLocation (range_) {
   let eof
   let { start, end = start + (range_.text || '.').length - 1 } = range_ === true ? (eof = true) && range() : range_ || range()
   const { line: startLine, column: startCol } = peg$computePosDetails(start)
-  const startDetails = { line: startLine, col: startCol }
+  const startDetails = { line: startLine, col: !end || input[start] === '\n' ? 0 : startCol }
   if (end === start) return [startDetails, startDetails]
   let hasEol
   if (eof) {
