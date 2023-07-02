@@ -307,7 +307,7 @@ indented = lines:indented_line+
     return applyBlockMetadata(node, metadata)
   }
 
-listing_delimiter_line = @$('-' '---' [-]*) eol
+listing_delimiter_line = @$('-' '-'|3..|) eol
 
 // FIXME pull lines out as separate rule to track location without having to hack location of parent
 listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDelim) }) lines:(!(delim:listing_delimiter_line &{ return isBlockEnd(context, delim) }) @line_or_empty_line)* closingDelim:(@listing_delimiter_line / eof)
@@ -329,7 +329,7 @@ listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDeli
     return applyBlockMetadata(node, metadataCache[offset()])
   }
 
-example_delimiter_line = @$('=' '===' [=]*) eol
+example_delimiter_line = @$('=' '='|3..|) eol
 
 example = (openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:block* closingDelim:(lf* @(example_delimiter_line / eof))
   {
@@ -344,7 +344,7 @@ example = (openingDelim:example_delimiter_line &{ return enterBlock(context, ope
     return applyBlockMetadata(node, metadata)
   }
 
-sidebar_delimiter_line = @$('*' '***' [*]*) eol
+sidebar_delimiter_line = @$('*' '*'|3..|) eol
 
 sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:block* closingDelim:(lf* @(sidebar_delimiter_line / eof))
   {
