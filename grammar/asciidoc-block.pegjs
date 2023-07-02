@@ -309,23 +309,25 @@ indented = lines:indented_line+
 
 listing_delimiter_line = @$('-' '-'|3..|) eol
 
-// FIXME pull lines out as separate rule to track location without having to hack location of parent
-listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDelim) }) lines:(!(delim:listing_delimiter_line &{ return isBlockEnd(context, delim) }) @line_or_empty_line)* closingDelim:(@listing_delimiter_line / eof)
+listing_contents = (!(delim:listing_delimiter_line &{ return isBlockEnd(context, delim) }) line_or_empty_line)*
+  {
+    let { start, end } = range()
+    if (end === start) return
+    const value = input.substring(start, (end === input.length ? end : --end) + (input[end] === '\n' ? 0 : 1))
+    const location_ = getLocation({ start, end: value ? end : start })
+    if (value && value[value.length - 1] === '\n') {
+      location_[1].line++
+      location_[1].col = 0
+    }
+    return [value || '\n', location_]
+  }
+
+listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDelim) }) contents:listing_contents closingDelim:(@listing_delimiter_line / eof)
   {
     const delimiter = exitBlock(context)
     if (!closingDelim && options.showWarnings) console.warn('unclosed listing block')
-    const location_ = getLocation(closingDelim ? undefined : true)
-    const inlines = []
-    if (lines.length) {
-      const firstLine = lines[0]
-      const value = lines.length > 1 ? lines.join('\n') : (firstLine || '\n')
-      const contentsLocation = [
-        { line: location_[0].line + 1, col: (firstLine ? 1 : 0) },
-        { line: location_[1].line - (closingDelim || value === '\n' ? 1 : 0), col: lines[lines.length - 1].length },
-      ]
-      inlines.push(toInlines('text', value, toSourceLocation(contentsLocation))[0])
-    }
-    const node = { name: 'listing', type: 'block', form: 'delimited', delimiter, inlines, location: toSourceLocation(location_) }
+    const inlines = contents ? toInlines('text', contents[0], toSourceLocation(contents[1])) : []
+    const node = { name: 'listing', type: 'block', form: 'delimited', delimiter, inlines, location: toSourceLocation(getLocation(closingDelim ? undefined : true)) }
     return applyBlockMetadata(node, metadataCache[offset()])
   }
 
