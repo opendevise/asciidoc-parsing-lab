@@ -313,7 +313,7 @@ listing_delimiter_line = @$('-' '-'|3..|) eol
 listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDelim) }) lines:(!(delim:listing_delimiter_line &{ return isBlockEnd(context, delim) }) @line_or_empty_line)* closingDelim:(@listing_delimiter_line / eof)
   {
     const delimiter = exitBlock(context)
-    if (!closingDelim) console.log('unclosed listing block')
+    if (!closingDelim && options.showWarnings) console.warn('unclosed listing block')
     const location_ = getLocation(closingDelim ? undefined : true)
     const inlines = []
     if (lines.length) {
@@ -338,7 +338,7 @@ example = (openingDelim:example_delimiter_line &{ return enterBlock(context, ope
     let style, admonitionVariant
     const metadata = metadataCache[offset()]
     if ((style = metadata?.attributes.style) && (admonitionVariant = ADMONITION_STYLES[style])) name = 'admonition'
-    if (!closingDelim) console.log(`unclosed ${name} block`)
+    if (!closingDelim && options.showWarnings) console.warn(`unclosed ${name} block`)
     const node = { name, type: 'block', form: 'delimited', delimiter, variant: admonitionVariant, blocks, location: toSourceLocation(getLocation(closingDelim ? undefined : true)) }
     if (!admonitionVariant) delete node.variant
     return applyBlockMetadata(node, metadata)
@@ -349,7 +349,7 @@ sidebar_delimiter_line = @$('*' '*'|3..|) eol
 sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:block* closingDelim:(lf* @(sidebar_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
-    if (!closingDelim) console.log('unclosed sidebar block')
+    if (!closingDelim && options.showWarnings) console.warn('unclosed sidebar block')
     const node = { name: 'sidebar', type: 'block', form: 'delimited', delimiter, blocks, location: toSourceLocation(getLocation(closingDelim ? undefined : true)) }
     return applyBlockMetadata(node, metadataCache[offset()])
   }
@@ -361,8 +361,8 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:list_i
       // TODO set this as start attribute
       let expected = parseInt(items[0].marker.slice(0, -1), 10)
       for (const item of items) {
-        if (item.marker !== expected + '.') {
-          console.log('list item index: expected ' + expected + ', got ' + item.marker.slice(0, -1))
+        if (item.marker !== expected + '.' && options.showWarnings) {
+          console.warn('list item index: expected ' + expected + ', got ' + item.marker.slice(0, -1))
         }
         expected++
       }
