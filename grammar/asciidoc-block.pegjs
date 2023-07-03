@@ -394,7 +394,7 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:list_i
       }
     }
     const variant = marker === '-' || marker[0] === '*' ? 'unordered' : 'ordered'
-    const node = { name: 'list', type: 'block', variant, marker, items: items, location: toSourceLocation(getLocation()) }
+    const node = { name: 'list', type: 'block', variant, marker, items, location: toSourceLocation(getLocation()) }
     return applyBlockMetadata(node, metadataCache[offset()])
   }
 
