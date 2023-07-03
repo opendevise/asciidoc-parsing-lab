@@ -403,8 +403,7 @@ list_marker = space* @$('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !eo
 list_item_principal = lines:line|1.., !(block_attribute_line / list_continuation_line / list_marker / any_block_delimiter_line)|
   {
     const location_ = getLocation()
-    const startCol = toSourceLocation(location_)[0].col
-    return parseInline(lines.join('\n'), { attributes: documentAttributes, locations: createLocationsForInlines(location_, startCol - 1) })
+    return parseInline(lines.join('\n'), { attributes: documentAttributes, locations: createLocationsForInlines(location_, location_[0].col - 1) })
   }
 
 list_continuation_line = '+' eol
