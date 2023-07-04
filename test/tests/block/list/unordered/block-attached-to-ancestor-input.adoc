@@ -1,0 +1,7 @@
+* mammals
+** primates
+*** humans
+
+
++
+Information about mammals.

@@ -415,10 +415,13 @@ list_continuation_line = '+' eol
 // TODO process block attribute lines above attached blocks
 // Q should block match after list continuation end with '?', or should last alternative be '!.'?
 // lf* above block rule will get absorbed into attached_block rule
-list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line lf* @block? / lf* @(list / indented))*
+// NOTE the rule could end with up:lf? instead since newlines above the following block aren't significant
+list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line lf* @block? / lf* @(list / indented))* up:(lf &(lf* list_continuation_line))?
   {
+    const range_ = range()
     if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
-    return { name: 'listItem', type: 'block', marker, principal, blocks, location: toSourceLocation(getLocation()) }
+    if (up) range_.end--
+    return { name: 'listItem', type: 'block', marker, principal, blocks, location: toSourceLocation(getLocation(range_)) }
   }
 
 image = 'image::' !space target:$(!lf !'[' .)+ '[' attrlistOffset:offset attrlist:attrlist ']' eol
