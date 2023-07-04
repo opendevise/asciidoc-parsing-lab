@@ -325,10 +325,12 @@ listing_contents = (!(delim:listing_delimiter_line &{ return isBlockEnd(context,
 listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDelim) }) contents:listing_contents closingDelim:(@listing_delimiter_line / eof)
   {
     const delimiter = exitBlock(context)
-    if (!closingDelim && options.showWarnings) console.warn('unclosed listing block')
+    const metadata = metadataCache[offset()]
+    const name = metadata?.attributes.style === 'literal' ? 'literal' : 'listing'
+    if (!closingDelim && options.showWarnings) console.warn(`unclosed ${name} block`)
     const inlines = contents ? toInlines('text', contents[0], toSourceLocation(contents[1])) : []
-    const node = { name: 'listing', type: 'block', form: 'delimited', delimiter, inlines, location: toSourceLocation(getLocation(closingDelim ? undefined : true)) }
-    return applyBlockMetadata(node, metadataCache[offset()])
+    const node = { name, type: 'block', form: 'delimited', delimiter, inlines, location: toSourceLocation(getLocation(closingDelim ? undefined : true)) }
+    return applyBlockMetadata(node, metadata)
   }
 
 literal_delimiter_line = @$('.' '.'|3..|) eol
@@ -349,10 +351,12 @@ literal_contents = (!(delim:literal_delimiter_line &{ return isBlockEnd(context,
 literal = (openingDelim:literal_delimiter_line { enterBlock(context, openingDelim) }) contents:literal_contents closingDelim:(@literal_delimiter_line / eof)
   {
     const delimiter = exitBlock(context)
-    if (!closingDelim && options.showWarnings) console.warn('unclosed literal block')
+    const metadata = metadataCache[offset()]
+    const name = metadata?.attributes.style === 'listing' ? 'listing' : 'literal'
+    if (!closingDelim && options.showWarnings) console.warn(`unclosed ${name} block`)
     const inlines = contents ? toInlines('text', contents[0], toSourceLocation(contents[1])) : []
-    const node = { name: 'literal', type: 'block', form: 'delimited', delimiter, inlines, location: toSourceLocation(getLocation(closingDelim ? undefined : true)) }
-    return applyBlockMetadata(node, metadataCache[offset()])
+    const node = { name, type: 'block', form: 'delimited', delimiter, inlines, location: toSourceLocation(getLocation(closingDelim ? undefined : true)) }
+    return applyBlockMetadata(node, metadata)
   }
 
 example_delimiter_line = @$('=' '='|3..|) eol
