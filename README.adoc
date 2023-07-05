@@ -67,6 +67,47 @@ Some tests also have a configuration file that ends in _-config.json_).
 These data-driven tests are a blueprint of the tests that will be included in the AsciiDoc TCK.
 Once the tests are contributed to the AsciiDoc TCK, this test suite will be updated to use the AsciiDoc TCK directly.
 
+== Unmapped syntax
+
+Below is a rough list of the AsciiDoc syntax that has not yet been mapped, or not mapped fully, in the grammar.
+There's likely more syntax and edge cases to cover, so this is only what we know to be outstanding.
+
+* process block attributes before parsing child blocks (meaning after block is positively identified)
+* dlists
+* colists
+* open block
+* quote/verse block
+* pass/stem block
+* thematic and page breaks
+* block metadata above blocks attached to list item
+* attribute entries in body
+* revision info line
+* wrap blocks before first section in preamble
+* tables
+* ifeval directive
+* variable-length delimiter lines and block nesting in preprocessor
+* line and block comments (likely in preprocessor)
+* inline replacements
+* backslash escaping for blocks
+* more thorough backslash escaping for inlines (need to consider all ASCII symbols)
+* lines and tags attribute on include directive
+* hardbreaks option on paragraph or styled paragraph
+* anchor on dlist term
+* anchor on list item
+* inline double and single quotes
+* inline image macro
+* inline footnote macro
+* inline UI macros (btn, kbd, menu)
+* inline xref macro
+* inline index term macro and shorthands
+* block video and audio macros
+* block toc macro
+* ...
+
+In general, the line preprocessor is woefully incomplete.
+We've been focusing on sorting out the block grammar first.
+Then we'll go back and map it correctly in the line preprocessor (or fold the two grammars into one).
+
 == Copyright and License
 
 Copyright (C) 2023-present Dan Allen and Sarah White (OpenDevise Inc.) and the individual contributors to this project.
