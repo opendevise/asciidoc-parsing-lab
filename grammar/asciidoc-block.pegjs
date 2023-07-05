@@ -398,7 +398,10 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:list_i
       }
     }
     const variant = marker === '-' || marker[0] === '*' ? 'unordered' : 'ordered'
-    const node = { name: 'list', type: 'block', variant, marker, items, location: toSourceLocation(getLocation()) }
+    // NOTE set location end of list to location end of last list item; prevents overrun caused by looking for ancestor list continuation
+    const sourceLocation = toSourceLocation(getLocation({ start: offset() }))
+    sourceLocation[1] = items[items.length - 1].location[1]
+    const node = { name: 'list', type: 'block', variant, marker, items, location: sourceLocation }
     return applyBlockMetadata(node, metadataCache[offset()])
   }
 
@@ -415,13 +418,25 @@ list_continuation_line = '+' eol
 // TODO process block attribute lines above attached blocks
 // Q should block match after list continuation end with '?', or should last alternative be '!.'?
 // lf* above block rule will get absorbed into attached_block rule
-// NOTE the rule could end with up:lf? instead since newlines above the following block aren't significant
-list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line @(lf* @block)? / lf* @(list / &space !list_marker @indented))* up:(lf &(lf* list_continuation_line))?
+list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line @(lf* @block)? / lf* @(list / &space !list_marker @indented))* trailer:lf?
   {
-    const range_ = range()
     if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
-    if (up) range_.end--
-    return { name: 'listItem', type: 'block', marker, principal, blocks, location: toSourceLocation(getLocation(range_)) }
+    let sourceLocation
+    if (blocks.length) {
+      sourceLocation = toSourceLocation(getLocation({ start: offset() }))
+      sourceLocation[1] = blocks[blocks.length - 1].location[1]
+    } else {
+      const range_ = range()
+      if (trailer) range_.end--
+      sourceLocation = toSourceLocation(getLocation(range_))
+    }
+    // or use a more brute-force approach...
+    //const range_ = range()
+    //if (trailer || blocks.length) {
+    //  while (input[range_.end - 1] === '\n') range_.end--
+    //}
+    //const sourceLocation = toSourceLocation(getLocation(range_))
+    return { name: 'listItem', type: 'block', marker, principal, blocks, location: sourceLocation }
   }
 
 image = 'image::' !space target:$(!lf !'[' .)+ '[' attrlistOffset:offset attrlist:attrlist ']' eol

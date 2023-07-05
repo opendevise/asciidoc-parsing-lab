@@ -61,13 +61,13 @@
                           "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 10 }]
                         }
                       ],
-                      "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 11 }]
+                      "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 10 }]
                     }
                   ],
-                  "location": [{ "line": 2, "col": 1 }, { "line": 3, "col": 11 }]
+                  "location": [{ "line": 2, "col": 1 }, { "line": 3, "col": 10 }]
                 }
               ],
-              "location": [{ "line": 2, "col": 1 }, { "line": 4, "col": 1 }]
+              "location": [{ "line": 2, "col": 1 }, { "line": 3, "col": 10 }]
             },
             {
               "name": "paragraph",

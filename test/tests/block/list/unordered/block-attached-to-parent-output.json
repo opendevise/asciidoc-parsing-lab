@@ -70,7 +70,7 @@
                   "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 12 }]
                 }
               ],
-              "location": [{ "line": 2, "col": 1 }, { "line": 4, "col": 13 }]
+              "location": [{ "line": 2, "col": 1 }, { "line": 4, "col": 12 }]
             },
             {
               "name": "paragraph",
