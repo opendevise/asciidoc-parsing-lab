@@ -1,2 +1,3 @@
 * list item
- ** indented nested list item
+ ** list item in child list
+ ** another list item in child list

@@ -35,21 +35,35 @@
                     {
                       "name": "text",
                       "type": "string",
-                      "value": "indented nested list item",
-                      "location": [{ "line": 2, "col": 5 }, { "line": 2, "col": 29 }]
+                      "value": "list item in child list",
+                      "location": [{ "line": 2, "col": 5 }, { "line": 2, "col": 27 }]
                     }
                   ],
-                  "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 29 }]
+                  "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 27 }]
+                },
+                {
+                  "name": "listItem",
+                  "type": "block",
+                  "marker": "**",
+                  "principal": [
+                    {
+                      "name": "text",
+                      "type": "string",
+                      "value": "another list item in child list",
+                      "location": [{ "line": 3, "col": 5 }, { "line": 3, "col": 35 }]
+                    }
+                  ],
+                  "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 35 }]
                 }
               ],
-              "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 29 }]
+              "location": [{ "line": 2, "col": 1 }, { "line": 3, "col": 35 }]
             }
           ],
-          "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 29 }]
+          "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 35 }]
         }
       ],
-      "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 29 }]
+      "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 35 }]
     }
   ],
-  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 29 }]
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 35 }]
 }
