@@ -407,18 +407,18 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:list_i
 
 list_marker = space* @$('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !eol
 
-list_item_principal = lines:line|1.., !(block_attribute_line / list_continuation_line / list_marker / any_block_delimiter_line)|
+list_item_principal = lines:line|1.., !(block_attribute_line / list_continuation / list_marker / any_block_delimiter_line)|
   {
     const location_ = getLocation()
     return parseInline(lines.join('\n'), { attributes: documentAttributes, locations: createLocationsForInlines(location_, location_[0].col - 1) })
   }
 
-list_continuation_line = '+' eol
+list_continuation = '+' eol
 
 // TODO process block attribute lines above attached blocks
 // Q should block match after list continuation end with '?', or should last alternative be '!.'?
 // lf* above block rule will get absorbed into attached_block rule
-list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line @(lf* @block)? / lf* @(list / &space !list_marker @indented))* trailer:lf?
+list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation @(lf* @block)? / lf* @(list / &space !list_marker @indented))* trailer:lf?
   {
     if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
     let sourceLocation
