@@ -416,7 +416,7 @@ list_continuation_line = '+' eol
 // Q should block match after list continuation end with '?', or should last alternative be '!.'?
 // lf* above block rule will get absorbed into attached_block rule
 // NOTE the rule could end with up:lf? instead since newlines above the following block aren't significant
-list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line lf* @block? / lf* @(list / &space !list_marker @indented))* up:(lf &(lf* list_continuation_line))?
+list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation_line @(lf* @block)? / lf* @(list / &space !list_marker @indented))* up:(lf &(lf* list_continuation_line))?
   {
     const range_ = range()
     if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
