@@ -1,0 +1,52 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "unordered",
+      "marker": "*",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "*",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "principal text",
+              "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 16 }]
+            }
+          ],
+          "blocks": [
+            {
+              "name": "literal",
+              "type": "block",
+              "form": "delimited",
+              "delimiter": "....",
+              "inlines": [
+                {
+                  "type": "string",
+                  "name": "text",
+                  "value": "attached block with metadata",
+                  "location": [{ "line": 7, "col": 1 }, { "line": 7, "col": 28 }]
+                }
+              ],
+              "location": [{ "line": 6, "col": 1 }, { "line": 8, "col": 4 }],
+              "metadata": {
+                "attributes": { "$1": ".output", "role": "output" },
+                "roles": ["output"],
+                "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 9 }]
+              }
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 8, "col": 4 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 8, "col": 4 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 8, "col": 4 }]
+}

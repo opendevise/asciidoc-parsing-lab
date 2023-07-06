@@ -1,0 +1,8 @@
+* principal text
++
+
+[.output]
+
+....
+attached block with metadata
+....

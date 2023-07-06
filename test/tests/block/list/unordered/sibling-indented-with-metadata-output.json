@@ -1,0 +1,49 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "unordered",
+      "marker": "*",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "*",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "End of list",
+              "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 13 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 13 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 13 }]
+    },
+    {
+      "name": "literal",
+      "type": "block",
+      "form": "indented",
+      "inlines": [
+        {
+          "type": "string",
+          "name": "text",
+          "value": "$ runme",
+          "location": [{ "line": 4, "col": 2 }, { "line": 4, "col": 8 }]
+        }
+      ],
+      "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 8 }],
+      "id": "cmd-1",
+      "metadata": {
+        "attributes": { "$1": "#cmd-1", "id": "cmd-1" },
+        "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 8 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 4, "col": 8 }]
+}
