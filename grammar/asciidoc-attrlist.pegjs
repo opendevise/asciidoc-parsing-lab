@@ -100,8 +100,8 @@ block_attrlist_with_shorthands = shorthandAttrs:block_shorthand_attrs? entries:(
         if ('reftext' in initial) delete initial.reftext
         shorthandAttrs.reftext = createValueResolver(shorthandAttrs.reftext, sourceMapping, locations['1'])
       }
-      shorthandAttrs.role &&= addAllToSet((initial.role ??= new Set()), shorthandAttrs.role)
-      shorthandAttrs.opts &&= addAllToSet((initial.opts ??= new Set()), shorthandAttrs.opts)
+      shorthandAttrs.role &&= addAllToSet((initial.role ?? new Set()), shorthandAttrs.role)
+      shorthandAttrs.opts &&= addAllToSet((initial.opts ?? new Set()), shorthandAttrs.opts)
       Object.assign(initial, shorthandAttrs)
     }
     return updateAttributes(initial, entries, posIdx)
