@@ -1,0 +1,57 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "unordered",
+      "marker": "*",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "*",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "disc",
+              "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 6 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 6 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 6 }]
+    },
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "unordered",
+      "marker": "**",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "**",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "square",
+              "location": [{ "line": 4, "col": 4 }, { "line": 4, "col": 9 }]
+            }
+          ],
+          "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 9 }]
+        }
+      ],
+      "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 9 }],
+      "metadata": {
+        "attributes": { "$1": "square", "style": "square" },
+        "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 8 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 4, "col": 9 }]
+}
