@@ -113,14 +113,16 @@ function applyBlockMetadata (block, metadata, posattrs) {
 }
 }
 // TODO if surrounding lf are not part of document, group inner two rules as a new rule
-//document = lf* header:header? blocks:body lf*
-document = lf* header:header? blocks:body .*
+document = lf* header:header? blocks:body lf* unparsed:.*
   {
     const node = { name: 'document', type: 'block' }
     if (header) {
       node.attributes = header.attributes
       delete header.attributes
       node.header = header
+    }
+    if (unparsed.length && options.showWarnings) {
+      console.warn(`unparsed content found at end of document:\n${unparsed.join('').trimEnd()}`)
     }
     return Object.assign(node, { blocks, location: toSourceLocation(getLocation(true)) })
   }
