@@ -79,7 +79,6 @@ There's likely more syntax and edge cases to cover, so this is only what we know
 * quote/verse block
 * pass/stem block
 * thematic and page breaks
-* block metadata above blocks attached to list item
 * attribute entries in body
 * revision info line
 * wrap blocks before first section in preamble
