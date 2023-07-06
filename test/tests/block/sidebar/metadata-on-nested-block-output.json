@@ -100,7 +100,7 @@
           ],
           "location": [{ "line": 5, "col": 1 }, { "line": 9, "col": 13 }],
           "metadata": {
-            "attributes": { "role": "procedure", "$1": ".procedure" },
+            "attributes": { "$1": ".procedure", "role": "procedure" },
             "roles": ["procedure"],
             "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 12 }]
           }
