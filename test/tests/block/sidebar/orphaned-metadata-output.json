@@ -1,0 +1,29 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "sidebar",
+      "type": "block",
+      "form": "delimited",
+      "delimiter": "****",
+      "blocks": [
+        {
+          "name": "paragraph",
+          "type": "block",
+          "inlines": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "paragraph",
+              "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 9 }]
+            }
+          ],
+          "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 9 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 4 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 4 }]
+}

@@ -217,6 +217,8 @@ author_name = $([a-zA-Z0-9] ('.' / [a-zA-Z0-9_'-]*))
 
 body = @section_block* block_metadata
 
+compound_block_body = @block* block_metadata
+
 // Q: should empty lines be permitted in metadata on block attached to list item?
 block_metadata = lf* metadataStartOffset:offset attrlists:(@(block_attribute_line / block_title_line) lf*)* metadataEndOffset:offset
   {
@@ -363,7 +365,7 @@ literal = (openingDelim:literal_delimiter_line { enterBlock(context, openingDeli
 
 example_delimiter_line = @$('=' '='|3..|) eol
 
-example = (openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:block* closingDelim:(lf* @(example_delimiter_line / eof))
+example = (openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:compound_block_body closingDelim:(lf* @(example_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
     let name = 'example'
@@ -378,7 +380,7 @@ example = (openingDelim:example_delimiter_line &{ return enterBlock(context, ope
 
 sidebar_delimiter_line = @$('*' '*'|3..|) eol
 
-sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:block* closingDelim:(lf* @(sidebar_delimiter_line / eof))
+sidebar = (openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) }) blocks:compound_block_body closingDelim:(lf* @(sidebar_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
     if (!closingDelim && options.showWarnings) console.warn('unclosed sidebar block')
