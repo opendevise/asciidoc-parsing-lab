@@ -418,7 +418,7 @@ list_continuation = '+' eol
 // TODO process block attribute lines above attached blocks
 // Q should block match after list continuation end with '?', or should last alternative be '!.'?
 // lf* above block rule will get absorbed into attached_block rule
-list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation @(lf* @block)? / lf* @(list / &space !list_marker @indented))* trailer:lf?
+list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation @block? / lf* @(list / &space !list_marker @indented))* trailer:lf?
   {
     if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
     let sourceLocation
