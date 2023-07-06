@@ -219,7 +219,6 @@ body = @section_block* block_metadata
 
 compound_block_body = @block* block_metadata
 
-// Q: should empty lines be permitted in metadata on block attached to list item?
 block_metadata = lf* metadataStartOffset:offset attrlists:(@(block_attribute_line / block_title_line) lf*)* metadataEndOffset:offset
   {
     return parseBlockMetadata(attrlists, metadataStartOffset, metadataEndOffset)
@@ -419,9 +418,7 @@ list_item_principal = lines:line|1.., !(block_attribute_line / list_continuation
 
 list_continuation = '+' eol
 
-// TODO process block attribute lines above attached blocks
 // Q should block match after list continuation end with '?', or should last alternative be '!.'?
-// lf* above block rule will get absorbed into attached_block rule
 // Q should @block? be changed to @(block / block_metadata {}) or should we let the parent handle the orphaned metadata lines?
 list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation @block? / (lf lf* / block_metadata) @(list / &space !list_marker @indented))* trailer:lf?
   {
