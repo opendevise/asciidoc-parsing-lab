@@ -113,7 +113,7 @@ function applyBlockMetadata (block, metadata, posattrs) {
 }
 }
 // TODO if surrounding lf are not part of document, group inner two rules as a new rule
-document = lf* header:header? blocks:body lf* unparsed:.*
+document = lf* header:header? blocks:body unparsed:.*
   {
     const node = { name: 'document', type: 'block' }
     if (header) {
@@ -215,7 +215,7 @@ author_info_item = names:author_name|1..3, space| address:(' <' @$(!'>' !lf .)+ 
 
 author_name = $([a-zA-Z0-9] ('.' / [a-zA-Z0-9_'-]*))
 
-body = section_block*
+body = @section_block* block_metadata
 
 // Q: should empty lines be permitted in metadata on block attached to list item?
 block_metadata = lf* metadataStartOffset:offset attrlists:(@(block_attribute_line / block_title_line) lf*)* metadataEndOffset:offset
