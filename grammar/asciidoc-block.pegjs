@@ -215,13 +215,14 @@ author_info_item = names:author_name|1..3, space| address:(' <' @$(!'>' !lf .)+ 
 
 author_name = $([a-zA-Z0-9] ('.' / [a-zA-Z0-9_'-]*))
 
-body = @section_block* block_metadata
+body = @section_block* lf* block_metadata
 
-compound_block_body = @block* block_metadata
+compound_block_body = @block* lf* block_metadata
 
-block_metadata = lf* metadataStartOffset:offset attrlists:(@(block_attribute_line / block_title_line) lf*)* metadataEndOffset:offset
+block_metadata = attrlists:(@(block_attribute_line / block_title_line) lf*)*
   {
-    return parseBlockMetadata(attrlists, metadataStartOffset, metadataEndOffset)
+    const { start, end } = range()
+    return parseBlockMetadata(attrlists, start, end)
   }
 
 block_attribute_line = @'[' @offset @attrlist ']' eol
@@ -230,9 +231,9 @@ block_attribute_line = @'[' @offset @attrlist ']' eol
 block_title_line = @'.' @offset @$('.'? (!lf !' ' !'.' .) (!lf .)*) eol
 
 // NOTE !heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
-section_block = block_metadata @(!heading @(listing / literal / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
+section_block = lf* block_metadata @(!heading @(listing / literal / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
 
-block = block_metadata @(discrete_heading / listing / literal / example / sidebar / list / indented / image / paragraph)
+block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / list / indented / image / paragraph)
 
 section_or_discrete_heading = headingStartOffset:offset headingRecord:heading blocks:(&{ return metadataCache[headingStartOffset]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, headingRecord[0].length - 1) } @section_block*)
   {
