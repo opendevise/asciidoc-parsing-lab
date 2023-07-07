@@ -1,0 +1,56 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "dlist",
+      "type": "block",
+      "marker": "::",
+      "items": [
+        {
+          "name": "dlistItem",
+          "type": "block",
+          "marker": "::",
+          "terms": [
+            [
+              {
+                "name": "text",
+                "type": "string",
+                "value": "config.yml",
+                "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 10 }]
+              }
+            ]
+          ],
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "The main configuration file.",
+              "location": [{ "line": 1, "col": 14 }, { "line": 1, "col": 41 }]
+            }
+          ],
+          "blocks": [
+            {
+              "name": "listing",
+              "type": "block",
+              "form": "delimited",
+              "delimiter": "----",
+              "inlines": [
+                {
+                  "type": "string",
+                  "name": "text",
+                  "value": "title: My Site",
+                  "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 14 }]
+                }
+              ],
+              "location": [{ "line": 3, "col": 1 }, { "line": 5, "col": 4 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 4 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 4 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 4 }]
+}

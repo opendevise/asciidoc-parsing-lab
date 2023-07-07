@@ -1,0 +1,63 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "dlist",
+      "type": "block",
+      "marker": "::",
+      "items": [
+        {
+          "name": "dlistItem",
+          "type": "block",
+          "marker": "::",
+          "terms": [
+            [
+              {
+                "name": "text",
+                "type": "string",
+                "value": "CPU",
+                "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 3 }]
+              }
+            ]
+          ],
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "The brain of the computer.",
+              "location": [{ "line": 1, "col": 7 }, { "line": 1, "col": 32 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 32 }]
+        },
+        {
+          "name": "dlistItem",
+          "type": "block",
+          "marker": "::",
+          "terms": [
+            [
+              {
+                "name": "text",
+                "type": "string",
+                "value": "RAM",
+                "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 3 }]
+              }
+            ]
+          ],
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Temporarily stores information the CPU uses during operation.",
+              "location": [{ "line": 2, "col": 7 }, { "line": 2, "col": 67 }]
+            }
+          ],
+          "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 67 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 67 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 67 }]
+}

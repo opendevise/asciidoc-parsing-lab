@@ -1,0 +1,2 @@
+CPU:: The brain of the computer.
+RAM:: Temporarily stores information the CPU uses during operation.

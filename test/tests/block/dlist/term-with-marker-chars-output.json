@@ -1,0 +1,39 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "dlist",
+      "type": "block",
+      "marker": "::",
+      "items": [
+        {
+          "name": "dlistItem",
+          "type": "block",
+          "marker": "::",
+          "terms": [
+            [
+              {
+                "name": "text",
+                "type": "string",
+                "value": "term::still term",
+                "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 16 }]
+              }
+            ]
+          ],
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "desc:: more desc",
+              "location": [{ "line": 1, "col": 20 }, { "line": 1, "col": 35 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 35 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 35 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 35 }]
+}

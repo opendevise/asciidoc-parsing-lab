@@ -231,9 +231,9 @@ block_attribute_line = @'[' @offset @attrlist ']' eol
 block_title_line = @'.' @offset @$('.'? (!(lf / ' ' / '.') .) (!lf .)*) eol
 
 // NOTE !heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
-section_block = lf* block_metadata @(!heading @(listing / literal / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
+section_block = lf* block_metadata @(!heading @(listing / literal / example / sidebar / list / dlist / indented / image / paragraph) / section_or_discrete_heading)
 
-block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / list / indented / image / paragraph)
+block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / list / dlist / indented / image / paragraph)
 
 section_or_discrete_heading = headingStartOffset:offset headingRecord:heading blocks:(&{ return metadataCache[headingStartOffset]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, headingRecord[0].length - 1) } @section_block*)
   {
@@ -411,17 +411,19 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:list_i
 
 list_marker = space* @$('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !eol
 
-list_item_principal = lines:line|1.., !(block_attribute_line / list_continuation / list_marker / any_block_delimiter_line)|
+list_item_principal = lines:line|1.., !list_item_principal_interrupting_line|
   {
     const location_ = getLocation()
     return parseInline(lines.join('\n'), { attributes: documentAttributes, locations: createLocationsForInlines(location_, location_[0].col - 1) })
   }
 
+list_item_principal_interrupting_line = block_attribute_line / list_continuation / list_marker / dlist_term / any_block_delimiter_line
+
 list_continuation = '+' eol
 
 // Q should block match after list continuation end with '?', or should last alternative be '!.'?
 // Q should @block? be changed to @(block / block_metadata {}) or should we let the parent handle the orphaned metadata lines?
-list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation @block? / (lf lf* / block_metadata) @(list / &space !list_marker @indented))* trailer:lf?
+list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation @block? / (lf lf* / block_metadata) @(list / dlist / &space !(list_marker / dlist_term) @indented))* trailer:lf?
   {
     if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
     let sourceLocation
@@ -440,6 +442,40 @@ list_item = marker:list_marker &{ return isCurrentList(context, marker) } princi
     //}
     //const sourceLocation = toSourceLocation(getLocation(range_))
     return { name: 'listItem', type: 'block', marker, principal, blocks, location: sourceLocation }
+  }
+
+dlist = &(termRecord:dlist_term &{ return isNewList(context, termRecord[2]) }) items:dlist_item|1.., lf*|
+  {
+    const marker = exitList(context)
+    const node = { name: 'dlist', type: 'block', marker, items, location: toSourceLocation(getLocation()) }
+    return applyBlockMetadata(node, metadataCache[offset()])
+  }
+
+dlist_term = space* @offset @$(!lf (!':' . / ':' (!':' / ':'|1..| !(space / eol))))+ @$(':' ':'|1..|) &(space / eol)
+
+dlist_term_for_current_item = termRecord:dlist_term &{ return isCurrentList(context, termRecord[2]) }
+  {
+    return { inlines: parseInline(termRecord[1].trimEnd(), { attributes: documentAttributes, locations: createLocationsForInlines(getLocation(), termRecord[0] - offset()) }), marker: termRecord[2] }
+  }
+
+dlist_item = term:dlist_term_for_current_item moreTerms:(lf lf* @dlist_term_for_current_item)* principal:(space space* @(&eol / list_item_principal) / @(lf lf* (!(space / list_item_principal_interrupting_line) / space !(list_marker / dlist_term) space*) @list_item_principal) / &eol) blocks:(list_continuation @block? / (lf lf* / block_metadata) @(list / dlist / &space !(list_marker / dlist_term) @indented))* trailer:lf?
+  {
+    if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
+    let sourceLocation
+    if (blocks.length) {
+      sourceLocation = toSourceLocation(getLocation({ start: offset() }))
+      sourceLocation[1] = blocks[blocks.length - 1].location[1]
+    } else {
+      const range_ = range()
+      if (trailer) range_.end--
+      sourceLocation = toSourceLocation(getLocation(range_))
+    }
+    // ...or see list_item rule for more brute-force approach
+    const marker = term.marker
+    const terms = moreTerms.length ? [term.inlines, ...moreTerms.map(({ inlines }) => inlines)] : [term.inlines]
+    const node = { name: 'dlistItem', type: 'block', marker, terms, principal, blocks, location: sourceLocation }
+    if (!principal) delete node.principal
+    return node
   }
 
 image = 'image::' !space target:$(!(lf / '[') .)+ '[' attrlistOffset:offset attrlist:attrlist ']' eol

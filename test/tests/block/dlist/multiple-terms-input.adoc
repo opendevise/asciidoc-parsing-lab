@@ -1,0 +1,5 @@
+Fedora::
+Debian::
+
+openSUSE::
+Examples of Linux distributions.

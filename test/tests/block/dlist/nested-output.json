@@ -1,0 +1,161 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "dlist",
+      "type": "block",
+      "marker": "::",
+      "items": [
+        {
+          "name": "dlistItem",
+          "type": "block",
+          "marker": "::",
+          "terms": [
+            [
+              {
+                "name": "text",
+                "type": "string",
+                "value": "Positions",
+                "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 9 }]
+              }
+            ]
+          ],
+          "blocks": [
+            {
+              "name": "dlist",
+              "type": "block",
+              "marker": ":::",
+              "items": [
+                {
+                  "name": "dlistItem",
+                  "type": "block",
+                  "marker": ":::",
+                  "terms": [
+                    [
+                      {
+                        "name": "text",
+                        "type": "string",
+                        "value": "Attack",
+                        "location": [{ "line": 2, "col": 3 }, { "line": 2, "col": 8 }]
+                      }
+                    ]
+                  ],
+                  "principal": [
+                    {
+                      "name": "text",
+                      "type": "string",
+                      "value": "Exclusively offensive players",
+                      "location": [{ "line": 2, "col": 13 }, { "line": 2, "col": 41 }]
+                    }
+                  ],
+                  "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 41 }]
+                },
+                {
+                  "name": "dlistItem",
+                  "type": "block",
+                  "marker": ":::",
+                  "terms": [
+                    [
+                      {
+                        "name": "text",
+                        "type": "string",
+                        "value": "Midfield",
+                        "location": [{ "line": 3, "col": 3 }, { "line": 3, "col": 10 }]
+                      }
+                    ]
+                  ],
+                  "principal": [
+                    {
+                      "name": "text",
+                      "type": "string",
+                      "value": "Two-way players",
+                      "location": [{ "line": 3, "col": 15 }, { "line": 3, "col": 29 }]
+                    }
+                  ],
+                  "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 29 }]
+                },
+                {
+                  "name": "dlistItem",
+                  "type": "block",
+                  "marker": ":::",
+                  "terms": [
+                    [
+                      {
+                        "name": "text",
+                        "type": "string",
+                        "value": "Defense",
+                        "location": [{ "line": 4, "col": 3 }, { "line": 4, "col": 9 }]
+                      }
+                    ]
+                  ],
+                  "principal": [
+                    {
+                      "name": "text",
+                      "type": "string",
+                      "value": "Exclusively defensive players",
+                      "location": [{ "line": 4, "col": 14 }, { "line": 4, "col": 42 }]
+                    }
+                  ],
+                  "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 42 }]
+                },
+                {
+                  "name": "dlistItem",
+                  "type": "block",
+                  "marker": ":::",
+                  "terms": [
+                    [
+                      {
+                        "name": "text",
+                        "type": "string",
+                        "value": "Goalie",
+                        "location": [{ "line": 5, "col": 3 }, { "line": 5, "col": 8 }]
+                      }
+                    ]
+                  ],
+                  "principal": [
+                    {
+                      "name": "text",
+                      "type": "string",
+                      "value": "Net minder",
+                      "location": [{ "line": 5, "col": 13 }, { "line": 5, "col": 22 }]
+                    }
+                  ],
+                  "location": [{ "line": 5, "col": 1 }, { "line": 5, "col": 22 }]
+                }
+              ],
+              "location": [{ "line": 2, "col": 1 }, { "line": 5, "col": 22 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 22 }]
+        },
+        {
+          "name": "dlistItem",
+          "type": "block",
+          "marker": "::",
+          "terms": [
+            [
+              {
+                "name": "text",
+                "type": "string",
+                "value": "Quarters",
+                "location": [{ "line": 6, "col": 1 }, { "line": 6, "col": 8 }]
+              }
+            ]
+          ],
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "4",
+              "location": [{ "line": 6, "col": 12 }, { "line": 6, "col": 12 }]
+            }
+          ],
+          "location": [{ "line": 6, "col": 1 }, { "line": 6, "col": 12 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 6, "col": 12 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 6, "col": 12 }]
+}

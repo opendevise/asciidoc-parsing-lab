@@ -1,0 +1,5 @@
+config.yml:: The main configuration file.
++
+----
+title: My Site
+----

@@ -1,0 +1,55 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "dlist",
+      "type": "block",
+      "marker": "::",
+      "items": [
+        {
+          "name": "dlistItem",
+          "type": "block",
+          "marker": "::",
+          "terms": [
+            [
+              {
+                "name": "text",
+                "type": "string",
+                "value": "Fedora",
+                "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 6 }]
+              }
+            ],
+            [
+              {
+                "name": "text",
+                "type": "string",
+                "value": "Debian",
+                "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 6 }]
+              }
+            ],
+            [
+              {
+                "name": "text",
+                "type": "string",
+                "value": "openSUSE",
+                "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 8 }]
+              }
+            ]
+          ],
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Examples of Linux distributions.",
+              "location": [{ "line": 5, "col": 1 }, { "line": 5, "col": 32 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 32 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 32 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 32 }]
+}

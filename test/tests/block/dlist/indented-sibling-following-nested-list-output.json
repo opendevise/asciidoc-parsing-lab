@@ -1,0 +1,94 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "dlist",
+      "type": "block",
+      "marker": "::",
+      "items": [
+        {
+          "name": "dlistItem",
+          "type": "block",
+          "marker": "::",
+          "terms": [
+            [
+              {
+                "name": "text",
+                "type": "string",
+                "value": "names",
+                "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 5 }]
+              }
+            ]
+          ],
+          "blocks": [
+            {
+              "name": "list",
+              "type": "block",
+              "variant": "unordered",
+              "marker": "*",
+              "items": [
+                {
+                  "name": "listItem",
+                  "type": "block",
+                  "marker": "*",
+                  "principal": [
+                    {
+                      "name": "text",
+                      "type": "string",
+                      "value": "Bond",
+                      "location": [{ "line": 3, "col": 3 }, { "line": 3, "col": 6 }]
+                    }
+                  ],
+                  "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 6 }]
+                },
+                {
+                  "name": "listItem",
+                  "type": "block",
+                  "marker": "*",
+                  "principal": [
+                    {
+                      "name": "text",
+                      "type": "string",
+                      "value": "007",
+                      "location": [{ "line": 4, "col": 3 }, { "line": 4, "col": 5 }]
+                    }
+                  ],
+                  "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 5 }]
+                }
+              ],
+              "location": [{ "line": 3, "col": 1 }, { "line": 4, "col": 5 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 4, "col": 5 }]
+        },
+        {
+          "name": "dlistItem",
+          "type": "block",
+          "marker": "::",
+          "terms": [
+            [
+              {
+                "name": "text",
+                "type": "string",
+                "value": "status",
+                "location": [{ "line": 6, "col": 2 }, { "line": 6, "col": 7 }]
+              }
+            ]
+          ],
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "active",
+              "location": [{ "line": 6, "col": 11 }, { "line": 6, "col": 16 }]
+            }
+          ],
+          "location": [{ "line": 6, "col": 1 }, { "line": 6, "col": 16 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 6, "col": 16 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 6, "col": 16 }]
+}

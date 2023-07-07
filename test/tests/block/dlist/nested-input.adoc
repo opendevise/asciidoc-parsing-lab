@@ -1,0 +1,6 @@
+Positions::
+  Attack::: Exclusively offensive players
+  Midfield::: Two-way players
+  Defense::: Exclusively defensive players
+  Goalie::: Net minder
+Quarters:: 4

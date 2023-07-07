@@ -1,0 +1,39 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "dlist",
+      "type": "block",
+      "marker": "::",
+      "items": [
+        {
+          "name": "dlistItem",
+          "type": "block",
+          "marker": "::",
+          "terms": [
+            [
+              {
+                "name": "text",
+                "type": "string",
+                "value": "Computer",
+                "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 8 }]
+              }
+            ]
+          ],
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "All\nthe\ncomponents\ntogether.",
+              "location": [{ "line": 1, "col": 12 }, { "line": 4, "col": 9 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 4, "col": 9 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 4, "col": 9 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 4, "col": 9 }]
+}
