@@ -17,9 +17,9 @@ const metadataCache = {}
 
 function getLocation (range_) {
   let eof, text
-  let { start, end = start + (text = range_.text || '.').length - 1 } = range_ === true ? (eof = true) && range() : range_ || range()
+  let { start, end = start + (text = range_.text || '').length } = range_ === true ? (eof = true) && range() : range_ ?? range()
   const { line: startLine, column: startCol } = peg$computePosDetails(start)
-  const startDetails = { line: startLine, col: end || text ? (input[start] === '\n' ? 0 : startCol) : 0 }
+  const startDetails = { line: startLine, col: end || text != null ? (input[start] === '\n' ? 0 : startCol) : 0 }
   if (end === start) return [startDetails, startDetails]
   let hasEol
   if (eof) {
