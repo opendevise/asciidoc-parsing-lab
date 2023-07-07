@@ -136,7 +136,7 @@ block_anchor = '[' @idname @(',' ' '* @(valueOffset:offset value:$('\\' ('\\' / 
 // Q what characters are allowed in a block style?
 block_style = $([a-zA-Z_] [a-zA-Z0-9_-]*)
 
-block_shorthand_attr = ('.' / '#' / '%') $(!'.' !'#' !'%' !',' !' ' .)+
+block_shorthand_attr = ('.' / '#' / '%') $(!('.' / '#' / '%' / ',' / ' ') .)+
 
 block_attrs = block_attr|.., ',' ' '* / ' '+ (',' ' '*)?|
 

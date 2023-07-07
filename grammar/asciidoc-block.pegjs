@@ -188,7 +188,7 @@ doctitle = '=' space space* titleOffset:offset title:line
 author_info_line = @author_info_item|1.., '; '| eol
 
 // Q: are attribute references permitted? if so, how do they work?
-author_info_item = names:author_name|1..3, space| address:(' <' @$(!'>' !lf .)+ '>')?
+author_info_item = names:author_name|1..3, space| address:(' <' @$(!('>' / lf) .)+ '>')?
   {
     const info = {}
     names = names.filter((name) => name).map((name) => ~name.indexOf('_') ? name.replace(/_/g, ' ') : name)
@@ -228,7 +228,7 @@ block_metadata = attrlists:(@(block_attribute_line / block_title_line) lf*)*
 block_attribute_line = @'[' @offset @attrlist ']' eol
 
 // NOTE don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
-block_title_line = @'.' @offset @$('.'? (!lf !' ' !'.' .) (!lf .)*) eol
+block_title_line = @'.' @offset @$('.'? (!(lf / ' ' / '.') .) (!lf .)*) eol
 
 // NOTE !heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
 section_block = lf* block_metadata @(!heading @(listing / literal / example / sidebar / list / indented / image / paragraph) / section_or_discrete_heading)
@@ -442,7 +442,7 @@ list_item = marker:list_marker &{ return isCurrentList(context, marker) } princi
     return { name: 'listItem', type: 'block', marker, principal, blocks, location: sourceLocation }
   }
 
-image = 'image::' !space target:$(!lf !'[' .)+ '[' attrlistOffset:offset attrlist:attrlist ']' eol
+image = 'image::' !space target:$(!(lf / '[') .)+ '[' attrlistOffset:offset attrlist:attrlist ']' eol
   {
     let metadata = metadataCache[offset()]
     if (attrlist) {
