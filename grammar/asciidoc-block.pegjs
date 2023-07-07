@@ -55,11 +55,11 @@ function createLocationsForInlines ([start, end = start], offset) {
   return mapping
 }
 
-function parseBlockMetadata (attrlists, metadataStartOffset, metadataEndOffset) {
+function parseBlockMetadata (attrlists, startOffset, endOffset) {
   if (!attrlists.length) return
-  const cacheKey = metadataEndOffset
+  const cacheKey = endOffset
   if (cacheKey in metadataCache) return metadataCache[cacheKey]
-  while (input[metadataEndOffset - 1] === '\n' && input[metadataEndOffset - 2] === '\n') metadataEndOffset--
+  while (input[endOffset - 1] === '\n' && input[endOffset - 2] === '\n') endOffset--
   const attributes = {}
   for (const [marker, attrlistOffset, attrlist] of attrlists) {
     if (!attrlist) continue
@@ -75,7 +75,7 @@ function parseBlockMetadata (attrlists, metadataStartOffset, metadataEndOffset) 
       parseAttrlist(attrlist, { attributes: documentAttributes, initial: attributes, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(location_)[0] }, startRule: 'block_attrlist_with_shorthands' })
     }
   }
-  const metadataLocation = toSourceLocation(getLocation({ start: metadataStartOffset, end: metadataEndOffset }))
+  const metadataLocation = toSourceLocation(getLocation({ start: startOffset, end: endOffset }))
   return (metadataCache[cacheKey] = { attributes, options: [], roles: [], location: metadataLocation })
 }
 
