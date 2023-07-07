@@ -78,7 +78,9 @@ There's likely more syntax and edge cases to cover, so this is only what we know
 * quote/verse block
 * pass/stem block
 * thematic and page breaks
+* block metadata on document (above doctitle)
 * attribute entries in body
+* immutable document attributes (hard set vs soft set from API)
 * revision info line
 * wrap blocks before first section in preamble
 * tables
