@@ -73,7 +73,6 @@ Below is a rough list of the AsciiDoc syntax that has not yet been mapped, or no
 There's likely more syntax and edge cases to cover, so this is only what we know to be outstanding.
 
 * process block attributes before parsing child blocks (meaning after block is positively identified)
-* dlists
 * colists
 * open block
 * quote/verse block
