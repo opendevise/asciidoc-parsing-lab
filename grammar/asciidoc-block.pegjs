@@ -235,18 +235,18 @@ section_block = lf* block_metadata @(!heading @(listing / literal / example / si
 
 block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / list / dlist / indented / image / paragraph)
 
-section_or_discrete_heading = headingStartOffset:offset headingRecord:heading blocks:(&{ return metadataCache[headingStartOffset]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, headingRecord[0].length - 1) } @section_block*)
+section_or_discrete_heading = startOffset:offset headingRecord:heading blocks:(&{ return metadataCache[startOffset]?.attributes.style === 'discrete' } / &{ return isNestedSection(context, headingRecord[0].length - 1) } @section_block*)
   {
     const [marker, titleOffset, title] = headingRecord
     const location_ = getLocation()
-    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - headingStartOffset) })
+    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - startOffset) })
     // Q: store marker instead of or in addition to level?
     const node = { name: 'heading', type: 'block', title: inlines, level: marker.length - 1, location: toSourceLocation(location_) }
     if (blocks) {
       exitSection(context)
       Object.assign(node, { name: 'section', blocks })
     }
-    return applyBlockMetadata(node, metadataCache[headingStartOffset])
+    return applyBlockMetadata(node, metadataCache[startOffset])
   }
 
 discrete_heading = headingRecord:heading
