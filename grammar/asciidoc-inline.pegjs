@@ -145,7 +145,7 @@ saved_passthrough = '\x10' '\0'+
     return Object.assign(new String(contents), { pass: true, sourceLength: end - 1 - start })
   }
 
-xref_shorthand_other = match:$[^>]+
+xref_shorthand_other = $[^>]+
 
 // FIXME attrlist_other prevents search for span following text (e.g., *foo* and *bar*)
 // TODO implement attrlist following optional link text
@@ -162,7 +162,7 @@ url_macro = protocol:('link:' @'' / @('https://' / 'http://')) target:$macro_tar
 
 macro_target = !space @[^\[]+
 
-attrlist_other = match:$[^\]]+
+attrlist_other = $[^\]]+
 
 other_left = $(not_mark_or_space+ (space / colon? !any))+
 other_right = $(wordy* constrained_left_mark) / space / escaped / any
