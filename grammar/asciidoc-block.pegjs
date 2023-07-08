@@ -76,11 +76,11 @@ function parseBlockMetadata (attrlists, startOffset, endOffset) {
     }
   }
   const sourceLocation = toSourceLocation(getLocation({ start: startOffset, end: endOffset }))
-  return (metadataCache[cacheKey] = { attributes, options: [], roles: [], location: sourceLocation })
+  return (metadataCache[cacheKey] = { attributes, options: undefined, roles: undefined, location: sourceLocation })
 }
 
 function applyBlockMetadata (block, metadata, posattrs) {
-  if (!metadata) return block
+  if (!metadata || metadata.options) return block
   const attributes = metadata.attributes
   const names = Object.keys(attributes)
   if (posattrs) {
@@ -98,8 +98,8 @@ function applyBlockMetadata (block, metadata, posattrs) {
     }
   }
   if ('id' in attributes) block.id = attributes.id
-  attributes.opts &&= (metadata.options = [...attributes.opts]).join(',')
-  attributes.role &&= (metadata.roles = [...attributes.role]).join(' ')
+  attributes.opts ? (attributes.opts = (metadata.options = [...attributes.opts]).join(',')) : (metadata.options = [])
+  attributes.role ? (attributes.role = (metadata.roles = [...attributes.role]).join(' ')) : (metadata.roles = [])
   for (const name of names) {
     const valueObject = attributes[name]
     if (valueObject.constructor !== Function) continue
@@ -480,10 +480,7 @@ dlist_item = term:dlist_term_for_current_item moreTerms:(lf lf* @dlist_term_for_
 image = 'image::' !space target:$(!(lf / '[') .)+ '[' attrlistOffset:offset attrlist:attrlist ']' eol
   {
     let metadata = metadataCache[offset()]
-    if (attrlist) {
-      const initial = (metadata ??= { attributes: {}, options: [], roles: [] }).attributes
-      parseAttrlist(attrlist, { attributes: documentAttributes, initial, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(getLocation({ start: attrlistOffset, text: attrlist }))[0] } })
-    }
+    if (attrlist) parseAttrlist(attrlist, { attributes: documentAttributes, initial: (metadata ??= { attributes: {} }).attributes, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(getLocation({ start: attrlistOffset, text: attrlist }))[0] } })
     target = inlinePreprocessor(target, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input
     const node = { name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()) }
     return applyBlockMetadata(node, metadata, ['alt', 'width', 'height'])
