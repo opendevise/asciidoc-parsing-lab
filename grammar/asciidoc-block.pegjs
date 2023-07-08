@@ -290,12 +290,12 @@ paragraph = lines:(!(block_attribute_line / any_block_delimiter_line) @line)+
 
 indented = lines:indented_line+
   {
+    const location_ = getLocation()
+    const metadata = metadataCache[offset()]
     const indents = []
     for (const line of lines) indents.push(line.length - line.trimStart().length)
     const outdent = Math.min.apply(null, indents)
     const contents = lines.reduce((accum, l) => accum + '\n' + l.slice(outdent), '').slice(1)
-    const metadata = metadataCache[offset()]
-    const location_ = getLocation()
     let node
     // Q should we allow "paragraph" as alternative to "normal"?
     if (metadata?.attributes.style === 'normal') {
