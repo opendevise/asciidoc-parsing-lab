@@ -65,7 +65,7 @@ open = unconstrained_open / constrained_open
 
 macro = xref_shorthand / url_macro
 
-unconstrained_code = pre:($wordy+)? main:('``' contents:(!'``' @constrained_code / emphasis / strong / open / macro / unconstrained_code_other)+ '``' { return { name: 'span', type: 'inline', variant: 'code', form: 'unconstrained', range: Object.assign(range(), { inlinesStart: offset() + 2 }), inlines: contents } })
+unconstrained_code = pre:$(wordy wordy*)? main:('``' contents:(!'``' @constrained_code / emphasis / strong / open / macro / unconstrained_code_other)+ '``' { return { name: 'span', type: 'inline', variant: 'code', form: 'unconstrained', range: Object.assign(range(), { inlinesStart: offset() + 2 }), inlines: contents } })
   {
     return pre ? [pre, main] : main
   }
@@ -73,14 +73,14 @@ unconstrained_code = pre:($wordy+)? main:('``' contents:(!'``' @constrained_code
 // Q: is it faster to use '`' !'`' / [_*#] here?
 unconstrained_code_other = $(wordy ('`' !'`' / '_' / '*' / '#')) / $(not_mark_or_space+ (space not_mark_or_space+)* (space+ / &'``')) / [^`]
 
-unconstrained_emphasis = pre:($wordy+)? main:('__' contents:(code / !'__' @constrained_emphasis / strong / open / macro / unconstrained_emphasis_other)+ '__' { return { name: 'span', type: 'inline', variant: 'emphasis', form: 'unconstrained', range: Object.assign(range(), { inlinesStart: offset() + 2 }), inlines: contents } })
+unconstrained_emphasis = pre:$(wordy wordy*)? main:('__' contents:(code / !'__' @constrained_emphasis / strong / open / macro / unconstrained_emphasis_other)+ '__' { return { name: 'span', type: 'inline', variant: 'emphasis', form: 'unconstrained', range: Object.assign(range(), { inlinesStart: offset() + 2 }), inlines: contents } })
   {
     return pre ? [pre, main] : main
   }
 
 unconstrained_emphasis_other = $(wordy ('`' / '_' !'_' / '*' / '#')) / $(not_mark_or_space+ (space not_mark_or_space+)* (space+ / &'__')) / [^_]
 
-unconstrained_strong = pre:($wordy+)? main:('**' contents:(code / emphasis / !'**' @constrained_strong / open / macro / unconstrained_strong_other)+ '**' { return { name: 'span', type: 'inline', variant: 'strong', form: 'unconstrained', range: Object.assign(range(), { inlinesStart: offset() + 2 }), inlines: contents } })
+unconstrained_strong = pre:$(wordy wordy*)? main:('**' contents:(code / emphasis / !'**' @constrained_strong / open / macro / unconstrained_strong_other)+ '**' { return { name: 'span', type: 'inline', variant: 'strong', form: 'unconstrained', range: Object.assign(range(), { inlinesStart: offset() + 2 }), inlines: contents } })
   {
     return pre ? [pre, main] : main
   }
@@ -89,7 +89,7 @@ unconstrained_strong = pre:($wordy+)? main:('**' contents:(code / emphasis / !'*
 // NOTE without &'**' check, parser ends up advancing character by character
 unconstrained_strong_other = $(wordy ('`' / '_' / '*' !'*' / '#')) / $(not_mark_or_space+ (space not_mark_or_space+)* (space+ / &'**')) / [^*]
 
-unconstrained_open = pre:($wordy+)? main:('##' contents:(code / emphasis / strong / !'##' @constrained_open / macro / unconstrained_open_other)+ '##' { return { name: 'span', type: 'inline', variant: 'mark', form: 'unconstrained', range: Object.assign(range(), { inlinesStart: offset() + 2 }), inlines: contents } })
+unconstrained_open = pre:$(wordy wordy*)? main:('##' contents:(code / emphasis / strong / !'##' @constrained_open / macro / unconstrained_open_other)+ '##' { return { name: 'span', type: 'inline', variant: 'mark', form: 'unconstrained', range: Object.assign(range(), { inlinesStart: offset() + 2 }), inlines: contents } })
   {
     return pre ? [pre, main] : main
   }
