@@ -239,15 +239,14 @@ section_or_discrete_heading = headingStartOffset:offset headingRecord:heading bl
   {
     const [marker, titleOffset, title] = headingRecord
     const location_ = getLocation()
-    const offset_ = offset()
-    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - offset_) })
+    const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - headingStartOffset) })
     // Q: store marker instead of or in addition to level?
     const node = { name: 'heading', type: 'block', title: inlines, level: marker.length - 1, location: toSourceLocation(location_) }
     if (blocks) {
       exitSection(context)
       Object.assign(node, { name: 'section', blocks })
     }
-    return applyBlockMetadata(node, metadataCache[offset_])
+    return applyBlockMetadata(node, metadataCache[headingStartOffset])
   }
 
 discrete_heading = headingRecord:heading
