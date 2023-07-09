@@ -190,13 +190,13 @@ constrained_left_mark_in_strong = '`' / '_' / '#'
 
 constrained_left_mark_in_open = '`' / '_' / '*'
 
-offset = ''
-  {
-    return peg$currPos
-  }
-
 colon = ':'
 
 space = ' '
 
 any = .
+
+offset = ''
+  {
+    return peg$currPos
+  }
