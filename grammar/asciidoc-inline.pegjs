@@ -175,12 +175,10 @@ escaped = '\\' match:([`_*#<{+\\] / $(wordy* colon))
 
 wordy = [\p{Alpha}0-9]
 
-// NOTE we don't have to include \\ here since it's always paired with a mark (if it means something)
 not_mark_or_space = [^ `_*#:<\\\x10]
 
 // NOTE regex starts to become faster than alternatives at ~ 3 characters
 constrained_left_mark = [`_*#]
-//constrained_left_mark = '`' / '_' / '*' / '#'
 
 constrained_left_mark_in_code = '_' / '*' / '#'
 
