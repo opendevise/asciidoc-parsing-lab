@@ -1,7 +1,7 @@
 {
   "name": "document",
   "type": "block",
-  "attributes": { "org": false },
+  "attributes": { "org": null },
   "header": {
     "title": [
       {

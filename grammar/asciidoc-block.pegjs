@@ -129,7 +129,7 @@ document = lf* header:header? blocks:body unparsed:.*
 
 attribute_entry = ':' negatedPrefix:'!'? name:attribute_name negatedSuffix:'!'? ':' value:attribute_value? eol
   {
-    return [name, negatedPrefix || negatedSuffix ? false : value || '']
+    return [name, negatedPrefix || negatedSuffix ? null : value || '']
   }
 
 // TODO permit non-ASCII letters in attribute name
@@ -145,7 +145,8 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doc
     if (attributeEntriesAbove.length) {
       for (const [name, val] of attributeEntriesAbove) {
         if (name in documentAttributes && !(name in attributes)) continue
-        if (val === false && !(attributes[name] = val)) {
+        if (val == null) {
+          attributes[name] = val
           delete documentAttributes[name]
         } else {
           documentAttributes[name] = attributes[name] = val ? inlinePreprocessor(val, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input : val
@@ -168,7 +169,8 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doc
       if (attributeEntriesBelow.length) {
         for (const [name, val] of attributeEntriesBelow) {
           if (name in documentAttributes && !(name in attributes)) continue
-          if (val === false && !(attributes[name] = val)) {
+          if (val == null) {
+            attributes[name] = null
             delete documentAttributes[name]
           } else {
             documentAttributes[name] = attributes[name] = val ? inlinePreprocessor(val, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input : val
