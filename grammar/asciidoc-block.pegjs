@@ -217,9 +217,11 @@ author_info_item = names:author_name|1..3, space| address:(' <' @$(!('>' / lf) .
 
 author_name = $([a-zA-Z0-9] ('.' / [a-zA-Z0-9_'-]*))
 
-body = @section_block* lf* block_metadata
+body = @section_block* remainder
 
-compound_block_body = @block* lf* block_metadata
+compound_block_body = @block* remainder
+
+remainder = lf* ((block_attribute_line / block_title_line) lf*)*
 
 block_metadata = attrlists:(@(block_attribute_line / block_title_line) lf*)*
   {
