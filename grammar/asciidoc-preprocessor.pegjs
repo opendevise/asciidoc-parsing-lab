@@ -239,7 +239,7 @@ pp_conditional = negated:('if' @'n'? 'def') '::' attributeNames:attribute_names 
   }
 
 // TODO permit non-ASCII letters in attribute name
-attribute_name = !'-' @$[a-zA-Z0-9_-]+
+attribute_name = $([a-zA-Z0-9_] [a-zA-Z0-9_-]*)
 
 attribute_names = @attribute_name @(',' attribute_name|1.., ','| / '+' attribute_name|1.., '+'|)?
 

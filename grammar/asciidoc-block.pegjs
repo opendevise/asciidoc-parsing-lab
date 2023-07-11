@@ -132,7 +132,7 @@ attribute_entry = ':' negatedPrefix:'!'? name:attribute_name negatedSuffix:'!'? 
   }
 
 // TODO permit non-ASCII letters in attribute name
-attribute_name = !'-' @$[a-zA-Z0-9_-]+
+attribute_name = $([a-zA-Z0-9_] [a-zA-Z0-9_-]*)
 
 attribute_value = space @$(!lf .)+
 
