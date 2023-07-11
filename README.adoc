@@ -104,6 +104,7 @@ There's likely more syntax and edge cases to cover, so this is only what we know
 * inline index term macro and shorthands
 * block video and audio macros
 * block toc macro
+* use Unicode Alpha property when matching letters in block grammar
 * ...
 
 In general, the line preprocessor is woefully incomplete.
