@@ -410,7 +410,7 @@ list = &(marker:list_marker &{ return isNewList(context, marker) }) items:list_i
     return applyBlockMetadata(node, metadataCache[offset()])
   }
 
-list_marker = space* @$('*' '*'* / '.' '.'* / '-' / [0-9]+ '.') space space* !eol
+list_marker = space* @$('*' '*'* / '.' '.'* / '-' / [0-9] [0-9]* '.') space space* !eol
 
 list_item_principal = lines:line|1.., !list_item_principal_interrupting_line|
   {
