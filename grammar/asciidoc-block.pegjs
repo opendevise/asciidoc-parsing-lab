@@ -55,8 +55,7 @@ function createLocationsForInlines ([start, end = start], offset) {
   return mapping
 }
 
-function parseBlockMetadata (attrlists, startOffset, endOffset) {
-  if (!attrlists.length) return
+function parseBlockMetadata (attrlists, { start: startOffset, end: endOffset }) {
   const cacheKey = endOffset
   if (cacheKey in metadataCache) return metadataCache[cacheKey]
   while (input[endOffset - 1] === '\n' && input[endOffset - 2] === '\n') endOffset--
@@ -225,8 +224,7 @@ remainder = lf* ((block_attribute_line / block_title_line) lf*)*
 
 block_metadata = attrlists:(@(block_attribute_line / block_title_line) lf*)*
   {
-    const { start, end } = range()
-    return parseBlockMetadata(attrlists, start, end)
+    return attrlists.length ? parseBlockMetadata(attrlists, range()) : undefined
   }
 
 block_attribute_line = @'[' @offset @attrlist ']' eol
