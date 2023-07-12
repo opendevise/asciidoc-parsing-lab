@@ -1,0 +1,33 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "ordered",
+      "marker": "1.",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "3.",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "three",
+              "location": [{ "line": 1, "col": 4 }, { "line": 1, "col": 8 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 8 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 8 }],
+      "metadata": {
+        "attributes": { "start": "3" }
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 8 }]
+}

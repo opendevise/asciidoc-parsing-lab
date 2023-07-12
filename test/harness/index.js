@@ -129,9 +129,9 @@ function stripASGDefaults (node) {
   if (node.type !== 'block') return node
   const metadata = node.metadata
   if (metadata) {
-    if (!Object.keys(metadata.attributes).length) delete metadata.attributes
-    if (!metadata.options.length) delete metadata.options
-    if (!metadata.roles.length) delete metadata.roles
+    if ('attributes' in metadata && !Object.keys(metadata.attributes).length) delete metadata.attributes
+    if ('options' in metadata && !metadata.options.length) delete metadata.options
+    if ('roles' in metadata && !metadata.roles.length) delete metadata.roles
   }
   if (node.form === 'macro' || node.name === 'break' || node.name === 'heading') return node
   if (['listing', 'literal', 'pass', 'stem', 'paragraph', 'verse'].includes(node.name)) {

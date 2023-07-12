@@ -404,8 +404,9 @@ list = metadata:(&(marker:list_marker &{ return isNewList(context, marker) }) { 
   {
     const marker = exitList(context)
     if (marker === '1.') {
-      // TODO set this as start attribute
-      let expected = parseInt(items[0].marker.slice(0, -1), 10)
+      const start = parseInt(items[0].marker.slice(0, -1), 10)
+      if (start !== 1) (metadata ??= { attributes: {}, options: [], roles: [] }).attributes.start = String(start)
+      let expected = start
       for (const item of items) {
         if (item.marker !== expected + '.' && options.showWarnings) {
           console.warn('list item index: expected ' + expected + ', got ' + item.marker.slice(0, -1))
