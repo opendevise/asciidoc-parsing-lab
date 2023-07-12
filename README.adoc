@@ -72,7 +72,6 @@ Once the tests are contributed to the AsciiDoc TCK, this test suite will be upda
 Below is a rough list of the AsciiDoc syntax that has not yet been mapped, or not mapped fully, in the grammar.
 There's likely more syntax and edge cases to cover, so this is only what we know to be outstanding.
 
-* colists
 * open block
 * quote/verse block
 * pass/stem block

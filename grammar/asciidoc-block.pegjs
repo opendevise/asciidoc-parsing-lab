@@ -403,7 +403,7 @@ sidebar = metadata:(startOffset:offset openingDelim:sidebar_delimiter_line &{ re
 list = metadata:(&(marker:list_marker &{ return isNewList(context, marker) }) { return processBlockMetadata() }) items:list_item|1.., lf*|
   {
     const marker = exitList(context)
-    const variant = marker === '-' || marker[0] === '*' ? 'unordered' : 'ordered'
+    const variant = marker === '-' || marker[0] === '*' ? 'unordered' : marker === '<1>' ? 'callout' : 'ordered'
     if (marker === '1.') {
       const start = parseInt(items[0].marker.slice(0, -1), 10)
       if (start !== 1) (metadata ??= { attributes: {}, options: [], roles: [] }).attributes.start = String(start)
@@ -415,6 +415,14 @@ list = metadata:(&(marker:list_marker &{ return isNewList(context, marker) }) { 
           }
         }
       }
+    } else if (variant === 'callout' && options.showWarnings) {
+      let expected = 0
+      for (const item of items) {
+        const itemMarker = item.marker
+        if (itemMarker !== `<${++expected}>` && itemMarker !== '<.>') {
+          console.warn('list item index: expected ' + expected + ', got ' + itemMarker.slice(1, -1))
+        }
+      }
     }
     // NOTE set location end of list to location end of last list item; prevents overrun caused by looking for ancestor list continuation
     const sourceLocation = toSourceLocation(getLocation({ start: offset() }))
@@ -422,7 +430,7 @@ list = metadata:(&(marker:list_marker &{ return isNewList(context, marker) }) { 
     return applyBlockMetadata({ name: 'list', type: 'block', variant, marker, items, location: sourceLocation }, metadata)
   }
 
-list_marker = space* @$('*' '*'* / '.' '.'* / '-' / [0-9] [0-9]* '.') space space* !eol
+list_marker = space* @$('*' '*'* / '.' '.'* / '-' / '<' ('.' / [1-9] [0-9]*) '>' / [0-9] [0-9]* '.') space space* !eol
 
 list_item_principal = lines:line|1.., !list_item_principal_interrupting_line|
   {
