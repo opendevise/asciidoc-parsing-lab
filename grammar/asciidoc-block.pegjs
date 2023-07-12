@@ -498,7 +498,7 @@ image = 'image::' !space target:$(!(lf / '[') .)+ '[' attrlistOffset:offset attr
     return applyBlockMetadata({ name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()) }, metadata)
   }
 
-any_block_delimiter_line = listing_delimiter_line / example_delimiter_line / sidebar_delimiter_line
+any_block_delimiter_line = listing_delimiter_line / literal_delimiter_line / example_delimiter_line / sidebar_delimiter_line
 
 line = @$(!lf .)+ eol
 
