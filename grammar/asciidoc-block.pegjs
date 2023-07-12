@@ -403,18 +403,19 @@ sidebar = metadata:(startOffset:offset openingDelim:sidebar_delimiter_line &{ re
 list = metadata:(&(marker:list_marker &{ return isNewList(context, marker) }) { return processBlockMetadata() }) items:list_item|1.., lf*|
   {
     const marker = exitList(context)
+    const variant = marker === '-' || marker[0] === '*' ? 'unordered' : 'ordered'
     if (marker === '1.') {
       const start = parseInt(items[0].marker.slice(0, -1), 10)
       if (start !== 1) (metadata ??= { attributes: {}, options: [], roles: [] }).attributes.start = String(start)
-      let expected = start
-      for (const item of items) {
-        if (item.marker !== expected + '.' && options.showWarnings) {
-          console.warn('list item index: expected ' + expected + ', got ' + item.marker.slice(0, -1))
+      if (options.showWarnings) {
+        let expected = start - 1
+        for (const item of items) {
+          if (item.marker !== ++expected + '.') {
+            console.warn('list item index: expected ' + expected + ', got ' + item.marker.slice(0, -1))
+          }
         }
-        expected++
       }
     }
-    const variant = marker === '-' || marker[0] === '*' ? 'unordered' : 'ordered'
     // NOTE set location end of list to location end of last list item; prevents overrun caused by looking for ancestor list continuation
     const sourceLocation = toSourceLocation(getLocation({ start: offset() }))
     sourceLocation[1] = items[items.length - 1].location[1]
