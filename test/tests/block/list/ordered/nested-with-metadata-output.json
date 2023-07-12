@@ -1,0 +1,59 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "ordered",
+      "marker": ".",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": ".",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "arabic",
+              "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 8 }]
+            }
+          ],
+          "blocks": [
+            {
+              "name": "list",
+              "type": "block",
+              "variant": "ordered",
+              "marker": "..",
+              "items": [
+                {
+                  "name": "listItem",
+                  "type": "block",
+                  "marker": "..",
+                  "principal": [
+                    {
+                      "name": "text",
+                      "type": "string",
+                      "value": "upper alpha",
+                      "location": [{ "line": 3, "col": 4 }, { "line": 3, "col": 14 }]
+                    }
+                  ],
+                  "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 14 }]
+                }
+              ],
+              "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 14 }],
+              "metadata": {
+                "attributes": { "$1": "upperalpha", "style": "upperalpha" },
+                "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 12 }]
+              }
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 14 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 14 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 14 }]
+}

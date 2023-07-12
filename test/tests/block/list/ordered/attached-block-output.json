@@ -1,0 +1,47 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "ordered",
+      "marker": ".",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": ".",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "principal text",
+              "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 16 }]
+            }
+          ],
+          "blocks": [
+            {
+              "name": "listing",
+              "type": "block",
+              "form": "delimited",
+              "delimiter": "----",
+              "inlines": [
+                {
+                  "type": "string",
+                  "name": "text",
+                  "value": "attached block",
+                  "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 14 }]
+                }
+              ],
+              "location": [{ "line": 3, "col": 1 }, { "line": 5, "col": 4 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 4 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 4 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 4 }]
+}

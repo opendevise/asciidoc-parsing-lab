@@ -1,0 +1,3 @@
+. arabic
+[upperalpha]
+.. upper alpha

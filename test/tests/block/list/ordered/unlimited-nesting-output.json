@@ -1,0 +1,194 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "ordered",
+      "marker": ".",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": ".",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "one",
+              "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 5 }]
+            }
+          ],
+          "blocks": [
+            {
+              "name": "list",
+              "type": "block",
+              "variant": "ordered",
+              "marker": "..",
+              "items": [
+                {
+                  "name": "listItem",
+                  "type": "block",
+                  "marker": "..",
+                  "principal": [
+                    {
+                      "name": "text",
+                      "type": "string",
+                      "value": "two",
+                      "location": [{ "line": 2, "col": 4 }, { "line": 2, "col": 6 }]
+                    }
+                  ],
+                  "blocks": [
+                    {
+                      "name": "list",
+                      "type": "block",
+                      "variant": "ordered",
+                      "marker": "...",
+                      "items": [
+                        {
+                          "name": "listItem",
+                          "type": "block",
+                          "marker": "...",
+                          "principal": [
+                            {
+                              "name": "text",
+                              "type": "string",
+                              "value": "three",
+                              "location": [{ "line": 3, "col": 5 }, { "line": 3, "col": 9 }]
+                            }
+                          ],
+                          "blocks": [
+                            {
+                              "name": "list",
+                              "type": "block",
+                              "variant": "ordered",
+                              "marker": "....",
+                              "items": [
+                                {
+                                  "name": "listItem",
+                                  "type": "block",
+                                  "marker": "....",
+                                  "principal": [
+                                    {
+                                      "name": "text",
+                                      "type": "string",
+                                      "value": "four",
+                                      "location": [{ "line": 4, "col": 6 }, { "line": 4, "col": 9 }]
+                                    }
+                                  ],
+                                  "blocks": [
+                                    {
+                                      "name": "list",
+                                      "type": "block",
+                                      "variant": "ordered",
+                                      "marker": ".....",
+                                      "items": [
+                                        {
+                                          "name": "listItem",
+                                          "type": "block",
+                                          "marker": ".....",
+                                          "principal": [
+                                            {
+                                              "name": "text",
+                                              "type": "string",
+                                              "value": "five",
+                                              "location": [{ "line": 5, "col": 7 }, { "line": 5, "col": 10 }]
+                                            }
+                                          ],
+                                          "blocks": [
+                                            {
+                                              "name": "list",
+                                              "type": "block",
+                                              "variant": "ordered",
+                                              "marker": "......",
+                                              "items": [
+                                                {
+                                                  "name": "listItem",
+                                                  "type": "block",
+                                                  "marker": "......",
+                                                  "principal": [
+                                                    {
+                                                      "name": "text",
+                                                      "type": "string",
+                                                      "value": "six",
+                                                      "location": [{ "line": 6, "col": 8 }, { "line": 6, "col": 10 }]
+                                                    }
+                                                  ],
+                                                  "blocks": [
+                                                    {
+                                                      "name": "list",
+                                                      "type": "block",
+                                                      "variant": "ordered",
+                                                      "marker": ".......",
+                                                      "items": [
+                                                        {
+                                                          "name": "listItem",
+                                                          "type": "block",
+                                                          "marker": ".......",
+                                                          "principal": [
+                                                            {
+                                                              "name": "text",
+                                                              "type": "string",
+                                                              "value": "seven",
+                                                              "location": [{ "line": 7, "col": 9 }, { "line": 7, "col": 13 }]
+                                                            }
+                                                          ],
+                                                          "location": [{ "line": 7, "col": 1 }, { "line": 7, "col": 13 }]
+                                                        }
+                                                      ],
+                                                      "location": [{ "line": 7, "col": 1 }, { "line": 7, "col": 13 }]
+                                                    }
+                                                  ],
+                                                  "location": [{ "line": 6, "col": 1 }, { "line": 7, "col": 13 }]
+                                                }
+                                              ],
+                                              "location": [{ "line": 6, "col": 1 }, { "line": 7, "col": 13 }]
+                                            }
+                                          ],
+                                          "location": [{ "line": 5, "col": 1 }, { "line": 7, "col": 13 }]
+                                        }
+                                      ],
+                                      "location": [{ "line": 5, "col": 1 }, { "line": 7, "col": 13 }]
+                                    }
+                                  ],
+                                  "location": [{ "line": 4, "col": 1 }, { "line": 7, "col": 13 }]
+                                }
+                              ],
+                              "location": [{ "line": 4, "col": 1 }, { "line": 7, "col": 13 }]
+                            }
+                          ],
+                          "location": [{ "line": 3, "col": 1 }, { "line": 7, "col": 13 }]
+                        }
+                      ],
+                      "location": [{ "line": 3, "col": 1 }, { "line": 7, "col": 13 }]
+                    }
+                  ],
+                  "location": [{ "line": 2, "col": 1 }, { "line": 7, "col": 13 }]
+                }
+              ],
+              "location": [{ "line": 2, "col": 1 }, { "line": 7, "col": 13 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 7, "col": 13 }]
+        },
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": ".",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "one again",
+              "location": [{ "line": 8, "col": 3 }, { "line": 8, "col": 11 }]
+            }
+          ],
+          "location": [{ "line": 8, "col": 1 }, { "line": 8, "col": 11 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 8, "col": 11 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 8, "col": 11 }]
+}

@@ -1,0 +1,55 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "ordered",
+      "marker": ".",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": ".",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "list item",
+              "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 11 }]
+            }
+          ],
+          "blocks": [
+            {
+              "name": "list",
+              "type": "block",
+              "variant": "ordered",
+              "marker": "..",
+              "items": [
+                {
+                  "name": "listItem",
+                  "type": "block",
+                  "marker": "..",
+                  "principal": [
+                    {
+                      "name": "text",
+                      "type": "string",
+                      "value": "nested list item",
+                      "location": [{ "line": 2, "col": 4 }, { "line": 2, "col": 19 }]
+                    }
+                  ],
+                  "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 19 }]
+                }
+              ],
+              "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 19 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 19 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 19 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 19 }]
+}

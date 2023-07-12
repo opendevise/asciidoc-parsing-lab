@@ -1,0 +1,7 @@
+. Install Bundler
+
+ gem install bundler
+
+. Install gems
+
+ bundle

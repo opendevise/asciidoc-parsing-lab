@@ -1,0 +1,76 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "ordered",
+      "marker": ".",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": ".",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Install Bundler",
+              "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 17 }]
+            }
+          ],
+          "blocks": [
+            {
+              "name": "literal",
+              "type": "block",
+              "form": "indented",
+              "inlines": [
+                {
+                  "type": "string",
+                  "name": "text",
+                  "value": "gem install bundler",
+                  "location": [{ "line": 3, "col": 2 }, { "line": 3, "col": 20 }]
+                }
+              ],
+              "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 20 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 20 }]
+        },
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": ".",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Install gems",
+              "location": [{ "line": 5, "col": 3 }, { "line": 5, "col": 14 }]
+            }
+          ],
+          "blocks": [
+            {
+              "name": "literal",
+              "type": "block",
+              "form": "indented",
+              "inlines": [
+                {
+                  "type": "string",
+                  "name": "text",
+                  "value": "bundle",
+                  "location": [{ "line": 7, "col": 2 }, { "line": 7, "col": 7 }]
+                }
+              ],
+              "location": [{ "line": 7, "col": 1 }, { "line": 7, "col": 7 }]
+            }
+          ],
+          "location": [{ "line": 5, "col": 1 }, { "line": 7, "col": 7 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 7, "col": 7 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 7, "col": 7 }]
+}

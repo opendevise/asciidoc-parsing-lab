@@ -1,0 +1,59 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "ordered",
+      "marker": ".",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": ".",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Principal text.",
+              "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 17 }]
+            }
+          ],
+          "blocks": [
+            {
+              "name": "paragraph",
+              "type": "block",
+              "inlines": [
+                {
+                  "name": "text",
+                  "type": "string",
+                  "value": "Supporting text.",
+                  "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 16 }]
+                }
+              ],
+              "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 16 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 16 }]
+        },
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": ".",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Another item.",
+              "location": [{ "line": 5, "col": 3 }, { "line": 5, "col": 15 }]
+            }
+          ],
+          "location": [{ "line": 5, "col": 1 }, { "line": 5, "col": 15 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 15 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 15 }]
+}
