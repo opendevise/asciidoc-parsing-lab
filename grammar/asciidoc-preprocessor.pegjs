@@ -40,7 +40,7 @@ document = lf* body .*
 
 body = block*
 
-block = (pp (lf / attribute_entry))* @(heading / listing / example / sidebar / list / paragraph)
+block = (pp (lf / attribute_entry))* @(heading / listing / literal / example / sidebar / list / paragraph)
 
 heading = '='+ space space* line
 
@@ -50,6 +50,13 @@ listing = listing_delimiter_line contents:$(pp !listing_delimiter_line line / lf
   }
 
 listing_delimiter_line = '-' '---' eol
+
+literal = literal_delimiter_line contents:$(pp !literal_delimiter_line line / lf)* pp literal_delimiter_line
+  {
+    return { name: 'literal', contents, location: location() }
+  }
+
+literal_delimiter_line = '.' '...' eol
 
 example = example_delimiter_line contents:paragraph pp example_delimiter_line
   {
@@ -65,7 +72,7 @@ sidebar = sidebar_delimiter_line contents:paragraph pp sidebar_delimiter_line
 
 sidebar_delimiter_line = '*' '***' eol
 
-any_block_delimiter_line = listing_delimiter_line / example_delimiter_line / sidebar_delimiter_line
+any_block_delimiter_line = listing_delimiter_line / literal_delimiter_line / example_delimiter_line / sidebar_delimiter_line
 
 paragraph = contents:line|1.., pp !any_block_delimiter_line|
   {
@@ -84,7 +91,7 @@ list_item = list_marker principal:$(line (pp !('+' lf / list_marker / any_block_
     return { name: 'listItem', principal, blocks, location: location() }
   }
 
-attached_block = pp '+' lf @(listing / example / sidebar / paragraph)
+attached_block = pp '+' lf @(listing / literal / example / sidebar / paragraph)
 
 attribute_entry = ':' negatedPrefix:'!'? name:attribute_name negatedSuffix:'!'? ':' value:attribute_value? eol
   {
