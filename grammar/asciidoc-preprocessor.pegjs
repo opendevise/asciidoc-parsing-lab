@@ -252,11 +252,6 @@ attribute_names = @attribute_name @(',' attribute_name|1.., ','| / '+' attribute
 
 attribute_value = space @$(!lf .)+
 
-offset = ''
-  {
-    return peg$currPos
-  }
-
 line = $((!lf .)+ eol)
 
 space = ' '
@@ -266,3 +261,8 @@ lf = '\n'
 eof = !.
 
 eol = '\n' / !.
+
+offset = ''
+  {
+    return peg$currPos
+  }
