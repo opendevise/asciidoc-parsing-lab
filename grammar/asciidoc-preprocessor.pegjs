@@ -31,56 +31,35 @@ document = lf* body .*
 
 body = block*
 
-block = (pp (lf / attribute_entry))* @(heading / listing / literal / example / sidebar / list / paragraph)
+block = (pp (lf / attribute_entry))* (heading / listing / literal / example / sidebar / list / paragraph)
 
 heading = '='+ space space* line
 
-listing = listing_delimiter_line contents:$(pp !listing_delimiter_line line / lf)* pp listing_delimiter_line
-  {
-    return { name: 'listing', contents, location: location() }
-  }
+listing = listing_delimiter_line (pp !listing_delimiter_line line / lf)* pp listing_delimiter_line
 
 listing_delimiter_line = '-' '---' eol
 
-literal = literal_delimiter_line contents:$(pp !literal_delimiter_line line / lf)* pp literal_delimiter_line
-  {
-    return { name: 'literal', contents, location: location() }
-  }
+literal = literal_delimiter_line (pp !literal_delimiter_line line / lf)* pp literal_delimiter_line
 
 literal_delimiter_line = '.' '...' eol
 
-example = example_delimiter_line contents:paragraph pp example_delimiter_line
-  {
-    return { name: 'example', contents, location: location() }
-  }
+example = example_delimiter_line paragraph pp example_delimiter_line
 
 example_delimiter_line = '=' '===' eol
 
-sidebar = sidebar_delimiter_line contents:paragraph pp sidebar_delimiter_line
-  {
-    return { name: 'sidebar', contents, location: location() }
-  }
+sidebar = sidebar_delimiter_line paragraph pp sidebar_delimiter_line
 
 sidebar_delimiter_line = '*' '***' eol
 
 any_block_delimiter_line = listing_delimiter_line / literal_delimiter_line / example_delimiter_line / sidebar_delimiter_line
 
-paragraph = contents:line|1.., pp !any_block_delimiter_line|
-  {
-    return { name: 'paragraph', contents, location: location() }
-  }
+paragraph = line|1.., pp !any_block_delimiter_line|
 
-list = items:list_item|1.., pp|
-  {
-    return { name: 'list', items, location: location() }
-  }
+list = list_item|1.., pp|
 
 list_marker = space* ('*' '*'* / '.' '.'* / '-' / '<' ('.' / [1-9] [0-9]*) '>' / [0-9] [0-9]* '.') space space* !eol
 
-list_item = list_marker principal:$(line (pp !('+' lf / list_marker / any_block_delimiter_line) line)*) blocks:attached_block*
-  {
-    return { name: 'listItem', principal, blocks, location: location() }
-  }
+list_item = list_marker (line (pp !('+' lf / list_marker / any_block_delimiter_line) line)*) attached_block*
 
 attached_block = pp '+' lf @(listing / literal / example / sidebar / paragraph)
 
