@@ -43,11 +43,11 @@ literal = literal_delimiter_line (pp !literal_delimiter_line line / lf)* literal
 
 literal_delimiter_line = '.' '...' eol
 
-example = example_delimiter_line paragraph pp example_delimiter_line
+example = example_delimiter_line block* pp example_delimiter_line
 
 example_delimiter_line = '=' '===' eol
 
-sidebar = sidebar_delimiter_line paragraph pp sidebar_delimiter_line
+sidebar = sidebar_delimiter_line block* pp sidebar_delimiter_line
 
 sidebar_delimiter_line = '*' '***' eol
 
