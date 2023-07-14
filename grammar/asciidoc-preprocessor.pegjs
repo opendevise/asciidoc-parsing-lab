@@ -53,7 +53,7 @@ sidebar_delimiter_line = '*' '***' eol
 
 any_block_delimiter_line = listing_delimiter_line / literal_delimiter_line / example_delimiter_line / sidebar_delimiter_line
 
-paragraph = line|1.., pp !any_block_delimiter_line|
+paragraph = (!any_block_delimiter_line line)|1.., pp|
 
 list = list_item|1.., pp|
 
