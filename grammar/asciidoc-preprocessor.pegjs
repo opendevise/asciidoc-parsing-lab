@@ -31,7 +31,7 @@ document = lf* body .*
 
 body = block*
 
-block = (pp (lf / attribute_entry))* (heading / listing / literal / example / sidebar / list / paragraph)
+block = (pp (lf / attribute_entry))* @(heading / listing / literal / example / sidebar / list / paragraph)
 
 heading = '='+ space space* line
 
@@ -59,7 +59,7 @@ list = list_item|1.., pp|
 
 list_marker = space* ('*' '*'* / '.' '.'* / '-' / '<' ('.' / [1-9] [0-9]*) '>' / [0-9] [0-9]* '.') space space* !eol
 
-list_item = list_marker (line (pp !('+' lf / list_marker / any_block_delimiter_line) line)*) attached_block*
+list_item = list_marker (line (pp !('+' lf / list_marker / any_block_delimiter_line) @line)*) attached_block*
 
 attached_block = pp '+' lf @(listing / literal / example / sidebar / paragraph)
 
