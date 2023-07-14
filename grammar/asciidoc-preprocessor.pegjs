@@ -1,18 +1,9 @@
 {{
+const { evaluateIf } = require('#preprocessor-helpers')
 const fs = require('node:fs')
 const inlinePreprocessor = require('#inline-preprocessor')
 const ospath = require('node:path')
 const { splitLines, unshiftOntoCopy } = require('#util')
-
-function evaluateIf (operands, catalog) {
-  const logicOperatorAndNames = operands[1]
-  if (logicOperatorAndNames) {
-    const names = unshiftOntoCopy(logicOperatorAndNames[1], operands[0])
-    const logicMethod = logicOperatorAndNames[0] === ',' ? 'some' : 'every'
-    return names[logicMethod]((name) => name in catalog)
-  }
-  return operands[0] in catalog
-}
 }}
 {
 if (!input) return { input }
