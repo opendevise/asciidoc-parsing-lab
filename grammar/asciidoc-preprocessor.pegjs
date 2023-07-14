@@ -35,11 +35,11 @@ block = (pp (lf / attribute_entry))* (heading / listing / literal / example / si
 
 heading = '='+ space space* line
 
-listing = listing_delimiter_line (pp !listing_delimiter_line line / lf)* pp listing_delimiter_line
+listing = listing_delimiter_line (pp !listing_delimiter_line line / lf)* listing_delimiter_line
 
 listing_delimiter_line = '-' '---' eol
 
-literal = literal_delimiter_line (pp !literal_delimiter_line line / lf)* pp literal_delimiter_line
+literal = literal_delimiter_line (pp !literal_delimiter_line line / lf)* literal_delimiter_line
 
 literal_delimiter_line = '.' '...' eol
 
