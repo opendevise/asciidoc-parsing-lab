@@ -256,11 +256,11 @@ body = @section_block* remainder
 compound_block_contents = @block* remainder
 
 // NOTE !heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
-section_block = lf* block_metadata @(!heading @(listing / literal / example / sidebar / image / list / dlist / indented / paragraph) / section_or_discrete_heading)
+section_block = lf* block_metadata @(!heading @(listing / literal / example / sidebar / image / list / dlist / &space @indented / paragraph) / section_or_discrete_heading)
 
-block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / image / list / dlist / indented / paragraph)
+block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / image / list / dlist / &space @indented / paragraph)
 
-attached_block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / image / list / !list_marker @(dlist / !dlist_term @(indented / attached_paragraph)))
+attached_block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / image / list / !list_marker @(dlist / !dlist_term @(&space @indented / attached_paragraph)))
 
 block_metadata = attrlists:(@(block_attribute_line / block_title_line) lf*)*
   {
