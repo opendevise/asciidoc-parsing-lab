@@ -4,6 +4,7 @@ const inlinePreprocessor = require('#inline-preprocessor')
 const { parse: parseAttrlist } = require('#attrlist-parser')
 const ADMONITION_STYLES = { CAUTION: 'caution', IMPORTANT: 'important', NOTE: 'note', TIP: 'tip', WARNING: 'warning' }
 const MAX_ADMONITION_STYLE_LENGTH = Object.keys(ADMONITION_STYLES).reduce((max, it) => it.length > max ? it.length : max, 0)
+const MIN_ADMONITION_STYLE_LENGTH = Object.keys(ADMONITION_STYLES).reduce((min, it) => it.length < min ? it.length : min, Infinity)
 }}
 {
 const {
@@ -129,7 +130,7 @@ function transformParagraph (lines) {
   let style, admonitionVariant, inlinesOffset
   if ((style = metadata?.attributes.style)) {
     admonitionVariant = ADMONITION_STYLES[style]
-  } else if (firstLine.length > MAX_ADMONITION_STYLE_LENGTH + 2 && ~(inlinesOffset = firstLine.indexOf(': ')) &&
+  } else if (firstLine.length - 2 > MIN_ADMONITION_STYLE_LENGTH && ~(inlinesOffset = firstLine.indexOf(': ')) &&
       inlinesOffset <= MAX_ADMONITION_STYLE_LENGTH && (admonitionVariant = ADMONITION_STYLES[firstLine.slice(0, inlinesOffset)])) {
     lines[0] = firstLine.slice((inlinesOffset += 2))
   } else {
