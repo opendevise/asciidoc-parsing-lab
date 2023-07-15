@@ -160,16 +160,6 @@ document = lf* header:header? blocks:body unparsed:.*
     return Object.assign(node, { blocks, location: toSourceLocation(getLocation(true)) })
   }
 
-attribute_entry = ':' negatedPrefix:'!'? name:attribute_name negatedSuffix:'!'? ':' value:attribute_value? eol
-  {
-    return [name, negatedPrefix || negatedSuffix ? null : value || '']
-  }
-
-// TODO permit non-ASCII letters in attribute name
-attribute_name = $([a-zA-Z0-9_] [a-zA-Z0-9_-]*)
-
-attribute_value = space @$(!lf .)+
-
 header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doctitle author_info_line? attributeEntriesBelow:attribute_entry*)? &{ return doctitleAndAttributeEntries || attributeEntriesAbove.length }
   {
     const attributes = {}
@@ -250,11 +240,24 @@ author_info_item = names:author_name|1..3, space| address:(' <' @$(!('>' / lf) .
 
 author_name = $([a-zA-Z0-9] ('.' / [a-zA-Z0-9_'-]*))
 
+attribute_entry = ':' negatedPrefix:'!'? name:attribute_name negatedSuffix:'!'? ':' value:attribute_value? eol
+  {
+    return [name, negatedPrefix || negatedSuffix ? null : value || '']
+  }
+
+// TODO permit non-ASCII letters in attribute name
+attribute_name = $([a-zA-Z0-9_] [a-zA-Z0-9_-]*)
+
+attribute_value = space @$(!lf .)+
+
 body = @section_block* remainder
 
-compound_block_body = @block* remainder
+compound_block_contents = @block* remainder
 
-remainder = lf* ((block_attribute_line / block_title_line) lf*)*
+// NOTE !heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
+section_block = lf* block_metadata @(!heading @(listing / literal / example / sidebar / list / dlist / indented / image / paragraph) / section_or_discrete_heading)
+
+block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / list / dlist / indented / image / paragraph)
 
 block_metadata = attrlists:(@(block_attribute_line / block_title_line) lf*)*
   {
@@ -265,11 +268,6 @@ block_attribute_line = @'[' @offset @attrlist ']' eol
 
 // NOTE don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
 block_title_line = @'.' @offset @$('.'? (!(lf / ' ' / '.') .) (!lf .)*) eol
-
-// NOTE !heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
-section_block = lf* block_metadata @(!heading @(listing / literal / example / sidebar / list / dlist / indented / image / paragraph) / section_or_discrete_heading)
-
-block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / list / dlist / indented / image / paragraph)
 
 section_or_discrete_heading = startOffset:offset headingRecord:heading metadataAndBlocks:(&{ return metadataCache[startOffset]?.attributes.style === 'discrete' } { return [processBlockMetadata(startOffset)] } / (&{ return isNestedSection(context, headingRecord[0].length - 1) } { return processBlockMetadata(startOffset) }) section_block*)
   {
@@ -381,7 +379,7 @@ literal = (openingDelim:literal_delimiter_line { enterBlock(context, openingDeli
 
 example_delimiter_line = @$('=' '='|3..|) eol
 
-example = metadata:(startOffset:offset openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) } { return processBlockMetadata(startOffset) }) blocks:compound_block_body closingDelim:(lf* @(example_delimiter_line / eof))
+example = metadata:(startOffset:offset openingDelim:example_delimiter_line &{ return enterBlock(context, openingDelim) } { return processBlockMetadata(startOffset) }) blocks:compound_block_contents closingDelim:(lf* @(example_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
     let name = 'example'
@@ -395,7 +393,7 @@ example = metadata:(startOffset:offset openingDelim:example_delimiter_line &{ re
 
 sidebar_delimiter_line = @$('*' '*'|3..|) eol
 
-sidebar = metadata:(startOffset:offset openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) } { return processBlockMetadata(startOffset) }) blocks:compound_block_body closingDelim:(lf* @(sidebar_delimiter_line / eof))
+sidebar = metadata:(startOffset:offset openingDelim:sidebar_delimiter_line &{ return enterBlock(context, openingDelim) } { return processBlockMetadata(startOffset) }) blocks:compound_block_contents closingDelim:(lf* @(sidebar_delimiter_line / eof))
   {
     const delimiter = exitBlock(context)
     if (!closingDelim && options.showWarnings) console.warn('unclosed sidebar block')
@@ -508,6 +506,8 @@ image = 'image::' !space target:$(!(lf / '[') .)+ '[' attrlistOffset:offset attr
     target = inlinePreprocessor(target, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input
     return applyBlockMetadata({ name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()) }, metadata)
   }
+
+remainder = lf* ((block_attribute_line / block_title_line) lf*)*
 
 any_block_delimiter_line = listing_delimiter_line / literal_delimiter_line / example_delimiter_line / sidebar_delimiter_line
 
