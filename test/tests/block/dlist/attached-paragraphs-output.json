@@ -1,0 +1,67 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "dlist",
+      "type": "block",
+      "marker": "::",
+      "items": [
+        {
+          "name": "dlistItem",
+          "type": "block",
+          "marker": "::",
+          "terms": [
+            [
+              {
+                "name": "text",
+                "type": "string",
+                "value": "term",
+                "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 4 }]
+              }
+            ]
+          ],
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "desc",
+              "location": [{ "line": 1, "col": 8 }, { "line": 1, "col": 11 }]
+            }
+          ],
+          "blocks": [
+            {
+              "name": "paragraph",
+              "type": "block",
+              "inlines": [
+                {
+                  "name": "text",
+                  "type": "string",
+                  "value": "foo",
+                  "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 3 }]
+                }
+              ],
+              "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 3 }]
+            },
+            {
+              "name": "paragraph",
+              "type": "block",
+              "inlines": [
+                {
+                  "name": "text",
+                  "type": "string",
+                  "value": "bar",
+                  "location": [{ "line": 5, "col": 1 }, { "line": 5, "col": 3 }]
+                }
+              ],
+              "location": [{ "line": 5, "col": 1 }, { "line": 5, "col": 3 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 3 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 3 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 3 }]
+}
