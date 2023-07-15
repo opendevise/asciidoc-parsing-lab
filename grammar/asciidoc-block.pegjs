@@ -259,6 +259,8 @@ section_block = lf* block_metadata @(!heading @(listing / literal / example / si
 
 block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / list / dlist / indented / image / paragraph)
 
+attached_block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / list / dlist / indented / image / attached_paragraph)
+
 block_metadata = attrlists:(@(block_attribute_line / block_title_line) lf*)*
   {
     return attrlists.length ? parseBlockMetadata(attrlists, range()) : undefined
@@ -299,6 +301,11 @@ heading = @$('=' '='*) space space* @offset @line
 
 // NOTE there's no need to check for block_attribute_line on the first line since the block metadata has already been consumed
 paragraph = !any_block_delimiter_line lines:line|1.., !(any_block_delimiter_line / block_attribute_line)|
+  {
+    return transformParagraph(lines)
+  }
+
+attached_paragraph = lines:(line:list_continuation { return [line] } / !any_block_delimiter_line @line|1.., !(list_continuation / any_block_delimiter_line / block_attribute_line)|)
   {
     return transformParagraph(lines)
   }
@@ -445,7 +452,7 @@ list_continuation = @'+' eol
 
 // Q should block match after list continuation end with '?', or should last alternative be '!.'?
 // Q should @block? be changed to @(block / block_metadata {}) or should we let the parent handle the orphaned metadata lines?
-list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation @block? / (lf lf* / block_metadata) @(list / dlist / &space !(list_marker / dlist_term) @indented))* trailer:lf?
+list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation @attached_block? / (lf lf* / block_metadata) @(list / dlist / &space !(list_marker / dlist_term) @indented))* trailer:lf?
   {
     if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
     let sourceLocation
