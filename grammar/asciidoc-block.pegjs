@@ -277,7 +277,7 @@ discrete_heading = headingRecord:heading
 heading = @$('=' '='*) space space* @offset @line
 
 // NOTE there's no need to check for block_attribute_line on the first line since the block metadata has already been consumed
-paragraph = !any_block_delimiter_line lines:line|1.., !(block_attribute_line / any_block_delimiter_line)|
+paragraph = !any_block_delimiter_line lines:line|1.., !(any_block_delimiter_line / block_attribute_line)|
   {
     const location_ = getLocation()
     const metadata = processBlockMetadata()
@@ -437,7 +437,7 @@ list_item_principal = lines:line|1.., !list_item_principal_interrupting_line|
     return parseInline(lines.join('\n'), { attributes: documentAttributes, locations: createLocationsForInlines(location_, location_[0].col - 1) })
   }
 
-list_item_principal_interrupting_line = block_attribute_line / list_continuation / list_marker / dlist_term / any_block_delimiter_line
+list_item_principal_interrupting_line = list_continuation / any_block_delimiter_line / list_marker / block_attribute_line / dlist_term
 
 list_continuation = @'+' eol
 
