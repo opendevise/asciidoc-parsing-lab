@@ -506,7 +506,7 @@ dlist_item = term:dlist_term_for_current_item moreTerms:(lf lf* @dlist_term_for_
     return node
   }
 
-image = 'image::' !space target:$(!(lf / '[') .)+ '[' attrlistOffset:offset attrlist:attrlist ']' eol
+image = 'i' 'mage::' !space target:$(!(lf / '[') .)+ '[' attrlistOffset:offset attrlist:attrlist ']' eol
   {
     if (attrlist) parseAttrlist(attrlist, { attributes: documentAttributes, initial: (metadataCache[offset()] ??= { attributes: {} }).attributes, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(getLocation({ start: attrlistOffset, text: attrlist }))[0] } })
     const metadata = processBlockMetadata(undefined, ['alt', 'width', 'height'])
