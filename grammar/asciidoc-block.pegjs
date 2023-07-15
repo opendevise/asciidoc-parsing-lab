@@ -276,9 +276,8 @@ discrete_heading = headingRecord:heading
 
 heading = @$('=' '='*) space space* @offset @line
 
-// TODO in order to enable list matching shorthand, must ensure this rule is only called when all other syntax has been exhausted
-//paragraph = lines:line|1.., !(block_attribute_line / any_block_delimiter_line)|
-paragraph = lines:(!(block_attribute_line / any_block_delimiter_line) @line)+
+// NOTE there's no need to check for block_attribute_line on the first line since the block metadata has already been consumed
+paragraph = !any_block_delimiter_line lines:line|1.., !(block_attribute_line / any_block_delimiter_line)|
   {
     const location_ = getLocation()
     const metadata = processBlockMetadata()
