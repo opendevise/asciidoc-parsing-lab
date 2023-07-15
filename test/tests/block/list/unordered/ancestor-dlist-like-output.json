@@ -1,0 +1,69 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "unordered",
+      "marker": "*",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "*",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "foo",
+              "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 5 }]
+            }
+          ],
+          "blocks": [
+            {
+              "name": "list",
+              "type": "block",
+              "variant": "unordered",
+              "marker": "**",
+              "items": [
+                {
+                  "name": "listItem",
+                  "type": "block",
+                  "marker": "**",
+                  "principal": [
+                    {
+                      "name": "text",
+                      "type": "string",
+                      "value": "bar",
+                      "location": [{ "line": 2, "col": 4 }, { "line": 2, "col": 6 }]
+                    }
+                  ],
+                  "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 6 }]
+                }
+              ],
+              "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 6 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 6 }]
+        },
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "*",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "foo:: bar",
+              "location": [{ "line": 3, "col": 3 }, { "line": 3, "col": 11 }]
+            }
+          ],
+          "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 11 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 11 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 11 }]
+}

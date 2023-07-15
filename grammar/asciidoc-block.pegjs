@@ -452,7 +452,7 @@ list_continuation = @'+' eol
 
 // Q should block match after list continuation end with '?', or should last alternative be '!.'?
 // Q should @block? be changed to @(block / block_metadata {}) or should we let the parent handle the orphaned metadata lines?
-list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation @attached_block? / (lf lf* / block_metadata) @(list / dlist / &space !(list_marker / dlist_term) @indented))* trailer:lf?
+list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation @attached_block? / (lf lf* / block_metadata) @(list / !list_marker @(dlist / &space !dlist_term @indented)))* trailer:lf?
   {
     if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
     let sourceLocation
@@ -486,7 +486,7 @@ dlist_term_for_current_item = termRecord:dlist_term &{ return isCurrentList(cont
     return { inlines: parseInline(termRecord[1].trimEnd(), { attributes: documentAttributes, locations: createLocationsForInlines(getLocation(), termRecord[0] - offset()) }), marker: termRecord[2] }
   }
 
-dlist_item = term:dlist_term_for_current_item moreTerms:(lf lf* @dlist_term_for_current_item)* principal:(space space* @(&eol / list_item_principal) / @(lf lf* (!(space / list_item_principal_interrupting_line) / space !(list_marker / dlist_term) space*) @list_item_principal) / &eol) blocks:(list_continuation @block? / (lf lf* / block_metadata) @(list / dlist / &space !(list_marker / dlist_term) @indented))* trailer:lf?
+dlist_item = term:dlist_term_for_current_item moreTerms:(lf lf* @dlist_term_for_current_item)* principal:(space space* @(&eol / list_item_principal) / @(lf lf* (!(space / list_item_principal_interrupting_line) / space !(list_marker / dlist_term) space*) @list_item_principal) / &eol) blocks:(list_continuation @block? / (lf lf* / block_metadata) @(list / !list_marker @(dlist / &space !dlist_term @indented)))* trailer:lf?
   {
     if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
     let sourceLocation
