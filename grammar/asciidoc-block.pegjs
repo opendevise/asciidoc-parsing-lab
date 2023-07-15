@@ -440,7 +440,7 @@ list_item_principal = lines:line|1.., !list_item_principal_interrupting_line|
 
 list_item_principal_interrupting_line = block_attribute_line / list_continuation / list_marker / dlist_term / any_block_delimiter_line
 
-list_continuation = '+' eol
+list_continuation = @'+' eol
 
 // Q should block match after list continuation end with '?', or should last alternative be '!.'?
 // Q should @block? be changed to @(block / block_metadata {}) or should we let the parent handle the orphaned metadata lines?
