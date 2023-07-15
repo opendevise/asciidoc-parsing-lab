@@ -260,7 +260,7 @@ section_block = lf* block_metadata @(!heading @(listing / literal / example / si
 
 block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / list / dlist / indented / image / paragraph)
 
-attached_block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / list / dlist / indented / image / attached_paragraph)
+attached_block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / list / !list_marker @(dlist / !dlist_term @(indented / image / attached_paragraph)))
 
 block_metadata = attrlists:(@(block_attribute_line / block_title_line) lf*)*
   {
