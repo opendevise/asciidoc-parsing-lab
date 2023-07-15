@@ -121,6 +121,29 @@ function applyBlockMetadata (block, metadata) {
   }
   return Object.assign(block, { metadata })
 }
+
+function transformParagraph (lines) {
+  const location_ = getLocation()
+  const metadata = processBlockMetadata()
+  const firstLine = lines[0]
+  let style, admonitionVariant, inlinesOffset
+  if ((style = metadata?.attributes.style)) {
+    admonitionVariant = ADMONITION_STYLES[style]
+  } else if (firstLine.length > MAX_ADMONITION_STYLE_LENGTH + 2 && ~(inlinesOffset = firstLine.indexOf(': ')) &&
+      inlinesOffset <= MAX_ADMONITION_STYLE_LENGTH && (admonitionVariant = ADMONITION_STYLES[firstLine.slice(0, inlinesOffset)])) {
+    lines[0] = firstLine.slice((inlinesOffset += 2))
+  } else {
+    inlinesOffset = 0
+  }
+  const inlines = parseInline(lines.join('\n'), { attributes: documentAttributes, locations: createLocationsForInlines(location_, inlinesOffset) })
+  const sourceLocation = toSourceLocation(location_)
+  let node = { name: 'paragraph', type: 'block', inlines, location: sourceLocation }
+  if (admonitionVariant) {
+    // Q: should location for paragraph start after admonition label?
+    node = { name: 'admonition', type: 'block', form: 'paragraph', variant: admonitionVariant, blocks: [node], location: sourceLocation }
+  }
+  return applyBlockMetadata(node, metadata)
+}
 }
 // TODO if surrounding lf are not part of document, group inner two rules as a new rule
 document = lf* header:header? blocks:body unparsed:.*
@@ -279,26 +302,7 @@ heading = @$('=' '='*) space space* @offset @line
 // NOTE there's no need to check for block_attribute_line on the first line since the block metadata has already been consumed
 paragraph = !any_block_delimiter_line lines:line|1.., !(any_block_delimiter_line / block_attribute_line)|
   {
-    const location_ = getLocation()
-    const metadata = processBlockMetadata()
-    const firstLine = lines[0]
-    let style, admonitionVariant, inlinesOffset
-    if ((style = metadata?.attributes.style)) {
-      admonitionVariant = ADMONITION_STYLES[style]
-    } else if (firstLine.length > MAX_ADMONITION_STYLE_LENGTH + 2 && ~(inlinesOffset = firstLine.indexOf(': ')) &&
-        inlinesOffset <= MAX_ADMONITION_STYLE_LENGTH && (admonitionVariant = ADMONITION_STYLES[firstLine.slice(0, inlinesOffset)])) {
-      lines[0] = firstLine.slice((inlinesOffset += 2))
-    } else {
-      inlinesOffset = 0
-    }
-    const inlines = parseInline(lines.join('\n'), { attributes: documentAttributes, locations: createLocationsForInlines(location_, inlinesOffset) })
-    const sourceLocation = toSourceLocation(location_)
-    let node = { name: 'paragraph', type: 'block', inlines, location: sourceLocation }
-    if (admonitionVariant) {
-      // Q: should location for paragraph start after admonition label?
-      node = { name: 'admonition', type: 'block', form: 'paragraph', variant: admonitionVariant, blocks: [node], location: sourceLocation }
-    }
-    return applyBlockMetadata(node, metadata)
+    return transformParagraph(lines)
   }
 
 indented = lines:indented_line+
