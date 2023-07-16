@@ -1,6 +1,9 @@
 {
   "name": "document",
   "type": "block",
+  "attributes": {
+    "target": { "value": "the-image.png", "origin": "external", "locked": true }
+  },
   "blocks": [
     {
       "name": "image",

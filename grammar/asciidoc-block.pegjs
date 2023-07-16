@@ -8,10 +8,11 @@ const MIN_ADMONITION_STYLE_LENGTH = Object.keys(ADMONITION_STYLES).reduce((min, 
 }}
 {
 const {
-  attributes: documentAttributes = {},
+  attributes: initialDocumentAttributes = {},
   contentAttributeNames = ['title', 'reftext', 'caption', 'citetitle', 'attribution'],
   locations,
 } = options
+const documentAttributes = Object.assign({}, initialDocumentAttributes)
 const context = createContext()
 const parseInline = (options.inlineParser ?? require('#block-default-inline-parser')).parse
 const metadataCache = {}
@@ -150,11 +151,8 @@ function transformParagraph (lines) {
 document = lf* header:header? blocks:body unparsed:.*
   {
     const node = { name: 'document', type: 'block' }
-    if (header) {
-      node.attributes = header.attributes
-      delete header.attributes
-      node.header = header
-    }
+    if (Object.keys(initialDocumentAttributes).length) node.attributes = initialDocumentAttributes
+    if (header) node.header = header
     if (unparsed.length && options.showWarnings) {
       console.warn(`unparsed content found at end of document:\n${unparsed.join('').trimEnd()}`)
     }
@@ -167,38 +165,32 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doc
     const header = {}
     const sourceLocation = toSourceLocation(getLocation())
     if (attributeEntriesAbove.length) {
-      for (const [name, val] of attributeEntriesAbove) {
-        if (name in documentAttributes && !(name in attributes)) continue
-        if (val == null) {
-          attributes[name] = val
-          delete documentAttributes[name]
-        } else {
-          documentAttributes[name] = attributes[name] = val ? inlinePreprocessor(val, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input : val
-        }
+      for (let [name, val, range_] of attributeEntriesAbove) {
+        if (documentAttributes[name]?.locked) continue
+        attributes[name] = { value: (val &&= inlinePreprocessor(val, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input), location: toSourceLocation(getLocation(range_)) }
+        documentAttributes[name] = { value: val, origin: 'header' }
       }
     }
     if (doctitleAndAttributeEntries) {
       const [[doctitle, locationsForDoctitleInlines], authors, attributeEntriesBelow] = doctitleAndAttributeEntries
       header.title = parseInline(doctitle, { attributes: documentAttributes, locations: locationsForDoctitleInlines })
-      // Q: set doctitle in header attributes too? set even if locked??
-      //documentAttributes.doctitle = attributes.doctitle = doctitle
-      documentAttributes.doctitle = doctitle
+      documentAttributes.doctitle = { value: doctitle, locked: true, origin: 'header' }
       if (authors) {
-        documentAttributes.author = attributes.author = authors[0].fullname
+        const author = authors[0].fullname
+        if (!documentAttributes.author?.locked) documentAttributes.author = { value: author, origin: 'header' }
         const address = authors[0].address
-        if (address) documentAttributes.email = attributes.email = address
-        documentAttributes.authors = attributes.authors = authors.map(({ fullname }) => fullname).join(', ')
+        if (address && !documentAttributes.email?.locked) documentAttributes.email = { value: address, origin: 'header' }
+        if (!documentAttributes.authors?.locked) {
+          const authors_ = authors.map(({ fullname }) => fullname).join(', ')
+          documentAttributes.authors = { value: authors_, origin: 'header' }
+        }
         header.authors = authors
       }
       if (attributeEntriesBelow.length) {
-        for (const [name, val] of attributeEntriesBelow) {
-          if (name in documentAttributes && !(name in attributes)) continue
-          if (val == null) {
-            attributes[name] = null
-            delete documentAttributes[name]
-          } else {
-            documentAttributes[name] = attributes[name] = val ? inlinePreprocessor(val, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input : val
-          }
+        for (let [name, val, range_] of attributeEntriesBelow) {
+          if (documentAttributes[name]?.locked) continue
+          attributes[name] = { value: (val &&= inlinePreprocessor(val, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input), location: toSourceLocation(getLocation(range_)) }
+          documentAttributes[name] = { value: val, origin: 'header' }
         }
       }
     }
@@ -243,7 +235,7 @@ author_name = $([a-zA-Z0-9] ('.' / [a-zA-Z0-9_'-]*))
 
 attribute_entry = ':' negatedPrefix:'!'? name:attribute_name negatedSuffix:'!'? ':' value:attribute_value? eol
   {
-    return [name, negatedPrefix || negatedSuffix ? null : value || '']
+    return [name, negatedPrefix || negatedSuffix ? null : value || '', range()]
   }
 
 // TODO permit non-ASCII letters in attribute name

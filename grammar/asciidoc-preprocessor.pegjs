@@ -65,10 +65,11 @@ attached_block = pp '+' lf @(listing / literal / example / sidebar / paragraph)
 
 attribute_entry = ':' negatedPrefix:'!'? name:attribute_name negatedSuffix:'!'? ':' value:attribute_value? eol
   {
+    if (documentAttributes[name]?.locked) return
     if (negatedPrefix || negatedSuffix) {
-      delete documentAttributes[name]
+      documentAttributes[name] = { value: null }
     } else {
-      documentAttributes[name] = value ? inlinePreprocessor(value, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input : ''
+      documentAttributes[name] = { value: value ? inlinePreprocessor(value, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input : '' }
     }
   }
 
@@ -102,7 +103,7 @@ pp_include = 'include::' !space target:$((!lf !'[' !' ' .) / space !'[')+ '[]' e
       }
     }
     // FIXME include file should be resolved relative to nested include, when applicable
-    const contents = splitLines(fs.readFileSync(ospath.join(documentAttributes.docdir || '', target), 'utf8'))
+    const contents = splitLines(fs.readFileSync(ospath.join(documentAttributes.docdir?.value ?? '', target), 'utf8'))
     const contentsLastLineIdx = contents.length - 1
     let numAdded = 0
     if (~contentsLastLineIdx) {

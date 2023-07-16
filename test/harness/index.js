@@ -120,6 +120,7 @@ function populateASGDefaults (node) {
   } else if (['list', 'dlist'].includes(node.name)) {
     node.items.forEach(populateASGDefaults)
   } else {
+    if (node.name === 'document' && node.header) node.header.attributes ??= {}
     ;(node.blocks ??= []).forEach(populateASGDefaults)
   }
   return node
@@ -139,6 +140,9 @@ function stripASGDefaults (node) {
   } else if (['list', 'dlist'].includes(node.name)) {
     node.items.forEach(stripASGDefaults)
   } else if (node.blocks?.length) {
+    if (node.name === 'document' && node.header && !Object.keys(node.header.attributes).length) {
+      delete node.header.attributes
+    }
     node.blocks.forEach(stripASGDefaults)
   } else {
     delete node.blocks

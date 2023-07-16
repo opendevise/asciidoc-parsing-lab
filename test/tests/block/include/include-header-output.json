@@ -1,7 +1,6 @@
 {
   "name": "document",
   "type": "block",
-  "attributes": { "reproducible": "" },
   "header": {
     "title": [
       {
@@ -11,6 +10,9 @@
         "location": [{ "line": 2, "col": 3, "file": ["header.adoc"] }, { "line": 2, "col": 16, "file": ["header.adoc"] }]
       }
     ],
+    "attributes": {
+      "reproducible": { "value": "", "location": [{ "line": 1, "col": 1, "file": ["header.adoc"] }, { "line": 1, "col": 14, "file": ["header.adoc"] }] }
+    },
     "location": [{ "line": 1, "col": 1, "file": ["header.adoc"] }, { "line": 2, "col": 16, "file": ["header.adoc"] }]
   },
   "blocks": [

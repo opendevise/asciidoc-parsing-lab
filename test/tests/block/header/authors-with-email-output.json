@@ -1,7 +1,6 @@
 {
   "name": "document",
   "type": "block",
-  "attributes": { "author": "Doc Writer", "email": "doc.writer@example.org", "authors": "Doc Writer, J. R. Wordsmith" },
   "header": {
     "title": [
       {

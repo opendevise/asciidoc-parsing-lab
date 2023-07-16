@@ -1351,7 +1351,7 @@ describe('inline (unported)', () => {
 
     it('should allow inline preprocessor to be deactivated', () => {
       const input = '{name}'
-      const attributes = { name: 'Dan' }
+      const attributes = { name: { value: 'Dan' } }
       const expected = [{ type: 'string', name: 'text', value: '{name}', location: loc(1, input) }]
       expect(parse(input, { attributes, preprocessorMode: 'none' })).to.eql(expected)
     })
@@ -1378,7 +1378,7 @@ describe('inline (unported)', () => {
           { range: 6, offset: 9 },
         ]),
       }
-      expect(inlinePreprocessor(input, { attributes: { name: 'Dan' } })).to.eql(expected)
+      expect(inlinePreprocessor(input, { attributes: { name: { value: 'Dan' } } })).to.eql(expected)
     })
 
     it('should define offset for attribute as range when value is longer than reference', () => {
@@ -1391,14 +1391,14 @@ describe('inline (unported)', () => {
           { range: 12, offset: 9 },
         ]),
       }
-      expect(inlinePreprocessor(input, { attributes: { name: 'Guillaume' } })).to.eql(expected)
+      expect(inlinePreprocessor(input, { attributes: { name: { value: 'Guillaume' } } })).to.eql(expected)
     })
 
     it('should track offsets across multiple attribute references', () => {
       const input = 'The case of {plantiff} vs {defendant}.'
       const attributes = {
-        plantiff: 'Wile E. Coyote',
-        defendant: 'ACME Corp',
+        plantiff: { value: 'Wile E. Coyote' },
+        defendant: { value: 'ACME Corp' },
       }
       const expected = {
         input: 'The case of Wile E. Coyote vs ACME Corp.',
@@ -1416,8 +1416,8 @@ describe('inline (unported)', () => {
     it('should track offsets when first attribute value overlaps location of second attribute reference', () => {
       const input = 'A {url-formal-grammar}[formal grammar] for the {url-asciidoc-lang}[AsciiDoc Language].'
       const attributes = {
-        'url-asciidoc-lang': 'https://gitlab.eclipse.org/eclipse/asciidoc-lang/asciidoc-lang',
-        'url-formal-grammar': 'https://en.wikipedia.org/wiki/Formal_grammar',
+        'url-asciidoc-lang': { value: 'https://gitlab.eclipse.org/eclipse/asciidoc-lang/asciidoc-lang' },
+        'url-formal-grammar': { value: 'https://en.wikipedia.org/wiki/Formal_grammar' },
       }
       const expected = {
         input: 'A https://en.wikipedia.org/wiki/Formal_grammar[formal grammar] for the ' +
@@ -1451,7 +1451,7 @@ describe('inline (unported)', () => {
 
     it('should allow initial sourceMapping from previous phase to be specified', () => {
       const input = '{name} +val+.'
-      const attributes = { name: 'a' }
+      const attributes = { name: { value: 'a' } }
       const { input: preprocessedInput, sourceMapping } = inlinePreprocessor(input, { attributes, mode: 'attributes' })
       const expected = {
         input: 'a \x10\0\0\0\0.',
@@ -1468,7 +1468,7 @@ describe('inline (unported)', () => {
 
     it('should return specified sourceMapping if nothing is matched', () => {
       const input = '{name}'
-      const attributes = { name: 'a' }
+      const attributes = { name: { value: 'a' } }
       const { input: preprocessedInput, sourceMapping } = inlinePreprocessor(input, { attributes, mode: 'attributes' })
       const expected = { input: 'a', sourceMapping }
       expect(inlinePreprocessor(preprocessedInput, { sourceMapping, mode: 'passthroughs' })).to.eql(expected)
@@ -1476,7 +1476,7 @@ describe('inline (unported)', () => {
 
     it('should only process attribute references if mode is attributes', () => {
       const input = '{name} +{foo}+ \\{name}.'
-      const attributes = { name: 'Dave', foo: 'value' }
+      const attributes = { name: { value: 'Dave' }, foo: { value: 'value' } }
       const expected = {
         input: 'Dave +value+ {name}.',
         sourceMapping: makeSourceMapping([
@@ -1493,7 +1493,7 @@ describe('inline (unported)', () => {
 
     it('should process backslashes in front of escaped attribute reference', () => {
       const input = 'Use \\\\\\{name} to escape an attribute reference'
-      const attributes = { name: 'Not used' }
+      const attributes = { name: { value: 'Not used' } }
       const expected = {
         input: 'Use \\{name} to escape an attribute reference',
         sourceMapping: makeSourceMapping([
@@ -1506,7 +1506,7 @@ describe('inline (unported)', () => {
 
     it('should only process passthroughs if mode is passthroughs', () => {
       const input = '{name} +{name}+'
-      const attributes = { name: 'Chris' }
+      const attributes = { name: { value: 'Chris' } }
       const expected = {
         input: '{name} \x10\0\0\0\0\0\0\0',
         sourceMapping: makeSourceMapping([

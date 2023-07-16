@@ -1,7 +1,6 @@
 {
   "name": "document",
   "type": "block",
-  "attributes": { "author": "Doc Writer", "authors": "Doc Writer" },
   "header": {
     "title": [
       {
