@@ -1,3 +1,8 @@
 {
-  "ensureTrailingNewline": true
+  "ensureTrailingNewline": true,
+  "options": {
+    "attributes": {
+      "docdir": true
+    }
+  }
 }

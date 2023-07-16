@@ -9,8 +9,10 @@ const tests = await scanTests(ospath.join(resolveDirname(import.meta), 'tests/bl
 
 describe('block', () => {
   makeTests(tests, function ({ input, options, inputPath, expected, expectedWithoutLocations }) {
-    options = Object.assign({}, options)
-    options.attributes = Object.assign({ docdir: ospath.dirname(inputPath) }, options.attributes)
+    if (options?.attributes?.docdir === true) {
+      const docdir = ospath.dirname(inputPath)
+      options = Object.assign({}, options, { attributes: Object.assign({}, options.attributes, { docdir }) })
+    }
     const actual = parse(input, options)
     if (expected == null) {
       // Q: can we write data to expect file automatically?
