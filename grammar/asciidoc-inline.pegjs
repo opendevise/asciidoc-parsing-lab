@@ -149,7 +149,7 @@ xref_shorthand_other = $[^>]+
 
 // FIXME attrlist_other prevents search for span following text (e.g., *foo* and *bar*)
 // TODO implement attrlist following optional link text
-url_macro = protocol:('link:' @'' / ('https://' / 'http://')) target:$macro_target '[' contentsOffset:offset contents:(span / attrlist_other)* ']'
+url_macro = protocol:('l' 'ink:' @'' / &'h' @('https://' / 'http://')) target:$macro_target '[' contentsOffset:offset contents:(span / attrlist_other)* ']'
   {
     // NOTE quick hack to support new window hint; if found, need to set window=_blank attribute on node
     let lastInline = contents[contents.length - 1]
