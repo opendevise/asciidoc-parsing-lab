@@ -174,10 +174,10 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doc
     const header = {}
     const sourceLocation = toSourceLocation(getLocation())
     if (attributeEntriesAbove.length) {
-      for (let [name, val, range_] of attributeEntriesAbove) {
+      for (let [name, value, range_] of attributeEntriesAbove) {
         if (documentAttributes[name]?.locked) continue
-        attributes[name] = { value: (val &&= inlinePreprocessor(val, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input), location: toSourceLocation(getLocation(range_)) }
-        documentAttributes[name] = { value: val, origin: 'header' }
+        attributes[name] = { value: (value &&= inlinePreprocessor(value, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input), location: toSourceLocation(getLocation(range_)) }
+        documentAttributes[name] = { value, origin: 'header' }
       }
     }
     if (doctitleAndAttributeEntries) {
@@ -196,10 +196,10 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doc
         header.authors = authors
       }
       if (attributeEntriesBelow.length) {
-        for (let [name, val, range_] of attributeEntriesBelow) {
+        for (let [name, value, range_] of attributeEntriesBelow) {
           if (documentAttributes[name]?.locked) continue
-          attributes[name] = { value: (val &&= inlinePreprocessor(val, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input), location: toSourceLocation(getLocation(range_)) }
-          documentAttributes[name] = { value: val, origin: 'header' }
+          attributes[name] = { value: (value &&= inlinePreprocessor(value, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input), location: toSourceLocation(getLocation(range_)) }
+          documentAttributes[name] = { value, origin: 'header' }
         }
       }
     }
