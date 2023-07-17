@@ -453,7 +453,7 @@ list_item_principal_interrupting_line = list_continuation / any_block_delimiter_
 list_continuation = @'+' eol
 
 // Q should block match after list continuation end with '?', or should last alternative be '!.'?
-// Q should @block? be changed to @(block / block_metadata {}) or should we let the parent handle the orphaned metadata lines?
+// Q should @attached_block? be changed to @(attached_block / block_metadata {}) to let parent handle the orphaned metadata lines?
 list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation @attached_block? / (lf lf* / block_metadata) @(list / !list_marker @(dlist / &space !dlist_term @indented)))* trailer:lf?
   {
     if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
