@@ -340,13 +340,13 @@ listing_contents = (!(delim:listing_delimiter_line &{ return isBlockEnd(context,
   {
     let { start, end } = range()
     if (end === start) return
-    const value = input.substring(start, (end === input.length ? end : --end) + (input[end] === '\n' ? 0 : 1))
-    const location_ = getLocation({ start, end: value ? end : start })
-    if (value && value[value.length - 1] === '\n') {
+    const contents = input.substring(start, (end === input.length ? end : --end) + (input[end] === '\n' ? 0 : 1))
+    const location_ = getLocation({ start, end: contents ? end : start })
+    if (contents && contents[contents.length - 1] === '\n') {
       location_[1].line++
       location_[1].col = 0
     }
-    return [value || '\n', location_]
+    return [contents || '\n', location_]
   }
 
 listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDelim) }) contents:listing_contents closingDelim:(@listing_delimiter_line / eof)
@@ -366,13 +366,13 @@ literal_contents = (!(delim:literal_delimiter_line &{ return isBlockEnd(context,
   {
     let { start, end } = range()
     if (end === start) return
-    const value = input.substring(start, (end === input.length ? end : --end) + (input[end] === '\n' ? 0 : 1))
-    const location_ = getLocation({ start, end: value ? end : start })
-    if (value && value[value.length - 1] === '\n') {
+    const contents = input.substring(start, (end === input.length ? end : --end) + (input[end] === '\n' ? 0 : 1))
+    const location_ = getLocation({ start, end: contents ? end : start })
+    if (contents && contents[contents.length - 1] === '\n') {
       location_[1].line++
       location_[1].col = 0
     }
-    return [value || '\n', location_]
+    return [contents || '\n', location_]
   }
 
 literal = (openingDelim:literal_delimiter_line { enterBlock(context, openingDelim) }) contents:literal_contents closingDelim:(@literal_delimiter_line / eof)
