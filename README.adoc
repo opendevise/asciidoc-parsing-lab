@@ -81,7 +81,6 @@ There's likely more syntax and edge cases to cover, so this is only what we know
 * attribute entries in body
 * attribute entry with multiline value
 * revision info line
-* wrap blocks before first section in preamble
 * tables
 * ifeval directive
 * variable-length delimiter lines and block nesting in preprocessor

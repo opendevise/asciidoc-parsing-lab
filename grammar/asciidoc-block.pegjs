@@ -152,7 +152,16 @@ document = lf* header:header? blocks:body unparsed:.*
   {
     const node = { name: 'document', type: 'block' }
     if (Object.keys(initialDocumentAttributes).length) node.attributes = initialDocumentAttributes
-    if (header) node.header = header
+    if (header) {
+      node.header = header
+      let idx
+      if (header.title && blocks.length && (idx = blocks.findIndex((it) => it.name === 'section')) > 0) {
+        const preambleBlocks = blocks.slice(0, idx)
+        const preambleSourceLocation = [blocks[0].location[0], blocks[idx - 1].location[1]]
+        const preamble = { name: 'preamble', type: 'block', blocks: preambleBlocks, location: preambleSourceLocation }
+        blocks.splice(0, idx, preamble)
+      }
+    }
     if (unparsed.length && options.showWarnings) {
       console.warn(`unparsed content found at end of document:\n${unparsed.join('').trimEnd()}`)
     }
