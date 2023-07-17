@@ -93,6 +93,7 @@ There's likely more syntax and edge cases to cover, so this is only what we know
 * lines and tags attribute on include directive
 * hardbreaks option on paragraph or styled paragraph
 * automatic ID generation for headings
+* support for leveloffset
 * anchor on dlist term
 * anchor on list item
 * inline double and single quotes
