@@ -1,7 +1,6 @@
 {
   "name": "document",
   "type": "block",
-  "attributes": { "foo": "baz" },
   "header": {
     "title": [
       {
@@ -11,6 +10,9 @@
         "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 16 }]
       }
     ],
+    "attributes": {
+      "foo": { "value": "baz", "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 9 }] }
+    },
     "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 9 }]
   },
   "blocks": [

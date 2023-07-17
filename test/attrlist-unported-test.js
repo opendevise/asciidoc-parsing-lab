@@ -467,35 +467,35 @@ describe('attrlist (unported)', () => {
 
   describe('attribute references', () => {
     it('should resolve attribute reference before parsing attrlist', () => {
-      const attributes = { attrs: 'name=value' }
+      const attributes = { attrs: { value: 'name=value' } }
       const expected = { name: 'value' }
       expect(parse('{attrs}', { attributes })).to.eql(expected)
     })
 
     it('should resolve attribute references before parsing attrlist', () => {
-      const attributes = { attr1: 'name=value', attr2: 'indent=0' }
+      const attributes = { attr1: { value: 'name=value' }, attr2: { value: 'indent=0' } }
       const expected = { name: 'value', indent: '0' }
       expect(parse('{attr1},{attr2}', { attributes })).to.eql(expected)
     })
 
     it('should resolve attribute reference in value of attribute before parsing attrlist', () => {
-      const attributes = { desc: 'describe me' }
+      const attributes = { desc: { value: 'describe me' } }
       const expected = { alt: 'describe me' }
       expect(parse('alt={desc}', { attributes })).to.eql(expected)
     })
 
     it('should not consider inline passthroughs when resolving attribute references in attrlist', () => {
-      const attributes = { value: 'the value' }
+      const attributes = { value: { value: 'the value' } }
       const expected = { name: '+the value+' }
       expect(parse('name=+{value}+', { attributes })).to.eql(expected)
     })
 
     it('should constrain location on value of content attribute to bounds of attribute reference', () => {
-      const title = 'a value longer than the attribute reference'
-      const attributes = { title }
+      const titleValue = 'a value longer than the attribute reference'
+      const attributes = { title: { value: titleValue } }
       const expected = {
         title: {
-          value: title,
+          value: titleValue,
           inlines: [{
             name: 'text',
             type: 'string',
@@ -509,8 +509,7 @@ describe('attrlist (unported)', () => {
     })
 
     it('should parse single-quoted content attribute added by attribute reference', () => {
-      const titleattr = 'title=\'*TODO* title me\''
-      const attributes = { titleattr }
+      const attributes = { titleattr: { value: 'title=\'*TODO* title me\'' } }
       const expectedLocation = [{ line: 1, col: 3 }, { line: 1, col: 13 }]
       const expected = {
         title: {
@@ -544,8 +543,7 @@ describe('attrlist (unported)', () => {
     })
 
     it('should honor passthrough in single-quoted content attribute added by attribute reference', () => {
-      const titleattr = 'title=\'+*TODO* title me+\''
-      const attributes = { titleattr }
+      const attributes = { titleattr: { value: 'title=\'+*TODO* title me+\'' } }
       const expectedLocation = [{ line: 1, col: 2 }, { line: 1, col: 12 }]
       const expected = {
         title: {
@@ -564,7 +562,7 @@ describe('attrlist (unported)', () => {
     })
 
     it('should map location of parsed content attribute added by longer attribute reference', () => {
-      const attributes = { 'name-of-attribute': 'title=\'t\'' }
+      const attributes = { 'name-of-attribute': { value: 'title=\'t\'' } }
       const expectedLocation = [{ line: 1, col: 2 }, { line: 1, col: 20 }]
       const expected = {
         title: {
@@ -583,8 +581,7 @@ describe('attrlist (unported)', () => {
     })
 
     it('should not process attribute references when parsing inlines in single-quoted value', () => {
-      const titleattr = 'title=\'{as-is}\''
-      const attributes = { titleattr, 'as-is': 'should not be used' }
+      const attributes = { titleattr: { value: 'title=\'{as-is}\'' }, 'as-is': { value: 'should not be used' } }
       const expectedLocation = [{ line: 1, col: 2 }, { line: 1, col: 12 }]
       const expected = {
         title: {

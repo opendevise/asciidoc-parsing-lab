@@ -1,17 +1,20 @@
 {
   "name": "document",
   "type": "block",
+  "attributes": {
+    "attribute-missing": { "value": "warn", "origin": "external" }
+  },
   "header": {
     "title": [
       {
         "name": "text",
         "type": "string",
         "value": "Document Title",
-        "location": [{ "line": 2, "col": 3 }, { "line": 2, "col": 16 }]
+        "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 16 }]
       }
     ],
     "attributes": {
-      "attribute-missing": { "value": "warn", "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 24 }] },
+      "attribute-missing": { "value": "skip", "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 24 }] },
       "toc": { "value": "", "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 5 }] }
     },
     "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 5 }]

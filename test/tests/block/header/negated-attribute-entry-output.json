@@ -1,7 +1,6 @@
 {
   "name": "document",
   "type": "block",
-  "attributes": { "org": null },
   "header": {
     "title": [
       {
@@ -11,6 +10,9 @@
         "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 16 }]
       }
     ],
+    "attributes": {
+      "org": { "value": null, "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 6 }] }
+    },
     "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 6 }]
   },
   "blocks": [

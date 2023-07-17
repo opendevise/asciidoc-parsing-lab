@@ -1,9 +1,6 @@
 {
   "name": "document",
   "type": "block",
-  "attributes": {
-    "productname": "ACME Cloud"
-  },
   "header": {
     "title": [
       {
@@ -13,6 +10,9 @@
         "location": [{ "line": 2, "col": 3 }, { "line": 2, "col": 21 }]
       }
     ],
+    "attributes": {
+      "productname": { "value": "ACME Cloud", "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 24 }] }
+    },
     "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 21 }]
   },
   "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 21 }]

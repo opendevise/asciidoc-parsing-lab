@@ -1,8 +1,10 @@
 {
   "name": "document",
   "type": "block",
-  "attributes": { "attribute-missing": "warn" },
   "header": {
+    "attributes": {
+      "attribute-missing": { "value": "warn", "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 24 }] }
+    },
     "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 24 }]
   },
   "blocks": [

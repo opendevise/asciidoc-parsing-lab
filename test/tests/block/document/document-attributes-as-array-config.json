@@ -1,0 +1,6 @@
+{
+  "options": {
+    "attributes": ["org@=ACME", "country=US", "!show-country"],
+    "parseInlines": true
+  }
+}

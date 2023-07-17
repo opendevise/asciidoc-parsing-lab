@@ -268,7 +268,7 @@ describe('preprocessor', () => {
       `,
       locations: { 1: loc('1:1:0'), 2: loc('3:1:1') },
     }
-    expect(parse(input, { attributes: { foo: '' } })).to.eql(expected)
+    expect(parse(input, { attributes: { foo: { value: '' } } })).to.eql(expected)
   })
 
   it('should process preprocessor conditional with attribute alternatives that evaluates to true', () => {
@@ -285,7 +285,7 @@ describe('preprocessor', () => {
       `,
       locations: { 1: loc('1:1:0'), 2: loc('2:16:0'), 3: loc('3:1:0') },
     }
-    expect(parse(input, { attributes: { foo: '' } })).to.eql(expected)
+    expect(parse(input, { attributes: { foo: { value: '' } } })).to.eql(expected)
   })
 
   it('should process negated preprocessor conditional with attribute alternatives that evaluates to true', () => {
@@ -319,7 +319,7 @@ describe('preprocessor', () => {
       `,
       locations: { 1: loc('1:1:0'), 2: loc('2:16:0'), 3: loc('3:1:0') },
     }
-    expect(parse(input, { attributes: { foo: '', bar: '' } })).to.eql(expected)
+    expect(parse(input, { attributes: { foo: { value: '' }, bar: { value: '' } } })).to.eql(expected)
   })
 
   it('should process negated preprocessor conditional with attribute combination that evaluates to true', () => {
@@ -336,7 +336,7 @@ describe('preprocessor', () => {
       `,
       locations: { 1: loc('1:1:0'), 2: loc('2:17:0'), 3: loc('3:1:0') },
     }
-    expect(parse(input, { attributes: { foo: '' } })).to.eql(expected)
+    expect(parse(input, { attributes: { foo: { value: '' } } })).to.eql(expected)
   })
 
   it('should process and retain attribute entry above preprocessor conditional', () => {
@@ -410,7 +410,7 @@ describe('preprocessor', () => {
   })
 
   it('should consult attribute in attributes passed from API', () => {
-    const attributes = { foo: 'bar' }
+    const attributes = { foo: { value: 'bar' } }
     const input = heredoc`
     ifdef::foo[foo is set]
     fin
@@ -426,7 +426,7 @@ describe('preprocessor', () => {
   })
 
   it('should not modify attributes passed from API when processing attribute entry', () => {
-    const attributes = { foo: 'bar' }
+    const attributes = { foo: { value: 'bar' } }
     const input = heredoc`
     :yin: yang
 
@@ -542,7 +542,7 @@ describe('preprocessor', () => {
         2: loc('3:1:1'),
       },
     }
-    expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
+    expect(parse(input, { attributes: { docdir: { value: ospath.join(__dirname, 'fixtures') } } })).to.eql(expected)
   })
 
   it('should compute offsets for non-empty include correctly', () => {
@@ -563,7 +563,7 @@ describe('preprocessor', () => {
         3: loc('3:1:0'),
       },
     }
-    expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
+    expect(parse(input, { attributes: { docdir: { value: ospath.join(__dirname, 'fixtures') } } })).to.eql(expected)
   })
 
   it('should compute offsets for non-empty include without trailing newline correctly', () => {
@@ -584,7 +584,7 @@ describe('preprocessor', () => {
         3: loc('3:1:0'),
       },
     }
-    expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
+    expect(parse(input, { attributes: { docdir: { value: ospath.join(__dirname, 'fixtures') } } })).to.eql(expected)
   })
 
   it('should compute offsets for trailing non-empty include without trailing newline correctly', () => {
@@ -599,7 +599,7 @@ describe('preprocessor', () => {
         2: loc('1:1:0', ['partial-noeol.adoc']),
       },
     }
-    expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
+    expect(parse(input, { attributes: { docdir: { value: ospath.join(__dirname, 'fixtures') } } })).to.eql(expected)
   })
 
   it('should compute offsets for non-empty include without trailing newline followed by newline correctly', () => {
@@ -616,7 +616,7 @@ describe('preprocessor', () => {
         3: loc('3:1:0'),
       },
     }
-    expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
+    expect(parse(input, { attributes: { docdir: { value: ospath.join(__dirname, 'fixtures') } } })).to.eql(expected)
   })
 
   it('should compute offsets for trailing non-empty include with trailing newline correctly', () => {
@@ -632,7 +632,7 @@ describe('preprocessor', () => {
         3: loc('2:1:0', ['partial.adoc']),
       },
     }
-    expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
+    expect(parse(input, { attributes: { docdir: { value: ospath.join(__dirname, 'fixtures') } } })).to.eql(expected)
   })
 
   it('should compute offsets for non-empty include with trailing newline followed by newline correctly', () => {
@@ -649,6 +649,6 @@ describe('preprocessor', () => {
         3: loc('3:1:0'),
       },
     }
-    expect(parse(input, { attributes: { docdir: ospath.join(__dirname, 'fixtures') } })).to.eql(expected)
+    expect(parse(input, { attributes: { docdir: { value: ospath.join(__dirname, 'fixtures') } } })).to.eql(expected)
   })
 })

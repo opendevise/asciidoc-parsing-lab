@@ -1,6 +1,10 @@
 {
   "name": "document",
   "type": "block",
+  "attributes": {
+    "alt": { "value": "Player Status Window", "origin": "external", "locked": true },
+    "dimensions": { "value": "600,800", "origin": "external", "locked": true }
+  },
   "blocks": [
     {
       "name": "image",
@@ -9,14 +13,7 @@
       "target": "player-status.png",
       "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 44 }],
       "metadata": {
-        "attributes": {
-          "$1": "Player Status Window",
-          "$2": "600",
-          "$3": "800",
-          "alt": "Player Status Window",
-          "width": "600",
-          "height": "800"
-        }
+        "attributes": { "$1": "Player Status Window", "$2": "600", "$3": "800", "alt": "Player Status Window", "width": "600", "height": "800" }
       }
     }
   ],

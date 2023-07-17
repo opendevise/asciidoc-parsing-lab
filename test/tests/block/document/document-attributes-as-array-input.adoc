@@ -1,0 +1,7 @@
+= Document Title
+:org: {org}, Inc.
+:show-country:
+
+{org}
+ifdef::show-country[({country})]
+We make everything, that fails.

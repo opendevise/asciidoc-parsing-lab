@@ -1,7 +1,6 @@
 {
   "name": "document",
   "type": "block",
-  "attributes": { "attrs": "title='*Exhibit A*'" },
   "header": {
     "title": [
       {
@@ -11,6 +10,9 @@
         "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 9 }]
       }
     ],
+    "attributes": {
+      "attrs": { "value": "title='*Exhibit A*'", "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 27 }] }
+    },
     "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 27 }]
   },
   "blocks": [

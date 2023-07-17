@@ -1,0 +1,39 @@
+{
+  "name": "document",
+  "type": "block",
+  "attributes": {
+    "org": { "value": "ACME", "origin": "external" },
+    "country": { "value": "US", "origin": "external", "locked": true },
+    "show-country": { "value": null, "origin": "external", "locked": true }
+  },
+  "header": {
+    "title": [
+      {
+        "name": "text",
+        "type": "string",
+        "value": "Document Title",
+        "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 16 }]
+      }
+    ],
+    "attributes": {
+      "org": { "value": "ACME, Inc.", "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 17 }] }
+    },
+    "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 14 }]
+  },
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "ACME, Inc.\nWe make everything, that fails.",
+          "location": [{ "line": 5, "col": 1 }, { "line": 7, "col": 31 }]
+        }
+      ],
+      "location": [{ "line": 5, "col": 1 }, { "line": 7, "col": 31 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 7, "col": 31 }]
+}

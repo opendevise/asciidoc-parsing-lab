@@ -1,7 +1,6 @@
 {
   "name": "document",
   "type": "block",
-  "attributes": { "url-project": "https://git.example.org/org/project", "url-repo": "https://git.example.org/org/project.git" },
   "header": {
     "title": [
       {
@@ -11,6 +10,10 @@
         "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 14 }]
       }
     ],
+    "attributes": {
+      "url-project": { "value": "https://git.example.org/org/project", "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 49 }] },
+      "url-repo": { "value": "https://git.example.org/org/project.git", "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 28 }] }
+    },
     "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 28 }]
   },
   "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 28 }]

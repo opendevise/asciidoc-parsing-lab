@@ -1,7 +1,6 @@
 {
   "name": "document",
   "type": "block",
-  "attributes": { "toc": "" },
   "header": {
     "title": [
       {
@@ -11,6 +10,9 @@
         "location": [{ "line": 1, "col": 3 }, { "line": 1, "col": 16 }]
       }
     ],
+    "attributes": {
+      "toc": { "value": "", "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 5 }] }
+    },
     "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 5 }]
   },
   "blocks": [
