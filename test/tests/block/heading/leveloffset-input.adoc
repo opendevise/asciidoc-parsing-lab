@@ -1,0 +1,4 @@
+:leveloffset: 2
+
+[discrete]
+= Heading

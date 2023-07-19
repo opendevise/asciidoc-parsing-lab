@@ -88,10 +88,11 @@ There's likely more syntax and edge cases to cover, so this is only what we know
 * inline replacements
 * backslash escaping for blocks
 * more thorough backslash escaping for inlines (need to consider all ASCII symbols)
-* lines and tags attribute on include directive
+* lines, tags, and leveloffset attributes on include directive
+* optional option on include directive
 * hardbreaks option on paragraph or styled paragraph
 * automatic ID generation for headings
-* support for leveloffset
+* support for relative leveloffset
 * anchor on dlist term
 * anchor on list item
 * inline double and single quotes

@@ -1,0 +1,31 @@
+{
+  "name": "document",
+  "type": "block",
+  "header": {
+    "attributes": {
+      "leveloffset": { "value": "2", "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 15 }] }
+    },
+    "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 15 }]
+  },
+  "blocks": [
+    {
+      "name": "heading",
+      "type": "block",
+      "title": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "Heading",
+          "location": [{ "line": 4, "col": 3 }, { "line": 4, "col": 9 }]
+        }
+      ],
+      "level": 2,
+      "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 9 }],
+      "metadata": {
+        "attributes": { "$1": "discrete", "style": "discrete" },
+        "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 10 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 4, "col": 9 }]
+}
