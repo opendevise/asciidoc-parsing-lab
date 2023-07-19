@@ -280,7 +280,7 @@ section_or_discrete_heading = startOffset:offset headingRecord:heading metadataA
     const location_ = getLocation()
     const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - startOffset) })
     let leveloffset = documentAttributes['leveloffset']?.value
-    const level = leveloffset && (leveloffset = parseInt(leveloffset, 10) || 0)
+    const level = (leveloffset &&= parseInt(leveloffset, 10) || 0)
       ? Math.max(marker.length - 1 + leveloffset, 0)
       : marker.length - 1
     // Q: store marker instead of or in addition to level?
@@ -299,7 +299,7 @@ discrete_heading = headingRecord:heading
     const metadata = processBlockMetadata()
     const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - offset()) })
     let leveloffset = documentAttributes['leveloffset']?.value
-    const level = leveloffset && (leveloffset = parseInt(leveloffset, 10) || 0)
+    const level = (leveloffset &&= parseInt(leveloffset, 10) || 0)
       ? Math.max(marker.length - 1 + leveloffset, 0)
       : marker.length - 1
     // Q: store marker instead of or in addition to level?
