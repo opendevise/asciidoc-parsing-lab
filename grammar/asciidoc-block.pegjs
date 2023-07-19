@@ -1,5 +1,5 @@
 {{
-const { createContext, enterBlock, exitBlock, exitList, exitSection, isBlockEnd, isCurrentList, isNestedSection, isNewList, toInlines } = require('#block-helpers')
+const { createContext, enterBlock, exitBlock, exitList, exitSection, isBlockEnd, isCurrentList, isNestedSection, isNewList, resolveLeveloffset, toInlines } = require('#block-helpers')
 const inlinePreprocessor = require('#inline-preprocessor')
 const { parse: parseAttrlist } = require('#attrlist-parser')
 const ADMONITION_STYLES = { CAUTION: 'caution', IMPORTANT: 'important', NOTE: 'note', TIP: 'tip', WARNING: 'warning' }
@@ -177,6 +177,7 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doc
       for (let [name, value, range_] of attributeEntriesAbove) {
         if (documentAttributes[name]?.locked) continue
         attributes[name] = { value: (value &&= inlinePreprocessor(value, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input), location: toSourceLocation(getLocation(range_)) }
+        if (name === 'leveloffset') attributes[name].value = value = resolveLeveloffset(value, { attributes: documentAttributes })
         documentAttributes[name] = { value, origin: 'header' }
       }
     }
@@ -199,6 +200,7 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doc
         for (let [name, value, range_] of attributeEntriesBelow) {
           if (documentAttributes[name]?.locked) continue
           attributes[name] = { value: (value &&= inlinePreprocessor(value, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input), location: toSourceLocation(getLocation(range_)) }
+          if (name === 'leveloffset') attributes[name].value = value = resolveLeveloffset(value, { attributes: documentAttributes })
           documentAttributes[name] = { value, origin: 'header' }
         }
       }
