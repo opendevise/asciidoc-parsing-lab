@@ -1,0 +1,26 @@
+{
+  "name": "document",
+  "type": "block",
+  "header": {
+    "attributes": {
+      "appsdir": { "value": "C:\\Program Files\\", "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 27 }] }
+    },
+    "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 27 }]
+  },
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "Look for the installed application in C:\\Program Files\\.",
+          "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 48 }]
+        }
+      ],
+      "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 48 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 48 }]
+}

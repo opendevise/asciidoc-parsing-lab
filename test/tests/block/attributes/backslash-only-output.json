@@ -1,0 +1,11 @@
+{
+  "name": "document",
+  "type": "block",
+  "header": {
+    "attributes": {
+      "bs": { "value": "\\", "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 6 }] }
+    },
+    "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 6 }]
+  },
+  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 6 }]
+}

@@ -1,0 +1,3 @@
+:icons:     font
+:toc:       preamble
+:toclevels: 1

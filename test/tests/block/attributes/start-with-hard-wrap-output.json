@@ -1,0 +1,11 @@
+{
+  "name": "document",
+  "type": "block",
+  "header": {
+    "attributes": {
+      "source": { "value": "\npreceded by newline", "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 19 }] }
+    },
+    "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 19 }]
+  },
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 19 }]
+}

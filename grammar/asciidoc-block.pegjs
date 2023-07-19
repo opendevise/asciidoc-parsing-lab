@@ -223,10 +223,51 @@ attribute_entry = ':' negatedPrefix:'!'? name:attribute_name negatedSuffix:'!'? 
     return [name, negatedPrefix || negatedSuffix ? null : value || '', range()]
   }
 
+attribute_entry_head = ':' '!'? attribute_name '!'? ':' (space / eol)
+
 // TODO permit non-ASCII letters in attribute name
 attribute_name = $([a-zA-Z0-9_] [a-zA-Z0-9_-]*)
 
-attribute_value = space @$(!lf .)+
+//attribute_value = space lines:($(!lf .)*)|1.., &{ let idx = offset(), count = 0; while (input[--idx] === '\\') count++; return !!(count % 2) } lf (&space / !(attribute_entry_head / eol / list_continuation / any_block_delimiter_line / block_attribute_line))|
+//{
+//    const lastLineIdx = lines.length - 1
+//    if (!lastLineIdx) {
+//      const line0 = lines[0]
+//      if (!line0) return line0
+//      if (line0[line0.length - 1] !== '\\') return line0[0] === ' ' ? line0.trimStart() : line0
+//    }
+//    let hardWrapNext = false
+//    return lines.reduce((buf, line, lineIdx) => {
+//      const hardWrap = hardWrapNext
+//      if (hardWrap) buf = buf.slice(0, -2) + '\n'
+//      if (lineIdx < lastLineIdx) {
+//        if (!(line = line.slice(0, -1)) && !(hardWrapNext = false)) return buf
+//        if (line[line.length - 1] === '\\') line = line.replace(/\\+$/, (m) => m.slice(0, m.length / 2))
+//      } else if (line[line.length - 1] === '\\') {
+//        line = line.replace(/\\+$/, (m) => m.slice(0, m.length % 2 ? (m.length - 1) / 2 + 1 : m.length / 2))
+//      }
+//      hardWrapNext = line.length > 1 && line[line.length - 2] === ' ' && line[line.length - 1] === ' '
+//      return buf + (hardWrap || line[0] !== ' ' ? line : line.trimStart())
+//    }, '')
+//}
+
+attribute_value = space lines:($(!('\\' / lf) . / '\\' !lf .)*)|1.., '\\' lf (&space / !(attribute_entry_head / eol / list_continuation / any_block_delimiter_line / block_attribute_line))| trailer:('\\' / '')
+{
+    if (lines.length === 1) {
+      const line0 = lines[0]
+      if (!line0) return trailer
+      if (line0[line0.length - 1] !== '\\') return (line0[0] === ' ' ? line0.trimStart() : line0) + trailer
+    }
+    let hardWrapNext = false
+    return lines.reduce((buf, line) => {
+      const hardWrap = hardWrapNext
+      if (hardWrap) buf = buf.slice(0, -2) + '\n'
+      if (!line && !(hardWrapNext = false)) return buf
+      if (line[line.length - 1] === '\\') line = line.replace(/\\+$/, (m) => m.slice(0, m.length / 2))
+      hardWrapNext = line.length > 1 && line[line.length - 2] === ' ' && line[line.length - 1] === ' '
+      return buf + (hardWrap || line[0] !== ' ' ? line : line.trimStart())
+    }, '') + trailer
+}
 
 body = @section_block* remainder
 

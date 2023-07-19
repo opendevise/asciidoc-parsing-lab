@@ -1,0 +1,2 @@
+:ad: Ascii\
+Doc
