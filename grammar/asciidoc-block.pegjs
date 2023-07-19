@@ -279,10 +279,10 @@ section_or_discrete_heading = startOffset:offset headingRecord:heading metadataA
     const [metadata, blocks] = metadataAndBlocks
     const location_ = getLocation()
     const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - startOffset) })
-    const leveloffset = String(documentAttributes['leveloffset']?.value ?? 0)
-    const level = leveloffset === '0'
-      ? marker.length - 1
-      : Math.max(marker.length - 1 + parseInt(leveloffset, 10), 0)
+    let leveloffset = documentAttributes['leveloffset']?.value
+    const level = leveloffset && (leveloffset = parseInt(leveloffset, 10) || 0)
+      ? Math.max(marker.length - 1 + leveloffset, 0)
+      : marker.length - 1
     // Q: store marker instead of or in addition to level?
     const node = { name: 'heading', type: 'block', title: inlines, level, location: toSourceLocation(location_) }
     if (blocks) {
@@ -298,10 +298,10 @@ discrete_heading = headingRecord:heading
     const location_ = getLocation()
     const metadata = processBlockMetadata()
     const inlines = parseInline(title, { attributes: documentAttributes, locations: createLocationsForInlines(location_, titleOffset - offset()) })
-    const leveloffset = String(documentAttributes['leveloffset']?.value ?? 0)
-    const level = leveloffset === '0'
-      ? marker.length - 1
-      : Math.max(marker.length - 1 + parseInt(leveloffset, 10), 0)
+    let leveloffset = documentAttributes['leveloffset']?.value
+    const level = leveloffset && (leveloffset = parseInt(leveloffset, 10) || 0)
+      ? Math.max(marker.length - 1 + leveloffset, 0)
+      : marker.length - 1
     // Q: store marker instead of or in addition to level?
     const node = { name: 'heading', type: 'block', title: inlines, level, location: toSourceLocation(location_) }
     return applyBlockMetadata(node, metadata)
