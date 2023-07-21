@@ -123,29 +123,6 @@ function applyBlockMetadata (block, metadata) {
   }
   return Object.assign(block, { metadata })
 }
-
-function transformParagraph (lines) {
-  const location_ = getLocation()
-  const metadata = processBlockMetadata()
-  const firstLine = lines[0]
-  let style, admonitionVariant, inlinesOffset
-  if ((style = metadata?.attributes.style)) {
-    admonitionVariant = ADMONITION_STYLES[style]
-  } else if (firstLine.length - 2 > MIN_ADMONITION_STYLE_LENGTH && ~(inlinesOffset = firstLine.indexOf(': ')) &&
-      inlinesOffset <= MAX_ADMONITION_STYLE_LENGTH && (admonitionVariant = ADMONITION_STYLES[firstLine.slice(0, inlinesOffset)])) {
-    lines[0] = firstLine.slice((inlinesOffset += 2))
-  } else {
-    inlinesOffset = 0
-  }
-  const inlines = parseInline(lines.join('\n'), { attributes: documentAttributes, locations: createLocationsForInlines(location_, inlinesOffset) })
-  const sourceLocation = toSourceLocation(location_)
-  let node = { name: 'paragraph', type: 'block', inlines, location: sourceLocation }
-  if (admonitionVariant) {
-    // Q: should location for paragraph start after admonition label?
-    node = { name: 'admonition', type: 'block', form: 'paragraph', variant: admonitionVariant, blocks: [node], location: sourceLocation }
-  }
-  return applyBlockMetadata(node, metadata)
-}
 }
 // TODO if surrounding lf are not part of document, group inner two rules as a new rule
 document = lf* header:header? blocks:body unparsed:.*
@@ -263,7 +240,7 @@ section_block = lf* block_metadata @(!heading @(listing / literal / example / si
 
 block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / image / list / dlist / &space @indented / paragraph)
 
-attached_block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / image / list / !list_marker @(dlist / !dlist_term @(&space @indented / attached_paragraph)))
+attached_block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / image / list / !list_marker @(dlist / !dlist_term @(&space @indented / paragraph)))
 
 block_metadata = attrlists:(@(block_attribute_line / block_title_line) lf*)*
   {
@@ -312,14 +289,28 @@ discrete_heading = headingRecord:heading
 heading = @$('=' '='*) space space* @offset @line
 
 // NOTE there's no need to check for block_attribute_line on the first line since the block metadata has already been consumed
-paragraph = !any_block_delimiter_line lines:line|1.., !(list_continuation / any_block_delimiter_line / block_attribute_line)|
+paragraph = &(!lf . eol / !any_block_delimiter_line) lines:line|1.., !(list_continuation / any_block_delimiter_line / block_attribute_line)|
   {
-    return transformParagraph(lines)
-  }
-
-attached_paragraph = &(list_continuation / !any_block_delimiter_line) lines:line|1.., !(list_continuation / any_block_delimiter_line / block_attribute_line)|
-  {
-    return transformParagraph(lines)
+    const location_ = getLocation()
+    const metadata = processBlockMetadata()
+    const firstLine = lines[0]
+    let style, admonitionVariant, inlinesOffset
+    if ((style = metadata?.attributes.style)) {
+      admonitionVariant = ADMONITION_STYLES[style]
+    } else if (firstLine.length - 2 > MIN_ADMONITION_STYLE_LENGTH && ~(inlinesOffset = firstLine.indexOf(': ')) &&
+        inlinesOffset <= MAX_ADMONITION_STYLE_LENGTH && (admonitionVariant = ADMONITION_STYLES[firstLine.slice(0, inlinesOffset)])) {
+      lines[0] = firstLine.slice((inlinesOffset += 2))
+    } else {
+      inlinesOffset = 0
+    }
+    const inlines = parseInline(lines.join('\n'), { attributes: documentAttributes, locations: createLocationsForInlines(location_, inlinesOffset) })
+    const sourceLocation = toSourceLocation(location_)
+    let node = { name: 'paragraph', type: 'block', inlines, location: sourceLocation }
+    if (admonitionVariant) {
+      // Q: should location for paragraph start after admonition label?
+      node = { name: 'admonition', type: 'block', form: 'paragraph', variant: admonitionVariant, blocks: [node], location: sourceLocation }
+    }
+    return applyBlockMetadata(node, metadata)
   }
 
 indented = lines:indented_line+
