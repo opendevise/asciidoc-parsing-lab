@@ -9,11 +9,11 @@
         {
           "name": "text",
           "type": "string",
-          "value": "first paragraph",
-          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 15 }]
+          "value": "+",
+          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 1 }]
         }
       ],
-      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 15 }]
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 1 }]
     },
     {
       "name": "paragraph",
@@ -22,12 +22,12 @@
         {
           "name": "text",
           "type": "string",
-          "value": "+\nsecond paragraph",
-          "location": [{ "line": 2, "col": 1 }, { "line": 3, "col": 16 }]
+          "value": "+",
+          "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 1 }]
         }
       ],
-      "location": [{ "line": 2, "col": 1 }, { "line": 3, "col": 16 }]
+      "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 1 }]
     }
   ],
-  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 16 }]
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 1 }]
 }
