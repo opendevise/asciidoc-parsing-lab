@@ -312,7 +312,7 @@ discrete_heading = headingRecord:heading
 heading = @$('=' '='*) space space* @offset @line
 
 // NOTE there's no need to check for block_attribute_line on the first line since the block metadata has already been consumed
-paragraph = !any_block_delimiter_line lines:line|1.., !(any_block_delimiter_line / block_attribute_line)|
+paragraph = !any_block_delimiter_line lines:line|1.., !(list_continuation / any_block_delimiter_line / block_attribute_line)|
   {
     return transformParagraph(lines)
   }
