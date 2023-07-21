@@ -124,13 +124,13 @@ function applyBlockMetadata (block, metadata) {
   return Object.assign(block, { metadata })
 }
 
-function setDocumentAttributes (attributeEntries) {
+function setDocumentAttributes (attributeEntries, origin) {
   const attributes = {}
   for (let [name, value, range_] of attributeEntries) {
     if (documentAttributes[name]?.locked) continue
     attributes[name] = { value: (value &&= inlinePreprocessor(value, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input), location: toSourceLocation(getLocation(range_)) }
     if (name === 'leveloffset') attributes[name].value = value = resolveLeveloffset(value, { attributes: documentAttributes })
-    documentAttributes[name] = { value, origin: 'header' }
+    documentAttributes[name] = { value, origin }
   }
   return attributes
 }
@@ -161,7 +161,7 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doc
     const attributes = {}
     const header = {}
     const sourceLocation = toSourceLocation(getLocation())
-    if (attributeEntriesAbove.length) Object.assign(attributes, setDocumentAttributes(attributeEntriesAbove))
+    if (attributeEntriesAbove.length) Object.assign(attributes, setDocumentAttributes(attributeEntriesAbove, 'header'))
     if (doctitleAndAttributeEntries) {
       const [[doctitle, locationsForDoctitleInlines], authors, attributeEntriesBelow] = doctitleAndAttributeEntries
       header.title = parseInline(doctitle, { attributes: documentAttributes, locations: locationsForDoctitleInlines })
@@ -177,7 +177,7 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doc
         }
         header.authors = authors
       }
-      if (attributeEntriesBelow.length) Object.assign(attributes, setDocumentAttributes(attributeEntriesBelow))
+      if (attributeEntriesBelow.length) Object.assign(attributes, setDocumentAttributes(attributeEntriesBelow, 'header'))
     }
     return Object.assign(header, { attributes, location: sourceLocation })
   }
