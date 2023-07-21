@@ -362,8 +362,18 @@ listing_contents = (!(delim:listing_delimiter_line &{ return isBlockEnd(context,
 listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDelim) }) contents:listing_contents closingDelim:(@listing_delimiter_line / eof)
   {
     const delimiter = exitBlock(context)
-    const metadata = processBlockMetadata()
-    const name = metadata?.attributes.style === 'literal' ? 'literal' : 'listing'
+    let metadata = metadataCache[offset()]
+    const style = metadata?.attributes.style
+    if (style === 'source') {
+      processBlockMetadata(undefined, [, 'language'])
+      let language = metadata.attributes.language
+      if (!language && (language = documentAttributes['source-language']?.value)) metadata.attributes.language = language
+    } else {
+      processBlockMetadata(undefined, style ? undefined : [, 'language'])
+      const language = !style && (metadata?.attributes.language || documentAttributes['source-language']?.value)
+      if (language) Object.assign((metadata ??= { attributes: {}, options: [], roles: [] }).attributes, { style: 'source', language })
+    }
+    const name = style === 'literal' ? 'literal' : 'listing'
     if (!closingDelim && options.showWarnings) console.warn(`unclosed ${name} block`)
     const inlines = contents ? toInlines('text', contents[0], toSourceLocation(contents[1])) : []
     const node = { name, type: 'block', form: 'delimited', delimiter, inlines, location: toSourceLocation(getLocation(closingDelim ? undefined : true)) }
@@ -388,8 +398,16 @@ literal_contents = (!(delim:literal_delimiter_line &{ return isBlockEnd(context,
 literal = (openingDelim:literal_delimiter_line { enterBlock(context, openingDelim) }) contents:literal_contents closingDelim:(@literal_delimiter_line / eof)
   {
     const delimiter = exitBlock(context)
-    const metadata = processBlockMetadata()
-    const name = metadata?.attributes.style === 'listing' ? 'listing' : 'literal'
+    const metadata = metadataCache[offset()]
+    const style = metadata?.attributes.style
+    if (style === 'source') {
+      processBlockMetadata(undefined, [, 'language'])
+      let language = metadata.attributes.language
+      if (!language && (language = documentAttributes['source-language']?.value)) metadata.attributes.language = language
+    } else {
+      processBlockMetadata()
+    }
+    const name = style === 'listing' || style === 'source' ? 'listing' : 'literal'
     if (!closingDelim && options.showWarnings) console.warn(`unclosed ${name} block`)
     const inlines = contents ? toInlines('text', contents[0], toSourceLocation(contents[1])) : []
     const node = { name, type: 'block', form: 'delimited', delimiter, inlines, location: toSourceLocation(getLocation(closingDelim ? undefined : true)) }
