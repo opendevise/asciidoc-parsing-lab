@@ -114,13 +114,14 @@ function populateASGDefaults (node) {
     metadata.options ??= []
     metadata.roles ??= []
   }
-  if (node.form === 'macro' || node.name === 'break' || node.name === 'heading') return node
-  if (['listing', 'literal', 'pass', 'stem', 'paragraph', 'verse'].includes(node.name)) {
+  const nodeName = node.name
+  if (node.form === 'macro' || ['break', 'heading', 'attributes'].includes(nodeName)) return node
+  if (['listing', 'literal', 'pass', 'stem', 'paragraph', 'verse'].includes(nodeName)) {
     node.inlines ??= []
-  } else if (['list', 'dlist'].includes(node.name)) {
+  } else if (['list', 'dlist'].includes(nodeName)) {
     node.items.forEach(populateASGDefaults)
   } else {
-    if (node.name === 'document' && node.header) node.header.attributes ??= {}
+    if (nodeName === 'document' && node.header) node.header.attributes ??= {}
     ;(node.blocks ??= []).forEach(populateASGDefaults)
   }
   return node
@@ -134,13 +135,14 @@ function stripASGDefaults (node) {
     if ('options' in metadata && !metadata.options.length) delete metadata.options
     if ('roles' in metadata && !metadata.roles.length) delete metadata.roles
   }
-  if (node.form === 'macro' || node.name === 'break' || node.name === 'heading') return node
-  if (['listing', 'literal', 'pass', 'stem', 'paragraph', 'verse'].includes(node.name)) {
+  const nodeName = node.name
+  if (node.form === 'macro' || ['break', 'heading', 'attributes'].includes(nodeName)) return node
+  if (['listing', 'literal', 'pass', 'stem', 'paragraph', 'verse'].includes(nodeName)) {
     if (!node.inlines.length) delete node.inlines
-  } else if (['list', 'dlist'].includes(node.name)) {
+  } else if (['list', 'dlist'].includes(nodeName)) {
     node.items.forEach(stripASGDefaults)
   } else if (node.blocks?.length) {
-    if (node.name === 'document' && node.header && !Object.keys(node.header.attributes).length) {
+    if (nodeName === 'document' && node.header && !Object.keys(node.header.attributes).length) {
       delete node.header.attributes
     }
     node.blocks.forEach(stripASGDefaults)

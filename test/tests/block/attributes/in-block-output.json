@@ -1,0 +1,59 @@
+{
+  "name": "document",
+  "type": "block",
+  "header": {
+    "attributes": {
+      "attrs": { "value": "", "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7 }] }
+    },
+    "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7 }]
+  },
+  "blocks": [
+    {
+      "name": "sidebar",
+      "type": "block",
+      "form": "delimited",
+      "delimiter": "****",
+      "blocks": [
+        {
+          "name": "paragraph",
+          "type": "block",
+          "inlines": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "before",
+              "location": [{ "line": 5, "col": 1 }, { "line": 5, "col": 6 }]
+            }
+          ],
+          "location": [{ "line": 5, "col": 1 }, { "line": 5, "col": 6 }]
+        },
+        {
+          "name": "attributes",
+          "type": "block",
+          "attributes": {
+            "attrs": { "value": "id=idname", "location": [{ "line": 7, "col": 1 }, { "line": 7, "col": 17 }] }
+          },
+          "location": [{ "line": 7, "col": 1 }, { "line": 7, "col": 17 }]
+        },
+        {
+          "name": "paragraph",
+          "type": "block",
+          "inlines": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "after",
+              "location": [{ "line": 9, "col": 1 }, { "line": 9, "col": 5 }]
+            }
+          ],
+          "location": [{ "line": 9, "col": 1 }, { "line": 9, "col": 5 }]
+        }
+      ],
+      "location": [{ "line": 4, "col": 1 }, { "line": 10, "col": 4 }],
+      "metadata": {
+        "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 9 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 10, "col": 4 }]
+}

@@ -1,0 +1,10 @@
+:attrs:
+
+[{attrs}]
+****
+before
+
+:attrs: id=idname
+
+after
+****

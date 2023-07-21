@@ -1,0 +1,44 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "before",
+          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 6 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 6 }]
+    },
+    {
+      "name": "attributes",
+      "type": "block",
+      "attributes": {
+        "org": {
+          "value": "ACME",
+          "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 10 }]
+        }
+      },
+      "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 10 }]
+    },
+    {
+      "name": "paragraph",
+      "type": "block",
+      "inlines": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "ACME",
+          "location": [{ "line": 5, "col": 1 }, { "line": 5, "col": 5 }]
+        }
+      ],
+      "location": [{ "line": 5, "col": 1 }, { "line": 5, "col": 5 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 5 }]
+}
