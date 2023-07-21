@@ -1,0 +1,12 @@
+[discrete]
+== Heading
+
+:leveloffset: 1
+
+[discrete]
+= Heading
+
+:leveloffset: -1
+
+[discrete]
+== Heading

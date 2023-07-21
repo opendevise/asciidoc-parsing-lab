@@ -233,11 +233,16 @@ body = @section_block* remainder
 compound_block_contents = @block* remainder
 
 // NOTE !heading is checked first since section_or_discrete_heading rule will fail at ancestor section, but should not then match a different rule
-section_block = lf* block_metadata @(!heading @(listing / literal / example / sidebar / image / list / dlist / &space @indented / paragraph) / section_or_discrete_heading)
+section_block = lf* @(attributes / block_metadata @(!heading @(listing / literal / example / sidebar / image / list / dlist / &space @indented / paragraph) / section_or_discrete_heading))
 
-block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / image / list / dlist / &space @indented / paragraph)
+block = lf* @(attributes / block_metadata @(discrete_heading / listing / literal / example / sidebar / image / list / dlist / &space @indented / paragraph))
 
-attached_block = lf* block_metadata @(discrete_heading / listing / literal / example / sidebar / image / list / !list_marker @(dlist / !dlist_term @(&space @indented / paragraph)))
+attached_block = block_metadata @(discrete_heading / listing / literal / example / sidebar / image / list / !list_marker @(dlist / !dlist_term @(&space @indented / paragraph)))
+
+attributes = attributeEntries:attribute_entry+
+  {
+    return { name: 'attributes', type: 'block', attributes: setDocumentAttributes(attributeEntries, 'body'), location: toSourceLocation(getLocation()) }
+  }
 
 block_metadata = attrlists:(@(block_attribute_line / block_title_line) lf*)*
   {
@@ -466,9 +471,18 @@ list_continuation = @'+' eol
 
 // Q should block match after list continuation end with '?', or should last alternative be '!.'?
 // Q should @attached_block? be changed to @(attached_block / block_metadata {}) or should parent handle the orphaned metadata lines?
-list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation @attached_block? / (lf lf* / block_metadata) @(list / !list_marker @(dlist / &space !dlist_term @indented)))* trailer:lf?
+list_item = marker:list_marker &{ return isCurrentList(context, marker) } principal:list_item_principal blocks:(list_continuation lf* @(@attributes (lf !attribute_entry)*)? @attached_block? / (lf lf* / block_metadata) @(list / !list_marker @(dlist / &space !dlist_term @indented)))* trailer:lf?
   {
-    if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
+    if (blocks.length) {
+      blocks = blocks.reduce((accum, block) => {
+        if (Array.isArray(block)) {
+          if (block[0] != null) accum.push(block[0])
+          block = block[1]
+        }
+        if (block != null) accum.push(block)
+        return accum
+      }, [])
+    }
     let sourceLocation
     if (blocks.length) {
       sourceLocation = toSourceLocation(getLocation({ start: offset() }))
@@ -500,9 +514,18 @@ dlist_term_for_current_item = termRecord:dlist_term &{ return isCurrentList(cont
     return { inlines: parseInline(termRecord[1].trimEnd(), { attributes: documentAttributes, locations: createLocationsForInlines(getLocation(), termRecord[0] - offset()) }), marker: termRecord[2] }
   }
 
-dlist_item = term:dlist_term_for_current_item moreTerms:(lf lf* @dlist_term_for_current_item)* principal:(space space* @(&eol / list_item_principal) / lf lf* @(&list_continuation / (!(space / list_item_principal_interrupting_line) / space !(list_marker / dlist_term) space*) @list_item_principal) / &eol) blocks:(list_continuation @attached_block? / (lf lf* / block_metadata) @(list / !list_marker @(dlist / &space !dlist_term @indented)))* trailer:lf?
+dlist_item = term:dlist_term_for_current_item moreTerms:(lf lf* @dlist_term_for_current_item)* principal:(space space* @(&eol / list_item_principal) / lf lf* @(&list_continuation / (!(space / list_item_principal_interrupting_line) / space !(list_marker / dlist_term) space*) @list_item_principal) / &eol) blocks:(list_continuation lf* @(@attributes (lf !attribute_entry)*)? @attached_block? / (lf lf* / block_metadata) @(list / !list_marker @(dlist / &space !dlist_term @indented)))* trailer:lf?
   {
-    if (blocks.length && blocks[blocks.length - 1] == null) blocks.pop()
+    if (blocks.length) {
+      blocks = blocks.reduce((accum, block) => {
+        if (Array.isArray(block)) {
+          if (block[0] != null) accum.push(block[0])
+          block = block[1]
+        }
+        if (block != null) accum.push(block)
+        return accum
+      }, [])
+    }
     let sourceLocation
     if (blocks.length) {
       sourceLocation = toSourceLocation(getLocation({ start: offset() }))
