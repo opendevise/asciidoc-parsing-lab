@@ -317,7 +317,7 @@ paragraph = !any_block_delimiter_line lines:line|1.., !(list_continuation / any_
     return transformParagraph(lines)
   }
 
-attached_paragraph = lines:(line:list_continuation { return [line] } / !any_block_delimiter_line @line|1.., !(list_continuation / any_block_delimiter_line / block_attribute_line)|)
+attached_paragraph = &(list_continuation / !any_block_delimiter_line) lines:line|1.., !(list_continuation / any_block_delimiter_line / block_attribute_line)|
   {
     return transformParagraph(lines)
   }
