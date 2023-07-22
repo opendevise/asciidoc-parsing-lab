@@ -90,7 +90,6 @@ There's likely more syntax and edge cases to cover, so this is only what we know
 * more thorough backslash escaping for inlines (need to consider all ASCII symbols)
 * lines, tags, and leveloffset attributes on include directive
 * optional option on include directive
-* hardbreaks option on paragraph or styled paragraph
 * automatic ID generation for headings
 * anchor on dlist term
 * anchor on list item
