@@ -13,6 +13,7 @@
           "location": [{ "line": 2, "col": 4 }, { "line": 2, "col": 10 }]
         }
       ],
+      "marker": "==",
       "level": 1,
       "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 10 }],
       "metadata": {
@@ -39,6 +40,7 @@
           "location": [{ "line": 7, "col": 3 }, { "line": 7, "col": 9 }]
         }
       ],
+      "marker": "=",
       "level": 1,
       "location": [{ "line": 7, "col": 1 }, { "line": 7, "col": 9 }],
       "metadata": {
@@ -65,6 +67,7 @@
           "location": [{ "line": 12, "col": 4 }, { "line": 12, "col": 10 }]
         }
       ],
+      "marker": "==",
       "level": 1,
       "location": [{ "line": 12, "col": 1 }, { "line": 12, "col": 10 }],
       "metadata": {

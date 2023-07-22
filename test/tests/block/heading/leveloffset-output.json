@@ -19,6 +19,7 @@
           "location": [{ "line": 4, "col": 3 }, { "line": 4, "col": 9 }]
         }
       ],
+      "marker": "=",
       "level": 2,
       "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 9 }],
       "metadata": {

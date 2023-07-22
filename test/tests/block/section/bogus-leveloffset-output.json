@@ -19,6 +19,7 @@
           "location": [{ "line": 3, "col": 4 }, { "line": 3, "col": 16 }]
         }
       ],
+      "marker": "==",
       "level": 1,
       "location": [{ "line": 3, "col": 1 }, { "line": 5, "col": 8 }],
       "blocks": [
