@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "npm run gen && npm run test",
-    "lint": "eslint \"{lib,test}/**/*.js\"",
+    "lint": "eslint \"bin/*\" \"{lib,test}/**/*.js\"",
     "test": "_mocha",
     "gen": "npm run gen:attrlist-parser && npm run gen:block-parser && npm run gen:inline-parser && npm run gen:preprocessor-parser",
     "gen:attrlist-parser": "peggy -c grammar/asciidoc-attrlist-config.js -t '' > /dev/null",
