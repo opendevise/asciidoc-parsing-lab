@@ -5,7 +5,6 @@
     {
       "name": "paragraph",
       "type": "block",
-      "id": "idname",
       "inlines": [
         {
           "name": "text",
@@ -17,6 +16,7 @@
       "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 31 }],
       "metadata": {
         "attributes": { "$1": "%hardbreaks#idname.role1.role2", "opts": "hardbreaks", "role": "role1 role2", "id": "idname" },
+        "id": "idname",
         "options": ["hardbreaks"],
         "roles": ["role1", "role2"],
         "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 32 }]

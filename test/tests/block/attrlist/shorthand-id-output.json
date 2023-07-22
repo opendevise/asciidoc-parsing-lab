@@ -5,7 +5,6 @@
     {
       "name": "paragraph",
       "type": "block",
-      "id": "idname",
       "inlines": [
         {
           "name": "text",
@@ -17,6 +16,7 @@
       "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 18 }],
       "metadata": {
         "attributes": { "$1": "#idname", "id": "idname" },
+        "id": "idname",
         "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 9 }]
       }
     }

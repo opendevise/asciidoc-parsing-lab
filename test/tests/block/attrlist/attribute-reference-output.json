@@ -21,7 +21,6 @@
       "type": "block",
       "form": "delimited",
       "delimiter": "----",
-      "id": "e1",
       "title": [
         {
           "name": "span",
@@ -50,6 +49,7 @@
       "location": [{ "line": 5, "col": 1 }, { "line": 7, "col": 4 }],
       "metadata": {
         "attributes": { "$1": "#e1", "id": "e1", "title": "*Exhibit A*" },
+        "id": "e1",
         "location": [{ "line": 4, "col": 1 }, { "line": 4, "col": 13 }]
       }
     }

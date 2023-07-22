@@ -34,9 +34,9 @@
                 }
               ],
               "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 8 }],
-              "id": "cmd-setup",
               "metadata": {
                 "attributes": { "$1": "#cmd-setup", "id": "cmd-setup" },
+                "id": "cmd-setup",
                 "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 12 }]
               }
             }

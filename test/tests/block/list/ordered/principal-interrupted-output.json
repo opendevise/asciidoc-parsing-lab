@@ -37,9 +37,9 @@
         }
       ],
       "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 9 }],
-      "id": "p1",
       "metadata": {
         "attributes": { "$1": "#p1", "id": "p1" },
+        "id": "p1",
         "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 5 }]
       }
     }

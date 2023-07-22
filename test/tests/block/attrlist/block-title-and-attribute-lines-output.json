@@ -14,7 +14,6 @@
         }
       ],
       "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 47 }],
-      "id": "p1",
       "title": [
         {
           "name": "text",
@@ -25,6 +24,7 @@
       ],
       "metadata": {
         "attributes": { "title": "The one and only", "$1": "#p1", "id": "p1" },
+        "id": "p1",
         "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 5 }]
       }
     }

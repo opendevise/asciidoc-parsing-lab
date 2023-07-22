@@ -100,7 +100,7 @@ function processBlockMetadata (cacheKey = offset(), posattrs) {
     }
   }
   const promote = {}
-  if ('id' in attributes) promote.id = attributes.id
+  if ('id' in attributes) metadata.id = attributes.id
   attributes.opts ? (attributes.opts = (metadata.options = [...attributes.opts]).join(',')) : (metadata.options = [])
   attributes.role ? (attributes.role = (metadata.roles = [...attributes.role]).join(' ')) : (metadata.roles = [])
   for (const name of names) {
