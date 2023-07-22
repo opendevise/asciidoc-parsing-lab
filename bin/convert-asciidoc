@@ -1,0 +1,72 @@
+#!/usr/bin/env node
+
+'use strict'
+
+const { Console } = require('node:console')
+const fs = require('node:fs')
+const parse = require('asciidoc-parsing-lab')
+const { parseArgs } = require('node:util')
+
+const options = {
+  attribute: {
+    type: 'string',
+    short: 'a',
+    multiple: true,
+    desc: 'set one or more AsciiDoc attributes',
+    hint: 'name=value',
+  },
+  embedded: { type: 'boolean', short: 'e', desc: 'output document without root element for embedding' },
+  format: {
+    type: 'string',
+    short: 'f',
+    default: 'html',
+    desc: 'generate the specified format',
+    hint: 'ext',
+    choices: ['html', 'asg'],
+  },
+  output: { type: 'string', short: 'o', desc: 'specify a different output file or - for stdout', hint: 'path' },
+  timings: { type: 'boolean', short: 't', desc: 'print a timings report to stderr' },
+  help: { type: 'boolean', short: 'h', desc: 'output this help and exit' },
+}
+
+const { positionals: [sourceFile], values: opts } = parseArgs({ args: process.argv.slice(2), options, strict: false })
+if (opts.help) printUsage(options)
+if (!sourceFile?.endsWith('.adoc')) printUsage(options, true)
+const outputFile = (opts.output ?? fs.fstatSync(1).isFIFO() ? '-' : undefined) === '-'
+  ? '-'
+  : sourceFile.replace(/\.adoc$/, '.' + opts.format)
+if (opts.embedded) (opts.attribute ??= []).push('embedded')
+let timer
+opts.timings && (timer = new Console(process.stderr)).time('elapsed')
+const source = fs.readFileSync(sourceFile, 'utf8').trimEnd()
+// NOTE parseInlines significantly increases the parsing time
+const asg = parse(source, { attributes: opts.attribute, parseInlines: true, showWarnings: true })
+const output = opts.format === 'asg'
+  ? require('#test-harness').stringifyASG(asg)
+  : require('asciidoc-parsing-lab/html-converter')(asg).trimEnd()
+outputFile === '-' ? console.log(output) : fs.writeFileSync(outputFile, output + '\n', 'utf8')
+timer && timer.timeEnd('elapsed')
+
+function printUsage (options, error) {
+  const cmd = require('node:path').parse(__filename).name
+  let usage = [
+    `Usage: ${cmd} [OPTION]... FILE`,
+    'Convert the specified AsciiDoc FILE to the specified output file and format.',
+    `Example: ${cmd} README.adoc`,
+  ]
+  if (error) {
+    usage = usage.slice(0, 1).concat(`Run '${cmd} --help' for more information.`)
+  } else {
+    usage.push('')
+    Object.entries(options).forEach(([long, { short, choices, default: default_, hint, multiple, desc }]) => {
+      const option = short ? `-${short}, --${long}${hint ? ' ' + hint : ''}` : `--${long}`
+      if (multiple) desc += '; can be specified more than once'
+      if (choices) desc += ` [${choices.join(', ')}]`
+      if (default_) desc += ` (default: ${default_})`
+      usage.push(`  ${option.padEnd(27, ' ')}${desc}`)
+    })
+    usage.push('', 'If --output is not specified, the output file path is derived from FILE (e.g., README.html).')
+  }
+  usage.reduce((stream, line) => typeof stream.write(line + '\n') && stream, error ? process.stderr : process.stdout)
+  process.exit(error ? 1 : 0)
+}
