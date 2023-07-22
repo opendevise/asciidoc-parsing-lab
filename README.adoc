@@ -78,7 +78,6 @@ There's likely more syntax and edge cases to cover, so this is only what we know
 * thematic and page breaks
 * block metadata on document (above doctitle)
 * intrinsic document attributes
-* attribute entries in body
 * attribute entry with multiline value
 * revision info line
 * tables
