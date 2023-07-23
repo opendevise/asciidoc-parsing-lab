@@ -3,7 +3,7 @@
   "type": "block",
   "header": {
     "attributes": {
-      "drive": { "value": "C:\\", "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 12 }] }
+      "drive": { "value": "C:\\\\", "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 12 }] }
     },
     "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 12 }]
   },

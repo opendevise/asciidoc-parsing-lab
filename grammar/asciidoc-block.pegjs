@@ -234,19 +234,17 @@ attribute_name = $([a-zA-Z0-9_] [a-zA-Z0-9_-]*)
 //    if (!lastLineIdx) {
 //      const line0 = lines[0]
 //      if (!line0) return line0
-//      if (line0[line0.length - 1] !== '\\') return line0[0] === ' ' ? line0.trimStart() : line0
+//      return line0[0] === ' ' ? line0.trimStart() : line0
 //    }
 //    let hardWrapNext = false
 //    return lines.reduce((buf, line, lineIdx) => {
 //      const hardWrap = hardWrapNext
 //      if (hardWrap) buf = buf.slice(0, -2) + '\n'
 //      if (lineIdx < lastLineIdx) {
-//        if (!(line = line.slice(0, -1)) && !(hardWrapNext = false)) return buf
-//        if (line[line.length - 1] === '\\') line = line.replace(/\\+$/, (m) => m.slice(0, m.length / 2))
-//      } else if (line[line.length - 1] === '\\') {
-//        line = line.replace(/\\+$/, (m) => m.slice(0, m.length % 2 ? (m.length - 1) / 2 + 1 : m.length / 2))
+//        hardWrapNext = false
+//        if (!(line = line.slice(0, -1))) return buf
+//        if (line.length > 1 && line[line.length - 2] === ' ' && line[line.length - 1] === ' ') hardWrapNext = true
 //      }
-//      hardWrapNext = line.length > 1 && line[line.length - 2] === ' ' && line[line.length - 1] === ' '
 //      return buf + (hardWrap || line[0] !== ' ' ? line : line.trimStart())
 //    }, '')
 //}
@@ -256,15 +254,15 @@ attribute_value = space lines:($(!('\\' / lf) . / '\\' !lf .)*)|1.., '\\' lf (&s
     if (lines.length === 1) {
       const line0 = lines[0]
       if (!line0) return trailer
-      if (line0[line0.length - 1] !== '\\') return (line0[0] === ' ' ? line0.trimStart() : line0) + trailer
+      return (line0[0] === ' ' ? line0.trimStart() : line0) + trailer
     }
     let hardWrapNext = false
     return lines.reduce((buf, line) => {
       const hardWrap = hardWrapNext
+      hardWrapNext = false
       if (hardWrap) buf = buf.slice(0, -2) + '\n'
-      if (!line && !(hardWrapNext = false)) return buf
-      if (line[line.length - 1] === '\\') line = line.replace(/\\+$/, (m) => m.slice(0, m.length / 2))
-      hardWrapNext = line.length > 1 && line[line.length - 2] === ' ' && line[line.length - 1] === ' '
+      if (!line) return buf
+      if (line.length > 1 && line[line.length - 2] === ' ' && line[line.length - 1] === ' ') hardWrapNext = true
       return buf + (hardWrap || line[0] !== ' ' ? line : line.trimStart())
     }, '') + trailer
 }

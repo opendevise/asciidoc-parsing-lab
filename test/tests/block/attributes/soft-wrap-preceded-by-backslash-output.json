@@ -3,9 +3,9 @@
   "type": "block",
   "header": {
     "attributes": {
-      "dir": { "value": "C:\\Program Files\\Application", "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 11 }] }
+      "dir": { "value": "C:\\\\Program Files\\\\Application\\", "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 12 }] }
     },
-    "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 11 }]
+    "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 12 }]
   },
-  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 11 }]
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 12 }]
 }
