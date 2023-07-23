@@ -1,4 +1,4 @@
 :filetree: article.adoc  \
 assets/  \
   example.rb  \
-  image.png
+  image.png  \

@@ -3,9 +3,9 @@
   "type": "block",
   "header": {
     "attributes": {
-      "filetree": { "value": "article.adoc\nassets/\n  example.rb\n  image.png", "location": [{ "line": 1, "col": 1 }, { "line": 4, "col": 11 }] }
+      "filetree": { "value": "article.adoc\nassets/\n  example.rb\n  image.png", "location": [{ "line": 1, "col": 1 }, { "line": 4, "col": 14 }] }
     },
-    "location": [{ "line": 1, "col": 1 }, { "line": 4, "col": 11 }]
+    "location": [{ "line": 1, "col": 1 }, { "line": 4, "col": 14 }]
   },
-  "location": [{ "line": 1, "col": 1 }, { "line": 4, "col": 11 }]
+  "location": [{ "line": 1, "col": 1 }, { "line": 4, "col": 14 }]
 }

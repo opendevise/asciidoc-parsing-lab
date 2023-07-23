@@ -3,9 +3,9 @@
   "type": "block",
   "header": {
     "attributes": {
-      "bs": { "value": "\\", "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 6 }] }
+      "esc": { "value": "\\", "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7 }] }
     },
-    "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 6 }]
+    "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7 }]
   },
-  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 6 }]
+  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7 }]
 }
