@@ -79,6 +79,7 @@ There's likely more syntax and edge cases to cover, so this is only what we know
 * block metadata on document (above doctitle)
 * intrinsic document attributes
 * attribute entry with multiline value
+* attribute entry with value enclosed in pass macro
 * revision info line
 * tables
 * ifeval directive
