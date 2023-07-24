@@ -110,7 +110,7 @@ block_attrlist_with_shorthands = shorthandAttrs:block_shorthand_attrs? entries:(
 block_shorthand_attrs = anchor:block_anchor? style:block_style? shorthands:block_shorthand_attr* separator:$(!. / ' '* ',' ' '*)
   {
     const attrs = {}
-    const value = separator ? text().slice(0, -separator.length) : text()
+    const value = input.substring(peg$savedPos, peg$currPos - (separator?.length ?? 0))
     if (!value) return attrs
     attrs['$1'] = value
     if (anchor) {
