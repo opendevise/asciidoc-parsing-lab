@@ -156,15 +156,15 @@ document = lf* header:header? blocks:body unparsed:.*
     return Object.assign(node, { blocks, location: toSourceLocation(getLocation(true)) })
   }
 
-header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doctitle author_info_line? attributeEntriesBelow:attribute_entry*)? &{ return doctitleAndAttributeEntries || attributeEntriesAbove.length }
+header = attributeEntriesAbove:attribute_entry* doctitleRecordAndAttributeEntries:(doctitle author_info_line? attributeEntriesBelow:attribute_entry*)? &{ return doctitleRecordAndAttributeEntries || attributeEntriesAbove.length }
   {
     const attributes = {}
     const header = {}
     const sourceLocation = toSourceLocation(getLocation())
     if (attributeEntriesAbove.length) Object.assign(attributes, setDocumentAttributes(attributeEntriesAbove, 'header'))
-    if (doctitleAndAttributeEntries) {
-      const [[doctitle, locationsForDoctitleInlines], authors, attributeEntriesBelow] = doctitleAndAttributeEntries
-      header.title = parseInline(doctitle, { attributes: documentAttributes, locations: locationsForDoctitleInlines })
+    if (doctitleRecordAndAttributeEntries) {
+      const [[doctitle, doctitleOffset, doctitleRange], authors, attributeEntriesBelow] = doctitleRecordAndAttributeEntries
+      header.title = parseInline(doctitle, { attributes: documentAttributes, locations: createLocationsForInlines(getLocation(doctitleRange), doctitleOffset - doctitleRange.start) })
       documentAttributes.doctitle = { value: doctitle, locked: true, origin: 'header' }
       if (authors) {
         const author = authors[0].fullname
@@ -184,8 +184,7 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doc
 
 doctitle = '=' space space* titleOffset:offset title:line
   {
-    // Q: should this just return offset of title instead of locations for inlines?
-    return [title, createLocationsForInlines(getLocation(), titleOffset - offset())]
+    return [title, titleOffset, range()]
   }
 
 author_info_line = @author_info_item|1.., '; '| eol
