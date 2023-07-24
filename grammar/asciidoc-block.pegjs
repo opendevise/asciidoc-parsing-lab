@@ -7,11 +7,9 @@ const MAX_ADMONITION_STYLE_LENGTH = Object.keys(ADMONITION_STYLES).reduce((max, 
 const MIN_ADMONITION_STYLE_LENGTH = Object.keys(ADMONITION_STYLES).reduce((min, it) => it.length < min ? it.length : min, Infinity)
 }}
 {
-const {
-  attributes: initialDocumentAttributes = {},
-  contentAttributeNames = ['title', 'reftext', 'caption', 'citetitle', 'attribution'],
-  locations,
-} = options
+const { attributes: initialDocumentAttributes = {}, locations } = options
+const defaultContentAttributeNames = ['title', 'reftext', 'caption', 'citetitle', 'attribution']
+const headingContentAttributeNames = ['reftext', 'caption']
 const documentAttributes = Object.assign({}, initialDocumentAttributes)
 const context = createContext()
 const parseInline = (options.inlineParser ?? require('#block-default-inline-parser')).parse
@@ -80,7 +78,7 @@ function parseBlockMetadata (attrlists, { start: startOffset, end: endOffset }) 
   return (metadataCache[cacheKey] = { attributes, options: undefined, roles: undefined, location: sourceLocation })
 }
 
-function processBlockMetadata (cacheKey = offset(), posattrs) {
+function processBlockMetadata (cacheKey = offset(), posattrs, contentAttributeNames = defaultContentAttributeNames) {
   const metadata = metadataCache[cacheKey]
   if (!metadata || metadata.options) return metadata
   const attributes = metadata.attributes
@@ -253,7 +251,7 @@ block_attribute_line = @'[' @offset @attrlist ']' eol
 // NOTE don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
 block_title_line = @'.' @offset @$('.'? (!(lf / ' ' / '.') .) (!lf .)*) eol
 
-section_or_discrete_heading = startOffset:offset headingRecord:heading metadataAndBlocks:(&{ return metadataCache[startOffset]?.attributes.style === 'discrete' } { return [processBlockMetadata(startOffset)] } / (&{ return isNestedSection(context, headingRecord[0].length - 1) } { return processBlockMetadata(startOffset) }) section_block*)
+section_or_discrete_heading = startOffset:offset headingRecord:heading metadataAndBlocks:(&{ return metadataCache[startOffset]?.attributes.style === 'discrete' } { return [processBlockMetadata(startOffset, undefined, headingContentAttributeNames)] } / (&{ return isNestedSection(context, headingRecord[0].length - 1) } { return processBlockMetadata(startOffset, undefined, headingContentAttributeNames) }) section_block*)
   {
     const [marker, titleOffset, title] = headingRecord
     const [metadata, blocks] = metadataAndBlocks

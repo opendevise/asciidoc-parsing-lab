@@ -1,0 +1,26 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "section",
+      "type": "block",
+      "title": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "Section Title",
+          "location": [{ "line": 2, "col": 4 }, { "line": 2, "col": 16 }]
+        }
+      ],
+      "marker": "==",
+      "level": 1,
+      "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 16 }],
+      "metadata": {
+        "attributes": { "title": "Section Title Override" },
+        "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 32 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 16 }]
+}
