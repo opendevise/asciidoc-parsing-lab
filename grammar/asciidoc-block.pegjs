@@ -154,14 +154,14 @@ document = lf* header:header? blocks:body unparsed:.*
     return Object.assign(node, { blocks, location: toSourceLocation(getLocation(true)) })
   }
 
-header = attributeEntriesAbove:attribute_entry* doctitleRecordAndAttributeEntries:(doctitle author_info_line? attributeEntriesBelow:attribute_entry*)? &{ return doctitleRecordAndAttributeEntries || attributeEntriesAbove.length }
+header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(doctitle author_info_line? attributeEntriesBelow:attribute_entry*)? &{ return doctitleAndAttributeEntries || attributeEntriesAbove.length }
   {
     const attributes = {}
     const header = {}
     const sourceLocation = toSourceLocation(getLocation())
     if (attributeEntriesAbove.length) Object.assign(attributes, setDocumentAttributes(attributeEntriesAbove, 'header'))
-    if (doctitleRecordAndAttributeEntries) {
-      const [[doctitle, doctitleOffset, doctitleRange], authors, attributeEntriesBelow] = doctitleRecordAndAttributeEntries
+    if (doctitleAndAttributeEntries) {
+      const [[doctitle, doctitleOffset, doctitleRange], authors, attributeEntriesBelow] = doctitleAndAttributeEntries
       header.title = parseInline(doctitle, { attributes: documentAttributes, locations: createLocationsForInlines(getLocation(doctitleRange), doctitleOffset - doctitleRange.start) })
       documentAttributes.doctitle = { value: doctitle, locked: true, origin: 'header' }
       if (authors) {
