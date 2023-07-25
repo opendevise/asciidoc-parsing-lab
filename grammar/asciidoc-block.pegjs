@@ -78,8 +78,12 @@ function parseBlockMetadata (attrlists, { start: startOffset, end: endOffset }) 
   return (metadataCache[cacheKey] = { attributes, options: undefined, roles: undefined, location: sourceLocation })
 }
 
+function getBlockMetadata (cacheKey = offset(), initialize) {
+  return metadataCache[cacheKey] ?? (initialize ? (metadataCache[cacheKey] = { attributes: {} }) : undefined)
+}
+
 function processBlockMetadata (cacheKey = offset(), posattrs, contentAttributeNames = defaultContentAttributeNames) {
-  const metadata = metadataCache[cacheKey]
+  const metadata = getBlockMetadata(cacheKey)
   if (!metadata || metadata.options) return metadata
   const attributes = metadata.attributes
   const names = Object.keys(attributes)
@@ -251,7 +255,7 @@ block_attribute_line = @'[' @offset @attrlist ']' eol
 // NOTE don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
 block_title_line = @'.' @offset @$('.'? (!(lf / ' ' / '.') .) (!lf .)*) eol
 
-section_or_discrete_heading = startOffset:offset headingRecord:heading metadataAndBlocks:(&{ return metadataCache[startOffset]?.attributes.style === 'discrete' } { return [processBlockMetadata(startOffset, undefined, headingContentAttributeNames)] } / (&{ return isNestedSection(context, headingRecord[0].length - 1) } { return processBlockMetadata(startOffset, undefined, headingContentAttributeNames) }) section_block*)
+section_or_discrete_heading = startOffset:offset headingRecord:heading metadataAndBlocks:(&{ return getBlockMetadata(startOffset)?.attributes.style === 'discrete' } { return [processBlockMetadata(startOffset, undefined, headingContentAttributeNames)] } / (&{ return isNestedSection(context, headingRecord[0].length - 1) } { return processBlockMetadata(startOffset, undefined, headingContentAttributeNames) }) section_block*)
   {
     const [marker, titleOffset, title] = headingRecord
     const [metadata, blocks] = metadataAndBlocks
@@ -346,7 +350,7 @@ listing_contents = (!(delim:listing_delimiter_line &{ return isBlockEnd(context,
 listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDelim) }) contents:listing_contents closingDelim:(@listing_delimiter_line / eof)
   {
     const delimiter = exitBlock(context)
-    let metadata = metadataCache[offset()]
+    let metadata = getBlockMetadata()
     const style = metadata?.attributes.style
     if (style === 'source') {
       processBlockMetadata(undefined, [, 'language'])
@@ -382,7 +386,7 @@ literal_contents = (!(delim:literal_delimiter_line &{ return isBlockEnd(context,
 literal = (openingDelim:literal_delimiter_line { enterBlock(context, openingDelim) }) contents:literal_contents closingDelim:(@literal_delimiter_line / eof)
   {
     const delimiter = exitBlock(context)
-    const metadata = metadataCache[offset()]
+    const metadata = getBlockMetadata()
     const style = metadata?.attributes.style
     if (style === 'source') {
       processBlockMetadata(undefined, [, 'language'])
@@ -540,7 +544,7 @@ dlist_item = term:dlist_term_for_current_item moreTerms:(lf lf* @dlist_term_for_
 
 image = 'i' 'mage::' !space target:$(!(lf / '[') .)+ '[' attrlistOffset:offset attrlist:attrlist ']' eol
   {
-    if (attrlist) parseAttrlist(attrlist, { attributes: documentAttributes, initial: (metadataCache[offset()] ??= { attributes: {} }).attributes, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(getLocation({ start: attrlistOffset, text: attrlist }))[0] } })
+    if (attrlist) parseAttrlist(attrlist, { attributes: documentAttributes, initial: (getBlockMetadata(undefined, true)).attributes, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(getLocation({ start: attrlistOffset, text: attrlist }))[0] } })
     const metadata = processBlockMetadata(undefined, ['alt', 'width', 'height'])
     target = inlinePreprocessor(target, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input
     return applyBlockMetadata({ name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()) }, metadata)
