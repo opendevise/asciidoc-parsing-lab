@@ -349,7 +349,7 @@ listing_contents = (!(delim:listing_delimiter_line &{ return isBlockEnd(context,
     return [contents || '\n', location_]
   }
 
-listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDelim) }) contents:listing_contents closingDelim:(@listing_delimiter_line / eof)
+listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDelim) }) contents:listing_contents closingDelim:(listing_delimiter_line / eof)
   {
     const delimiter = exitBlock(context)
     let metadata = getBlockMetadata()
@@ -385,7 +385,7 @@ literal_contents = (!(delim:literal_delimiter_line &{ return isBlockEnd(context,
     return [contents || '\n', location_]
   }
 
-literal = (openingDelim:literal_delimiter_line { enterBlock(context, openingDelim) }) contents:literal_contents closingDelim:(@literal_delimiter_line / eof)
+literal = (openingDelim:literal_delimiter_line { enterBlock(context, openingDelim) }) contents:literal_contents closingDelim:(literal_delimiter_line / eof)
   {
     const delimiter = exitBlock(context)
     const metadata = getBlockMetadata()
