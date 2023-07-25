@@ -108,13 +108,13 @@ async function scanTests (dir = process.cwd(), base = process.cwd()) {
 
 function populateASGDefaults (node) {
   if (node.type !== 'block') return node
-  const metadata = node.metadata
+  const nodeName = node.name
+  const metadata = nodeName === 'document' ? node.header?.metadata : node.metadata
   if (metadata) {
     metadata.attributes ??= {}
     metadata.options ??= []
     metadata.roles ??= []
   }
-  const nodeName = node.name
   if (node.form === 'macro' || ['break', 'heading', 'attributes'].includes(nodeName)) return node
   if (['listing', 'literal', 'pass', 'stem', 'paragraph', 'verse'].includes(nodeName)) {
     node.inlines ??= []
@@ -129,13 +129,13 @@ function populateASGDefaults (node) {
 
 function stripASGDefaults (node) {
   if (node.type !== 'block') return node
-  const metadata = node.metadata
+  const nodeName = node.name
+  const metadata = nodeName === 'document' ? node.header?.metadata : node.metadata
   if (metadata) {
     if ('attributes' in metadata && !Object.keys(metadata.attributes).length) delete metadata.attributes
     if ('options' in metadata && !metadata.options.length) delete metadata.options
     if ('roles' in metadata && !metadata.roles.length) delete metadata.roles
   }
-  const nodeName = node.name
   if (node.form === 'macro' || ['break', 'heading', 'attributes'].includes(nodeName)) return node
   if (['listing', 'literal', 'pass', 'stem', 'paragraph', 'verse'].includes(nodeName)) {
     if (!node.inlines.length) delete node.inlines

@@ -10,17 +10,17 @@
           "name": "text",
           "type": "string",
           "value": "Heading",
-          "location": [{ "line": 2, "col": 3 }, { "line": 2, "col": 9 }]
+          "location": [{ "line": 2, "col": 4 }, { "line": 2, "col": 10 }]
         }
       ],
-      "marker": "=",
-      "level": 0,
-      "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 9 }],
+      "marker": "==",
+      "level": 1,
+      "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 10 }],
       "metadata": {
         "attributes": { "$1": "discrete", "style": "discrete", "title": "Heading Override" },
         "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 35 }]
       }
     }
   ],
-  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 9 }]
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 10 }]
 }

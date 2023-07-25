@@ -1,2 +1,2 @@
 [discrete,title="Heading Override"]
-= Heading
+== Heading

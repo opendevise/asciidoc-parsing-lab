@@ -1,0 +1,22 @@
+{
+  "name": "document",
+  "type": "block",
+  "header": {
+    "title": [
+      {
+        "name": "text",
+        "type": "string",
+        "value": "Article Title",
+        "location": [{ "line": 2, "col": 3 }, { "line": 2, "col": 15 }]
+      }
+    ],
+    "attributes": {},
+    "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 15 }],
+    "metadata": {
+      "attributes": { "$1": "#article-id", "id": "article-id" },
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 13 }],
+      "id": "article-id"
+    }
+  },
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 15 }]
+}

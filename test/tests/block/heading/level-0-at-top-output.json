@@ -1,0 +1,26 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "heading",
+      "type": "block",
+      "title": [
+        {
+          "name": "text",
+          "type": "string",
+          "value": "Not Document Title",
+          "location": [{ "line": 2, "col": 3 }, { "line": 2, "col": 20 }]
+        }
+      ],
+      "marker": "=",
+      "level": 0,
+      "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 20 }],
+      "metadata": {
+        "attributes": { "$1": "discrete", "style": "discrete" },
+        "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 10 }]
+      }
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 20 }]
+}
