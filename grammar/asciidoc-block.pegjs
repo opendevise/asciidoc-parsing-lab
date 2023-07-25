@@ -83,7 +83,7 @@ function getBlockMetadata (cacheKey = offset(), initialize) {
 }
 
 function processBlockMetadata (cacheKey = offset(), posattrs, contentAttributeNames = defaultContentAttributeNames) {
-  const metadata = getBlockMetadata(cacheKey)
+  const metadata = Number.isInteger(cacheKey) ? getBlockMetadata(cacheKey) : cacheKey
   if (!metadata || metadata.options) return metadata
   const attributes = metadata.attributes
   const names = Object.keys(attributes)
@@ -353,11 +353,11 @@ listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDeli
     let metadata = getBlockMetadata()
     const style = metadata?.attributes.style
     if (style === 'source') {
-      processBlockMetadata(undefined, [, 'language'])
+      processBlockMetadata(metadata, [, 'language'])
       let language = metadata.attributes.language
       if (!language && (language = documentAttributes['source-language']?.value)) metadata.attributes.language = language
     } else {
-      processBlockMetadata(undefined, style ? undefined : [, 'language'])
+      processBlockMetadata(metadata, style ? undefined : [, 'language'])
       const language = !style && (metadata?.attributes.language || documentAttributes['source-language']?.value)
       if (language) Object.assign((metadata ??= { attributes: {}, options: [], roles: [] }).attributes, { style: 'source', language })
     }
@@ -389,11 +389,11 @@ literal = (openingDelim:literal_delimiter_line { enterBlock(context, openingDeli
     const metadata = getBlockMetadata()
     const style = metadata?.attributes.style
     if (style === 'source') {
-      processBlockMetadata(undefined, [, 'language'])
+      processBlockMetadata(metadata, [, 'language'])
       let language = metadata.attributes.language
       if (!language && (language = documentAttributes['source-language']?.value)) metadata.attributes.language = language
     } else {
-      processBlockMetadata()
+      processBlockMetadata(metadata)
     }
     const name = style === 'listing' || style === 'source' ? 'listing' : 'literal'
     if (!closingDelim && options.showWarnings) console.warn(`unclosed ${name} block`)
@@ -544,8 +544,9 @@ dlist_item = term:dlist_term_for_current_item moreTerms:(lf lf* @dlist_term_for_
 
 image = 'i' 'mage::' !space target:$(!(lf / '[') .)+ '[' attrlistOffset:offset attrlist:attrlist ']' eol
   {
-    if (attrlist) parseAttrlist(attrlist, { attributes: documentAttributes, initial: (getBlockMetadata(undefined, true)).attributes, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(getLocation({ start: attrlistOffset, text: attrlist }))[0] } })
-    const metadata = processBlockMetadata(undefined, ['alt', 'width', 'height'])
+    let metadata
+    if (attrlist) parseAttrlist(attrlist, { attributes: documentAttributes, initial: (metadata = getBlockMetadata(undefined, true)).attributes, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(getLocation({ start: attrlistOffset, text: attrlist }))[0] } })
+    metadata = processBlockMetadata(metadata, ['alt', 'width', 'height'])
     target = inlinePreprocessor(target, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input
     return applyBlockMetadata({ name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()) }, metadata)
   }
