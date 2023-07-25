@@ -336,7 +336,7 @@ indented = lines:indented_line+
 
 listing_delimiter_line = @$('-' '-'|3..|) eol
 
-listing_contents = (!(delim:listing_delimiter_line &{ return isBlockEnd(context, delim) }) line_or_empty_line)*
+listing_contents = (lf / !(delim:listing_delimiter_line &{ return isBlockEnd(context, delim) }) line)*
   {
     let { start, end } = range()
     if (end === start) return
@@ -372,7 +372,7 @@ listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDeli
 
 literal_delimiter_line = @$('.' '.'|3..|) eol
 
-literal_contents = (!(delim:literal_delimiter_line &{ return isBlockEnd(context, delim) }) line_or_empty_line)*
+literal_contents = (lf / !(delim:literal_delimiter_line &{ return isBlockEnd(context, delim) }) line)*
   {
     let { start, end } = range()
     if (end === start) return
@@ -558,8 +558,6 @@ remainder = lf* ((block_attribute_line / block_title_line) lf*)*
 any_block_delimiter_line = listing_delimiter_line / literal_delimiter_line / example_delimiter_line / sidebar_delimiter_line
 
 line = @$(!lf .)+ eol
-
-line_or_empty_line = line / lf @''
 
 indented_line = @$(space (!lf .)+) eol
 
