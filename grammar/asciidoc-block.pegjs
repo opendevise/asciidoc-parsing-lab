@@ -136,6 +136,18 @@ function setDocumentAttributes (attributeEntries, origin) {
   }
   return attributes
 }
+
+function transformVerbatimContents () {
+  let { start, end } = range()
+  if (end === start) return
+  const contents = input.substring(start, (end === input.length ? end : --end) + (input[end] === '\n' ? 0 : 1))
+  const location_ = getLocation({ start, end: contents ? end : start })
+  if (contents && contents[contents.length - 1] === '\n') {
+    location_[1].line++
+    location_[1].col = 0
+  }
+  return [contents || '\n', location_]
+}
 }
 // TODO if surrounding lf are not part of document, group inner two rules as a new rule
 document = lf* header:header? blocks:body unparsed:.*
@@ -338,15 +350,7 @@ listing_delimiter_line = @$('-' '-'|3..|) eol
 
 listing_contents = (lf / !(delim:listing_delimiter_line &{ return isBlockEnd(context, delim) }) line)*
   {
-    let { start, end } = range()
-    if (end === start) return
-    const contents = input.substring(start, (end === input.length ? end : --end) + (input[end] === '\n' ? 0 : 1))
-    const location_ = getLocation({ start, end: contents ? end : start })
-    if (contents && contents[contents.length - 1] === '\n') {
-      location_[1].line++
-      location_[1].col = 0
-    }
-    return [contents || '\n', location_]
+    return transformVerbatimContents()
   }
 
 listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDelim) }) contents:listing_contents closingDelim:(listing_delimiter_line / eof)
@@ -374,15 +378,7 @@ literal_delimiter_line = @$('.' '.'|3..|) eol
 
 literal_contents = (lf / !(delim:literal_delimiter_line &{ return isBlockEnd(context, delim) }) line)*
   {
-    let { start, end } = range()
-    if (end === start) return
-    const contents = input.substring(start, (end === input.length ? end : --end) + (input[end] === '\n' ? 0 : 1))
-    const location_ = getLocation({ start, end: contents ? end : start })
-    if (contents && contents[contents.length - 1] === '\n') {
-      location_[1].line++
-      location_[1].col = 0
-    }
-    return [contents || '\n', location_]
+    return transformVerbatimContents()
   }
 
 literal = (openingDelim:literal_delimiter_line { enterBlock(context, openingDelim) }) contents:literal_contents closingDelim:(literal_delimiter_line / eof)
