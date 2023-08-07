@@ -100,6 +100,7 @@ There's likely more syntax and edge cases to cover, so this is only what we know
 * inline index term macro and shorthands
 * block video and audio macros
 * block toc macro
+* callouts in verbatim blocks
 * use Unicode Alpha property when matching letters in block grammar
 * ...
 
