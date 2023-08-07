@@ -1,0 +1,5 @@
+<1> Loads the library.
++
+The public API will be available as a top-level constant.
+
+<2> Uses the public API.

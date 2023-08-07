@@ -1,0 +1,30 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "callout",
+      "marker": "<1>",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "<1>",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Loads the library",
+              "location": [{ "line": 1, "col": 5 }, { "line": 1, "col": 21 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 21 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 21 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 21 }]
+}

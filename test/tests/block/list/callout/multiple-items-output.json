@@ -1,0 +1,58 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "callout",
+      "marker": "<1>",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "<1>",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Loads the library",
+              "location": [{ "line": 1, "col": 5 }, { "line": 1, "col": 21 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 21 }]
+        },
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "<2>",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Instantiates a new instance",
+              "location": [{ "line": 2, "col": 5 }, { "line": 2, "col": 31 }]
+            }
+          ],
+          "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 31 }]
+        },
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "<3>",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Calls the action method on that instance",
+              "location": [{ "line": 3, "col": 5 }, { "line": 3, "col": 44 }]
+            }
+          ],
+          "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 44 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 44 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 44 }]
+}

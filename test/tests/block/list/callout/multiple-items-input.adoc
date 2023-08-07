@@ -1,0 +1,3 @@
+<1> Loads the library
+<2> Instantiates a new instance
+<3> Calls the action method on that instance

@@ -1,0 +1,59 @@
+{
+  "name": "document",
+  "type": "block",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "block",
+      "variant": "callout",
+      "marker": "<1>",
+      "items": [
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "<1>",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Loads the library.",
+              "location": [{ "line": 1, "col": 5 }, { "line": 1, "col": 22 }]
+            }
+          ],
+          "blocks": [
+            {
+              "name": "paragraph",
+              "type": "block",
+              "inlines": [
+                {
+                  "name": "text",
+                  "type": "string",
+                  "value": "The public API will be available as a top-level constant.",
+                  "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 57 }]
+                }
+              ],
+              "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 57 }]
+            }
+          ],
+          "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 57 }]
+        },
+        {
+          "name": "listItem",
+          "type": "block",
+          "marker": "<2>",
+          "principal": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "Uses the public API.",
+              "location": [{ "line": 5, "col": 5 }, { "line": 5, "col": 24 }]
+            }
+          ],
+          "location": [{ "line": 5, "col": 1 }, { "line": 5, "col": 24 }]
+        }
+      ],
+      "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 24 }]
+    }
+  ],
+  "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 24 }]
+}
