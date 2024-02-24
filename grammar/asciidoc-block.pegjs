@@ -5,6 +5,8 @@ const { parse: parseAttrlist } = require('#attrlist-parser')
 const ADMONITION_STYLES = { CAUTION: 'caution', IMPORTANT: 'important', NOTE: 'note', TIP: 'tip', WARNING: 'warning' }
 const MAX_ADMONITION_STYLE_LENGTH = Object.keys(ADMONITION_STYLES).reduce((max, it) => it.length > max ? it.length : max, 0)
 const MIN_ADMONITION_STYLE_LENGTH = Object.keys(ADMONITION_STYLES).reduce((min, it) => it.length < min ? it.length : min, Infinity)
+const DEFAULT_CONTENT_ATTRIBUTE_NAMES = ['title', 'reftext', 'caption', 'citetitle', 'attribution']
+const HEADING_CONTENT_ATTRIBUTE_NAMES = ['reftext', 'caption']
 const POSITIONAL_ATTRIBUTES = {
   image: ['alt', 'width', 'height'],
   source: [, 'language'],
@@ -12,8 +14,6 @@ const POSITIONAL_ATTRIBUTES = {
 }}
 {
 const { attributes: initialDocumentAttributes = {}, locations } = options
-const defaultContentAttributeNames = ['title', 'reftext', 'caption', 'citetitle', 'attribution']
-const headingContentAttributeNames = ['reftext', 'caption']
 const documentAttributes = Object.assign({}, initialDocumentAttributes)
 const context = createContext()
 const parseInline = (options.inlineParser ?? require('#block-default-inline-parser')).parse
@@ -86,7 +86,7 @@ function getBlockMetadata (cacheKey = offset(), initialize) {
   return metadataCache[cacheKey] ?? (initialize ? (metadataCache[cacheKey] = { attributes: {} }) : undefined)
 }
 
-function processBlockMetadata (cacheKey = offset(), posattrs, contentAttributeNames = defaultContentAttributeNames) {
+function processBlockMetadata (cacheKey = offset(), posattrs, contentAttributeNames = DEFAULT_CONTENT_ATTRIBUTE_NAMES) {
   const metadata = Number.isInteger(cacheKey) ? getBlockMetadata(cacheKey) : cacheKey
   if (!metadata || metadata.options) return metadata
   const attributes = metadata.attributes
@@ -183,7 +183,7 @@ header = attributeEntriesAbove:attribute_entry* doctitleAndAttributeEntries:(@bl
     if (attributeEntriesAbove.length) Object.assign(attributes, setDocumentAttributes(attributeEntriesAbove, 'header'))
     if (doctitleAndAttributeEntries) {
       const [metadata_, [doctitle, doctitleOffset, doctitleRange], authors, attributeEntriesBelow] = doctitleAndAttributeEntries
-      if (metadata_) metadata = processBlockMetadata(metadata_, undefined, headingContentAttributeNames)
+      if (metadata_) metadata = processBlockMetadata(metadata_, undefined, HEADING_CONTENT_ATTRIBUTE_NAMES)
       header.title = parseInline(doctitle, { attributes: documentAttributes, locations: createLocationsForInlines(getLocation(doctitleRange), doctitleOffset - doctitleRange.start) })
       documentAttributes.doctitle = { value: doctitle, locked: true, origin: 'header' }
       if (authors) {
@@ -273,7 +273,7 @@ block_attribute_line = @'[' @offset @attrlist ']' eol
 // NOTE don't match line that starts with '. ' or '.. ' (which could be a list marker) or '...' (which could be a literal block delimiter or list marker)
 block_title_line = @'.' @offset @$('.'? (!(lf / ' ' / '.') .) (!lf .)*) eol
 
-section_or_discrete_heading = startOffset:offset headingRecord:heading metadataAndBlocks:(&{ return getBlockMetadata(startOffset)?.attributes.style === 'discrete' } { return [processBlockMetadata(startOffset, undefined, headingContentAttributeNames)] } / (&{ return isNestedSection(context, headingRecord[0].length - 1) } { return processBlockMetadata(startOffset, undefined, headingContentAttributeNames) }) section_block*)
+section_or_discrete_heading = startOffset:offset headingRecord:heading metadataAndBlocks:(&{ return getBlockMetadata(startOffset)?.attributes.style === 'discrete' } { return [processBlockMetadata(startOffset, undefined, HEADING_CONTENT_ATTRIBUTE_NAMES)] } / (&{ return isNestedSection(context, headingRecord[0].length - 1) } { return processBlockMetadata(startOffset, undefined, HEADING_CONTENT_ATTRIBUTE_NAMES) }) section_block*)
   {
     const [marker, titleOffset, title] = headingRecord
     const [metadata, blocks] = metadataAndBlocks
