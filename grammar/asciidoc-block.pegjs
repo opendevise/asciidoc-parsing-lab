@@ -5,7 +5,7 @@ const { parse: parseAttrlist } = require('#attrlist-parser')
 const ADMONITION_STYLES = { CAUTION: 'caution', IMPORTANT: 'important', NOTE: 'note', TIP: 'tip', WARNING: 'warning' }
 const MAX_ADMONITION_STYLE_LENGTH = Object.keys(ADMONITION_STYLES).reduce((max, it) => it.length > max ? it.length : max, 0)
 const MIN_ADMONITION_STYLE_LENGTH = Object.keys(ADMONITION_STYLES).reduce((min, it) => it.length < min ? it.length : min, Infinity)
-const POSATTRS = {
+const POSITIONAL_ATTRIBUTES = {
   image: ['alt', 'width', 'height'],
   source: [, 'language'],
 }
@@ -363,11 +363,11 @@ listing = (openingDelim:listing_delimiter_line { enterBlock(context, openingDeli
     let metadata = getBlockMetadata()
     const style = metadata?.attributes.style
     if (style === 'source') {
-      processBlockMetadata(metadata, POSATTRS.source)
+      processBlockMetadata(metadata, POSITIONAL_ATTRIBUTES.source)
       let language = metadata.attributes.language
       if (!language && (language = documentAttributes['source-language']?.value)) metadata.attributes.language = language
     } else {
-      processBlockMetadata(metadata, style ? undefined : POSATTRS.source)
+      processBlockMetadata(metadata, style ? undefined : POSITIONAL_ATTRIBUTES.source)
       const language = !style && (metadata?.attributes.language || documentAttributes['source-language']?.value)
       if (language) Object.assign((metadata ??= { attributes: {}, options: [], roles: [] }).attributes, { style: 'source', language })
     }
@@ -391,7 +391,7 @@ literal = (openingDelim:literal_delimiter_line { enterBlock(context, openingDeli
     const metadata = getBlockMetadata()
     const style = metadata?.attributes.style
     if (style === 'source') {
-      processBlockMetadata(metadata, POSATTRS.source)
+      processBlockMetadata(metadata, POSITIONAL_ATTRIBUTES.source)
       let language = metadata.attributes.language
       if (!language && (language = documentAttributes['source-language']?.value)) metadata.attributes.language = language
     } else {
@@ -548,7 +548,7 @@ image = 'i' 'mage::' !space target:$(!(lf / '[') .)+ '[' attrlistOffset:offset a
   {
     let metadata
     if (attrlist) parseAttrlist(attrlist, { attributes: documentAttributes, initial: (metadata = getBlockMetadata(undefined, true)).attributes, inlineParser: { parse: parseInline }, locations: { 1: toSourceLocation(getLocation({ start: attrlistOffset, text: attrlist }))[0] } })
-    metadata = processBlockMetadata(metadata, POSATTRS.image)
+    metadata = processBlockMetadata(metadata, POSITIONAL_ATTRIBUTES.image)
     target = inlinePreprocessor(target, { attributes: documentAttributes, mode: 'attributes', sourceMapping: false }).input
     return applyBlockMetadata({ name: 'image', type: 'block', form: 'macro', target, location: toSourceLocation(getLocation()) }, metadata)
   }
