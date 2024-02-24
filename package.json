@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "peggy": "~3.0",
-    "chai": "latest",
+    "chai": "~4.4",
     "eslint": "latest",
     "eslint-config-standard": "latest",
     "mocha": "latest"
