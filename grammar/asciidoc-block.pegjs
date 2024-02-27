@@ -95,14 +95,17 @@ function processBlockMetadata (cacheKey = offset(), posattrs, contentAttributeNa
     let posIdx = 0
     for (const name of posattrs) {
       const posKey = `$${++posIdx}`
-      if (name == null) continue
-      if (!(posKey in attributes)) continue
-      // Q: should existing named attribute be allowed to take precedence? (this has never been the case)
-      if (name in attributes) names.splice(names.indexOf(name), 1)
-      names.splice(names.indexOf(posKey), 0, name)
-      const valueObject = attributes[name] = attributes[posKey]
-      // NOTE remap value as deferred function to avoid having to resolve again for positional attribute
-      if (valueObject.constructor === Function) attributes[posKey] = () => attributes[name]
+      if (name == null || !names.includes(posKey)) continue
+      if (names.includes(name)) {
+        if (names.indexOf(posKey) < names.indexOf(name)) continue
+      } else {
+        // insert synthetic named attribute ahead of positional attribute
+        names.splice(names.indexOf(posKey), 0, name)
+      }
+      // assign positional attribute to named attribute, overwriting explicit named attribute if it exists
+      attributes[name] = attributes[posKey]
+      // remap positional attribute to resolved value of implicit named attribute (which will be resolved first)
+      attributes[posKey] = () => attributes[name]
     }
   }
   const promote = {}

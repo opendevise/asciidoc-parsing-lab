@@ -1,0 +1,2 @@
+[alt=Player Status]
+image::player-status.png[Player Status Window,600,800]
