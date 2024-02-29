@@ -71,7 +71,7 @@ describe('inline (unported)', () => {
       })
     })
 
-    it('escaped formatting mark followed by wordy', () => {
+    it('escaped formatting mark followed by alpha\\d', () => {
       const marks = ['`', '_', '*', '#']
       marks.forEach((mark) => {
         const input = '\\' + mark + 'disclaimer'

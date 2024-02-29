@@ -65,70 +65,70 @@ open = unconstrained_open / constrained_open
 
 macro = xref_shorthand / url_macro
 
-unconstrained_code = pre:$(wordy wordy*)? main:('``' contents:(!'``' @constrained_code / emphasis / strong / open / macro / unconstrained_code_other)+ '``' { return { name: 'span', type: 'inline', variant: 'code', form: 'unconstrained', range: Object.assign(range(), { inlinesStart: offset() + 2 }), inlines: contents } })
+unconstrained_code = pre:$(alpha_d alpha_d*)? main:('``' contents:(!'``' @constrained_code / emphasis / strong / open / macro / unconstrained_code_other)+ '``' { return { name: 'span', type: 'inline', variant: 'code', form: 'unconstrained', range: Object.assign(range(), { inlinesStart: offset() + 2 }), inlines: contents } })
   {
     return pre ? [pre, main] : main
   }
 
 // Q: is it faster to use '`' !'`' / [_*#] here?
-unconstrained_code_other = $(wordy ('`' !'`' / '_' / '*' / '#')) / $(not_mark_or_space+ (space not_mark_or_space+)* (space+ / &'``')) / !'`' @.
+unconstrained_code_other = $(alpha_d ('`' !'`' / '_' / '*' / '#')) / $(not_mark_or_space+ (space not_mark_or_space+)* (space+ / &'``')) / !'`' @.
 
-unconstrained_emphasis = pre:$(wordy wordy*)? main:('__' contents:(code / !'__' @constrained_emphasis / strong / open / macro / unconstrained_emphasis_other)+ '__' { return { name: 'span', type: 'inline', variant: 'emphasis', form: 'unconstrained', range: Object.assign(range(), { inlinesStart: offset() + 2 }), inlines: contents } })
+unconstrained_emphasis = pre:$(alpha_d alpha_d*)? main:('__' contents:(code / !'__' @constrained_emphasis / strong / open / macro / unconstrained_emphasis_other)+ '__' { return { name: 'span', type: 'inline', variant: 'emphasis', form: 'unconstrained', range: Object.assign(range(), { inlinesStart: offset() + 2 }), inlines: contents } })
   {
     return pre ? [pre, main] : main
   }
 
-unconstrained_emphasis_other = $(wordy ('`' / '_' !'_' / '*' / '#')) / $(not_mark_or_space+ (space not_mark_or_space+)* (space+ / &'__')) / !'_' @.
+unconstrained_emphasis_other = $(alpha_d ('`' / '_' !'_' / '*' / '#')) / $(not_mark_or_space+ (space not_mark_or_space+)* (space+ / &'__')) / !'_' @.
 
-unconstrained_strong = pre:$(wordy wordy*)? main:('**' contents:(code / emphasis / !'**' @constrained_strong / open / macro / unconstrained_strong_other)+ '**' { return { name: 'span', type: 'inline', variant: 'strong', form: 'unconstrained', range: Object.assign(range(), { inlinesStart: offset() + 2 }), inlines: contents } })
+unconstrained_strong = pre:$(alpha_d alpha_d*)? main:('**' contents:(code / emphasis / !'**' @constrained_strong / open / macro / unconstrained_strong_other)+ '**' { return { name: 'span', type: 'inline', variant: 'strong', form: 'unconstrained', range: Object.assign(range(), { inlinesStart: offset() + 2 }), inlines: contents } })
   {
     return pre ? [pre, main] : main
   }
 
-// should first rule use wordy, wordy*, or wordy+ ?
+// should first rule use alpha_d, alpha_d*, or alpha_d+ ?
 // NOTE without &'**' check, parser ends up advancing character by character
-unconstrained_strong_other = $(wordy ('`' / '_' / '*' !'*' / '#')) / $(not_mark_or_space+ (space not_mark_or_space+)* (space+ / &'**')) / !'*' @.
+unconstrained_strong_other = $(alpha_d ('`' / '_' / '*' !'*' / '#')) / $(not_mark_or_space+ (space not_mark_or_space+)* (space+ / &'**')) / !'*' @.
 
-unconstrained_open = pre:$(wordy wordy*)? main:('##' contents:(code / emphasis / strong / !'##' @constrained_open / macro / unconstrained_open_other)+ '##' { return { name: 'span', type: 'inline', variant: 'mark', form: 'unconstrained', range: Object.assign(range(), { inlinesStart: offset() + 2 }), inlines: contents } })
+unconstrained_open = pre:$(alpha_d alpha_d*)? main:('##' contents:(code / emphasis / strong / !'##' @constrained_open / macro / unconstrained_open_other)+ '##' { return { name: 'span', type: 'inline', variant: 'mark', form: 'unconstrained', range: Object.assign(range(), { inlinesStart: offset() + 2 }), inlines: contents } })
   {
     return pre ? [pre, main] : main
   }
 
-unconstrained_open_other = $(wordy ('`' / '_' / '*' / '#' !'#')) / $(not_mark_or_space+ (space not_mark_or_space+)* (space+ / &'##')) / !'#' @.
+unconstrained_open_other = $(alpha_d ('`' / '_' / '*' / '#' !'#')) / $(not_mark_or_space+ (space not_mark_or_space+)* (space+ / &'##')) / !'#' @.
 
-constrained_code = '`' !space contents0:(unconstrained_code / emphasis / strong / open / macro / @'`' !wordy / saved_passthrough / constrained_code_other) contents1:(unconstrained_code / emphasis / strong / macro / saved_passthrough / constrained_code_other)* '`' !wordy
+constrained_code = '`' !space contents0:(unconstrained_code / emphasis / strong / open / macro / @'`' !alpha_d / saved_passthrough / constrained_code_other) contents1:(unconstrained_code / emphasis / strong / macro / saved_passthrough / constrained_code_other)* '`' !alpha_d
   {
     const contents = contents1.length ? unshiftOntoCopy(contents1, contents0) : [contents0]
     return { name: 'span', type: 'inline', variant: 'code', form: 'constrained', range: Object.assign(range(), { inlinesStart: offset() + 1 }), inlines: contents }
   }
 
-constrained_code_other = $(wordy* constrained_left_mark_in_code) / $(not_mark_or_space+ (space not_mark_or_space+)* &('`' !wordy)) / $(space+ (!'`' / &'``' &unconstrained_code / '`')) / @'`' &wordy / escaped / !(' ' / '`') @.
+constrained_code_other = $(alpha_d* constrained_left_mark_in_code) / $(not_mark_or_space+ (space not_mark_or_space+)* &('`' !alpha_d)) / $(space+ (!'`' / &'``' &unconstrained_code / '`')) / @'`' &alpha_d / escaped / !(' ' / '`') @.
 
-constrained_emphasis = '_' !space contents0:(code / unconstrained_emphasis / strong / open / macro / @'_' !wordy / constrained_emphasis_other) contents1:(code / unconstrained_emphasis / strong / macro / constrained_emphasis_other)* '_' !wordy
+constrained_emphasis = '_' !space contents0:(code / unconstrained_emphasis / strong / open / macro / @'_' !alpha_d / constrained_emphasis_other) contents1:(code / unconstrained_emphasis / strong / macro / constrained_emphasis_other)* '_' !alpha_d
   {
     const contents = contents1.length ? unshiftOntoCopy(contents1, contents0) : [contents0]
     return { name: 'span', type: 'inline', variant: 'emphasis', form: 'constrained', range: Object.assign(range(), { inlinesStart: offset() + 1 }), inlines: contents }
   }
 
-constrained_emphasis_other = $(wordy* constrained_left_mark_in_emphasis) / $(not_mark_or_space+ (space not_mark_or_space+)* &('_' !wordy)) / $(space+ (!'_' / &'__' &unconstrained_emphasis / '_')) / @'_' &wordy / escaped / !(' ' / '_') @.
+constrained_emphasis_other = $(alpha_d* constrained_left_mark_in_emphasis) / $(not_mark_or_space+ (space not_mark_or_space+)* &('_' !alpha_d)) / $(space+ (!'_' / &'__' &unconstrained_emphasis / '_')) / @'_' &alpha_d / escaped / !(' ' / '_') @.
 
-constrained_strong = '*' !space contents0:(code / emphasis / unconstrained_strong / open / macro / @'*' !wordy / constrained_strong_other) contents1:(code / emphasis / unconstrained_strong / macro / constrained_strong_other)* '*' !wordy
+constrained_strong = '*' !space contents0:(code / emphasis / unconstrained_strong / open / macro / @'*' !alpha_d / constrained_strong_other) contents1:(code / emphasis / unconstrained_strong / macro / constrained_strong_other)* '*' !alpha_d
   {
     const contents = contents1.length ? unshiftOntoCopy(contents1, contents0) : [contents0]
     return { name: 'span', type: 'inline', variant: 'strong', form: 'constrained', range: Object.assign(range(), { inlinesStart: offset() + 1 }), inlines: contents }
   }
 
 // NOTE can never take space before * unless we're sure it's an unconstrained strong or the closing mark for the constrained strong
-// NOTE instead of checking &unconstrained_strong, could use wordy_or_space+ for unconstrained pre; but it's slow
-constrained_strong_other = $(wordy* constrained_left_mark_in_strong) / $(not_mark_or_space+ (space not_mark_or_space+)* &('*' !wordy)) / $(space+ (!'*' / &'**' &unconstrained_strong / '*')) / @'*' &wordy / escaped / !(' ' / '*') @.
+// NOTE instead of checking &unconstrained_strong, could use alpha_d_or_space+ for unconstrained pre; but it's slow
+constrained_strong_other = $(alpha_d* constrained_left_mark_in_strong) / $(not_mark_or_space+ (space not_mark_or_space+)* &('*' !alpha_d)) / $(space+ (!'*' / &'**' &unconstrained_strong / '*')) / @'*' &alpha_d / escaped / !(' ' / '*') @.
 
-constrained_open = '#' !space contents0:(code / emphasis / strong / unconstrained_open / macro / @'#' !wordy / constrained_open_other) contents1:(code / emphasis / strong / unconstrained_open / macro / constrained_open_other)* '#' !wordy
+constrained_open = '#' !space contents0:(code / emphasis / strong / unconstrained_open / macro / @'#' !alpha_d / constrained_open_other) contents1:(code / emphasis / strong / unconstrained_open / macro / constrained_open_other)* '#' !alpha_d
   {
     const contents = contents1.length ? unshiftOntoCopy(contents1, contents0) : [contents0]
     return { name: 'span', type: 'inline', variant: 'mark', form: 'constrained', range: Object.assign(range(), { inlinesStart: offset() + 1 }), inlines: contents }
   }
 
-constrained_open_other = $(wordy* constrained_left_mark_in_open) / $(not_mark_or_space+ (space not_mark_or_space+)* &('#' !wordy)) / $(space+ (!'#' / &'##' &unconstrained_open / '#')) / @'#' &wordy / escaped / !(' ' / '#') @.
+constrained_open_other = $(alpha_d* constrained_left_mark_in_open) / $(not_mark_or_space+ (space not_mark_or_space+)* &('#' !alpha_d)) / $(space+ (!'#' / &'##' &unconstrained_open / '#')) / @'#' &alpha_d / escaped / !(' ' / '#') @.
 
 // FIXME: xref_shorthand_other prevents search for span following text (e.g., *foo* and *bar*)
 // Q: should we use !space at start of target?
@@ -165,15 +165,16 @@ macro_target = !space @[^\[]+
 attrlist_other = $[^\]]+
 
 other_left = $(not_mark_or_space+ (space / colon? !any))+
-other_right = $(wordy* constrained_left_mark) / space / escaped / any
+other_right = $(alpha_d* constrained_left_mark) / space / escaped / any
 
-// TODO could add : to regexp and use wordy+ colon in second alternative
-escaped = '\\' match:([`_*#<{+\\] / $(wordy* colon))
+// TODO could add : to regexp and use alpha_d+ colon in second alternative
+escaped = '\\' match:([`_*#<{+\\] / $(alpha_d* colon))
   {
     return Object.assign(new String(match), { escaped: true, sourceLength: match.length + 1 })
   }
 
-wordy = [\p{Alpha}0-9]
+// Q: rename to alpha09, alphadig, alpha_or_d?
+alpha_d = [\p{Alpha}0-9]
 
 not_mark_or_space = [^ `_*#:<\\\x10]
 
