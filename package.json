@@ -25,7 +25,7 @@
   "exports": {
     ".": "./lib/index.js",
     "./package.json": "./package.json",
-    "./html-converter": "./lib/html-converter.js"
+    "./converter/html": "./lib/converter/html.js"
   },
   "imports": {
     "#attrlist-parser": "./lib/asciidoc-attrlist-parser.js",

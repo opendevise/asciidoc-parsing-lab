@@ -43,7 +43,7 @@ const source = fs.readFileSync(sourceFile, 'utf8').trimEnd()
 const asg = parse(source, { attributes: opts.attribute, parseInlines: true, showWarnings: true })
 const output = opts.format === 'asg'
   ? require('#test-harness').stringifyASG(asg)
-  : require('asciidoc-parsing-lab/html-converter')(asg).trimEnd()
+  : require('asciidoc-parsing-lab/converter/html')(asg).trimEnd()
 outputFile === '-' ? console.log(output) : fs.writeFileSync(outputFile, output + '\n', 'utf8')
 timer && timer.timeEnd('elapsed')
 

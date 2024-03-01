@@ -2,7 +2,7 @@
 'use strict'
 
 const { expect, heredoc } = require('#test-harness')
-const convertToHTML = require('asciidoc-parsing-lab/html-converter')
+const convertToHTML = require('asciidoc-parsing-lab/converter/html')
 
 describe('html-converter', () => {
   const foldStyles = (html) => html.replace(/<style>[\s\S]+?<\/style>/, '<style>[...]</style>')
