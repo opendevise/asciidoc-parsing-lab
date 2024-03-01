@@ -1,0 +1,13 @@
+{
+  "name": "document",
+  "type": "block",
+  "header": {
+    "attributes": {
+      "icons": { "value": "font", "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 16 }] },
+      "toc": { "value": "preamble", "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 20 }] },
+      "toclevels": { "value": "1", "location": [{ "line": 3, "col": 1 }, { "line": 3, "col": 13 }] }
+    },
+    "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 13 }]
+  },
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 13 }]
+}

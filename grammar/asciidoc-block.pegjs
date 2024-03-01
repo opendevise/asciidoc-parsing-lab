@@ -245,10 +245,62 @@ attribute_entry = ':' negatedPrefix:'!'? name:attribute_name negatedSuffix:'!'? 
     return [name, negatedPrefix || negatedSuffix ? null : value || '', range()]
   }
 
+attribute_entry_head = ':' '!'? attribute_name '!'? ':' (space / eol)
+
 // TODO permit non-ASCII letters in attribute name
 attribute_name = $([a-zA-Z0-9_] [a-zA-Z0-9_-]*)
 
-attribute_value = space @$(!lf .)+
+//attribute_value = space lines:($(!lf .)*)|1.., &{ let idx = offset(), count = 0; while (input[--idx] === '\\') count++; return !!(count % 2) } lf (&space / !(attribute_entry_head / eol / list_continuation / any_block_delimiter_line / block_attribute_line))|
+//{
+//    if (lines.length === 1) {
+//      const line = lines[0]
+//      if (!line) return line
+//      const len = line.length
+//      if (len > 2 && line[len - 1] === '\\' && line[len - 2] === ' ' && line[len - 3] === ' ') return line.slice(0, len - 3)
+//      return line[0] === ' ' ? line.trimStart() : line
+//    }
+//    let hardWrapNext = false
+//    const lastLineIdx = lines.length - 1
+//    return lines.reduce((buf, line, lineIdx) => {
+//      const hardWrap = hardWrapNext
+//      if (hardWrap) buf += '\n'
+//      hardWrapNext = false
+//      let len = line.length
+//      if (lineIdx < lastLineIdx) {
+//        if (!(line = line.substring(0, --len))) return buf
+//        if (len > 1 && line[len - 2] === ' ' && line[len - 1] === ' ' && (hardWrapNext = true)) {
+//          return buf + line.substring(0, len - 2)
+//        }
+//      } else if (len > 2 && line[len - 1] === '\\' && line[len - 2] === ' ' && line[len - 3] === ' ') {
+//        return buf + line.substring(0, len - 3)
+//      }
+//      return buf + (hardWrap || line[0] !== ' ' ? line : line.trimStart())
+//    }, '')
+//}
+
+attribute_value = space lines:($(!('\\' / lf) . / '\\' !lf .)*)|1.., '\\' lf (&space / !(attribute_entry_head / eol / list_continuation / any_block_delimiter_line / block_attribute_line))| trailer:('\\' / '')
+{
+    if (lines.length === 1) {
+      const line = lines[0]
+      if (!line) return trailer
+      if (!trailer) return line[0] === ' ' ? line.trimStart() : line
+      const len = line.length
+      if (len > 1 && line[len - 1] === ' ' && line[len - 2] === ' ') return line.substring(0, len - 2)
+      return (line[0] === ' ' ? line.trimStart() : line) + trailer
+    }
+    let hardWrapNext = false
+    const lastLineIdx = lines.length - 1
+    return lines.reduce((buf, line, lineIdx) => {
+      const hardWrap = hardWrapNext
+      if (hardWrap) buf += '\n'
+      hardWrapNext = false
+      if (!line) return buf
+      const len = line.length
+      return len > 1 && line[len - 1] === ' ' && line[len - 2] === ' ' && (hardWrapNext = true)
+        ? buf + line.substring(0, len - 2) + (lineIdx === lastLineIdx ? (trailer = '') : '')
+        : buf + (hardWrap || line[0] !== ' ' ? line : line.trimStart())
+    }, '') + trailer
+}
 
 body = @section_block* remainder
 

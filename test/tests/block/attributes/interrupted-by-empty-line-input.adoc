@@ -1,0 +1,3 @@
+:appsdir: C:\Program Files\
+
+Look for the installed application in {appsdir}.

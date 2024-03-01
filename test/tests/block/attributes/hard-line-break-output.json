@@ -1,0 +1,11 @@
+{
+  "name": "document",
+  "type": "block",
+  "header": {
+    "attributes": {
+      "bars": { "value": "Roses are red, +\nViolets are blue.", "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 17 }] }
+    },
+    "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 17 }]
+  },
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 17 }]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "document",
+  "type": "block",
+  "header": {
+    "attributes": {
+      "description": { "value": "This is the description. It summaries the contents of this article.", "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 56 }] }
+    },
+    "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 56 }]
+  },
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 56 }]
+}

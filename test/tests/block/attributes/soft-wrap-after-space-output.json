@@ -1,0 +1,11 @@
+{
+  "name": "document",
+  "type": "block",
+  "header": {
+    "attributes": {
+      "lml": { "value": "lightweight markup language", "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 8 }] }
+    },
+    "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 8 }]
+  },
+  "location": [{ "line": 1, "col": 1 }, { "line": 3, "col": 8 }]
+}

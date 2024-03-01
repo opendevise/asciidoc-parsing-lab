@@ -1,0 +1,11 @@
+{
+  "name": "document",
+  "type": "block",
+  "header": {
+    "attributes": {
+      "lines": { "value": "foo\nbar\nbaz", "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 3 }] }
+    },
+    "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 3 }]
+  },
+  "location": [{ "line": 1, "col": 1 }, { "line": 5, "col": 3 }]
+}

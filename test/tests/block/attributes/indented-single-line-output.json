@@ -1,0 +1,11 @@
+{
+  "name": "document",
+  "type": "block",
+  "header": {
+    "attributes": {
+      "source": { "value": "  indented", "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 22 }] }
+    },
+    "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 22 }]
+  },
+  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 22 }]
+}

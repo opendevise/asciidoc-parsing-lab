@@ -1,0 +1,11 @@
+{
+  "name": "document",
+  "type": "block",
+  "header": {
+    "attributes": {
+      "description": { "value": "Describe me.", "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 12 }] }
+    },
+    "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 12 }]
+  },
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 12 }]
+}

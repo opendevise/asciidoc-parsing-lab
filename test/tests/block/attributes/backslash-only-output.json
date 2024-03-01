@@ -1,0 +1,11 @@
+{
+  "name": "document",
+  "type": "block",
+  "header": {
+    "attributes": {
+      "esc": { "value": "\\", "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7 }] }
+    },
+    "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7 }]
+  },
+  "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 7 }]
+}

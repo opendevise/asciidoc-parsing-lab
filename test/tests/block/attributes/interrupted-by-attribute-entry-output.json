@@ -1,0 +1,12 @@
+{
+  "name": "document",
+  "type": "block",
+  "header": {
+    "attributes": {
+      "bs": { "value": "\\", "location": [{ "line": 1, "col": 1 }, { "line": 1, "col": 6 }] },
+      "org": { "value": "ACME", "location": [{ "line": 2, "col": 1 }, { "line": 2, "col": 10 }] }
+    },
+    "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 10 }]
+  },
+  "location": [{ "line": 1, "col": 1 }, { "line": 2, "col": 10 }]
+}
