@@ -18,12 +18,14 @@
     "gen:preprocessor-parser": "peggy -c grammar/asciidoc-preprocessor-config.js -t '' > /dev/null"
   },
   "bin": {
-    "asciidoc-tck-adapter": "bin/asciidoc-tck-adapter"
+    "asciidoc-tck-adapter": "bin/asciidoc-tck-adapter",
+    "convert-asciidoc": "bin/convert-asciidoc"
   },
   "main": "lib/index.js",
   "exports": {
     ".": "./lib/index.js",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./html-converter": "./lib/html-converter.js"
   },
   "imports": {
     "#attrlist-parser": "./lib/asciidoc-attrlist-parser.js",
